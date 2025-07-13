@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import essential CSS files only */
+@import './lib/styles/variables.css';
+@import './lib/styles/base.css';

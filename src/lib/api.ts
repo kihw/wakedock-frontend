@@ -14,10 +14,10 @@
  */
 
 // Export everything from the new modular API
-export * from './api/index.js';
+export * from './api/index';
 
 // The api singleton is still available as before
-import { api } from './api/index.js';
+import { api } from './api/index';
 export { api };
 
 // Backward compatibility - these exports ensure existing imports continue to work

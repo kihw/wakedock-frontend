@@ -1,34 +1,63 @@
 {
-    "extends": "./.svelte-kit/tsconfig.json",
-    "compilerOptions": {
-        "target": "ES2022",
-        "module": "ESNext",
-        "moduleResolution": "bundler",
-        "allowImportingTsExtensions": true,
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "noEmit": true,
-        "strict": true,
-        "skipLibCheck": true,
-        "verbatimModuleSyntax": true,
-        "lib": [
-            "ES2022",
-            "DOM",
-            "DOM.Iterable"
-        ],
-        "types": [
-            "vite/client"
-        ]
-    },
-    "include": [
-        "src/**/*.ts",
-        "src/**/*.js",
-        "src/**/*.svelte",
-        "src/app.d.ts"
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "es6"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
     ],
-    "exclude": [
-        "node_modules",
-        "build",
-        ".svelte-kit"
-    ]
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/hooks/*": ["./src/lib/hooks/*"],
+      "@/utils/*": ["./src/lib/utils/*"],
+      "@/stores/*": ["./src/lib/stores/*"],
+      "@/api/*": ["./src/lib/api/*"],
+      "@/types/*": ["./src/lib/types/*"]
+    },
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "allowImportingTsExtensions": false
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out",
+    "build",
+    "src/lib/api-backup.ts",
+    "src/lib/api-legacy.ts",
+    "src/lib/api.test.ts",
+    "src/lib/components/**/*.svelte",
+    "src/lib/components/**/*.test.ts",
+    "src/lib/stores/auth.test.ts",
+    "src/lib/stores/auth.ts",
+    "src/routes/**/*",
+    "src/main.ts",
+    "src/app.ts",
+    "src/App.svelte",
+    "src/service-worker.ts",
+    "src/stories/**/*",
+    "tests/**/*"
+  ]
 }

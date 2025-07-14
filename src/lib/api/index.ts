@@ -4,20 +4,20 @@
  */
 
 // Export main client
-export { ApiClient } from './api-client.js';
+export { ApiClient } from './api-client';
 
 // Export individual services for advanced usage
-export { BaseApiClient } from './base-client.js';
-export { AuthService } from './auth-service.js';
-export { ServicesApi } from './services-api.js';
-export { SystemApi } from './system-api.js';
-export { UsersApi } from './users-api.js';
+export { BaseApiClient } from './base-client';
+export { AuthService } from './auth-service';
+export { ServicesApi } from './services-api';
+export { SystemApi } from './system-api';
+export { UsersApi } from './users-api';
 
 // Export types
-export type { RequestOptions } from './base-client.js';
+export type { RequestOptions } from './base-client';
 
 // Create and export singleton instance
-import { ApiClient } from './api-client.js';
+import { ApiClient } from './api-client';
 export const api = new ApiClient();
 
 // Re-export types for backward compatibility
@@ -33,7 +33,7 @@ export type {
   UpdateServiceRequest,
   SystemInfo,
   SystemStats
-} from '../types/api.js';
+} from '../types/api';
 
 // Re-export interfaces for backward compatibility (from old api.ts)
 export interface Service {

@@ -20,7 +20,7 @@ export interface StorageItem<T = any> {
 
 class StorageManager {
     private readonly storagePrefix = 'wakedock_';
-    private readonly version = '1.0.0';
+    private readonly version = '0.0.1';
 
     /**
      * Vérifie si le localStorage est disponible

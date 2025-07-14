@@ -4,13 +4,13 @@
   import { Globe, Shield, Clock } from 'lucide-svelte';
 
   let currentYear = new Date().getFullYear();
-  let buildVersion = 'v1.0.0';
+  let buildVersion = 'v0.0.1';
   let lastUpdate = '';
 
   onMount(() => {
     // Get build info from environment if available
     try {
-      buildVersion = process.env.PUBLIC_BUILD_VERSION || 'v1.0.0';
+      buildVersion = process.env.PUBLIC_BUILD_VERSION || 'v0.0.1';
       lastUpdate = process.env.PUBLIC_BUILD_DATE || new Date().toISOString().split('T')[0];
     } catch (e) {
       // Fallback for client-side

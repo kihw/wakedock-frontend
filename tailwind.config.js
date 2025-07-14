@@ -147,6 +147,8 @@ module.exports = {
             },
             animation: {
                 'fade': 'fadeIn 0.3s ease-out',
+                'spin-slow': 'spin 2s linear infinite',
+                'spin-fast': 'spin 0.5s linear infinite',
             },
             keyframes: {
                 fadeIn: {

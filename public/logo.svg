@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="whaleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#40E0D0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0A8DB8;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Whale body -->
+  <ellipse cx="128" cy="140" rx="80" ry="50" fill="url(#whaleGradient)" />
+  
+  <!-- Whale head -->
+  <ellipse cx="80" cy="120" rx="40" ry="35" fill="url(#whaleGradient)" />
+  
+  <!-- Whale tail -->
+  <path d="M200 130 Q220 110 240 120 Q230 140 220 150 Q210 145 200 140 Z" fill="url(#whaleGradient)" />
+  <path d="M220 120 Q240 100 260 110 Q250 130 240 140 Q230 135 220 130 Z" fill="url(#whaleGradient)" />
+  
+  <!-- Whale eye -->
+  <circle cx="70" cy="110" r="4" fill="#1a365d" />
+  
+  <!-- Water spout -->
+  <path d="M60 80 Q55 60 65 50 Q70 60 75 50 Q80 65 70 75 Z" fill="#87CEEB" opacity="0.7" />
+  
+  <!-- Docker container reference (small rectangles) -->
+  <rect x="100" y="125" width="8" height="6" rx="1" fill="#0A8DB8" opacity="0.8" />
+  <rect x="112" y="125" width="8" height="6" rx="1" fill="#0A8DB8" opacity="0.8" />
+  <rect x="124" y="125" width="8" height="6" rx="1" fill="#0A8DB8" opacity="0.8" />
+</svg>

@@ -5,7 +5,7 @@
 
 <div class="sidebar-footer" role="contentinfo">
   <div class="version">
-    <p class="version-text" aria-label="WakeDock version 1.0.0">WakeDock v1.0.0</p>
+    <p class="version-text" aria-label="WakeDock version 1.0.0">WakeDock v0.0.1</p>
     <p class="build-info" aria-label="Build version 2024.1.1">Build 2024.1.1</p>
   </div>
 </div>

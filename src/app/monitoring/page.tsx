@@ -359,11 +359,6 @@ function MonitoringPage() {
   );
 }
 
-export const metadata: Metadata = {
-  title: 'System Monitoring - WakeDock',
-  description: 'Real-time system and service monitoring dashboard',
-};
-
 export default function MonitoringPageWrapper() {
   return (
     <DashboardLayout>

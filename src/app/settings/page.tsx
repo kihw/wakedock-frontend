@@ -433,11 +433,6 @@ function SettingsPage() {
   );
 }
 
-export const metadata: Metadata = {
-  title: 'Settings - WakeDock',
-  description: 'Configure your WakeDock instance',
-};
-
 export default function SettingsPageWrapper() {
   return (
     <DashboardLayout>

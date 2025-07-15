@@ -83,7 +83,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div 
-      className={`app flex flex-1 bg-background relative ${
+      className={`app flex flex-1 bg-background relative min-h-screen ${
         sidebarOpen ? 'sidebar-open' : ''
       } ${mobileMenuOpen ? 'mobile-menu-open' : ''}`}
     >
@@ -98,7 +98,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       />
 
       {/* Main Content Area */}
-      <div className="main-container flex-1 flex flex-col min-w-0 transition-all duration-200">
+      <div className="main-container flex-1 flex flex-col min-w-0 transition-all duration-200 min-h-screen">
         {/* Header */}
         <Header 
           sidebarOpen={sidebarOpen} 
@@ -107,7 +107,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
         {/* Main Content */}
         <main className="main-content flex-1 flex flex-col min-h-0 overflow-hidden">
-          <div className="content-wrapper flex-1 p-4 lg:p-6 overflow-y-auto bg-background w-full scroll-smooth">
+          <div className="content-wrapper flex-1 p-4 lg:p-6 overflow-y-auto w-full scroll-smooth" style={{ backgroundColor: 'var(--color-background)' }}>
             {children}
           </div>
         </main>

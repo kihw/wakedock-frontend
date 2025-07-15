@@ -566,11 +566,6 @@ function UsersPage() {
   );
 }
 
-export const metadata: Metadata = {
-  title: 'User Management - WakeDock',
-  description: 'Manage user accounts and permissions for WakeDock',
-};
-
 export default function UsersPageWrapper() {
   return (
     <DashboardLayout>

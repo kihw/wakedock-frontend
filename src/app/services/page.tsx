@@ -180,11 +180,6 @@ function ServicesPage() {
   );
 }
 
-export const metadata: Metadata = {
-  title: 'Docker Services - WakeDock',
-  description: 'Manage and monitor your Docker containers',
-};
-
 export default function ServicesPageWrapper() {
   return (
     <DashboardLayout>

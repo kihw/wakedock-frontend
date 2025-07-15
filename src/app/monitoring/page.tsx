@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Metadata } from 'next';
+import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useServicesStore } from '@/lib/stores/services-store';
 import { useToastStore } from '@/lib/stores/toast-store';
 import { 
@@ -17,7 +19,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 
-export default function MonitoringPage() {
+function MonitoringPage() {
   const { 
     services, 
     systemOverview, 
@@ -354,5 +356,18 @@ export default function MonitoringPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export const metadata: Metadata = {
+  title: 'System Monitoring - WakeDock',
+  description: 'Real-time system and service monitoring dashboard',
+};
+
+export default function MonitoringPageWrapper() {
+  return (
+    <DashboardLayout>
+      <MonitoringPage />
+    </DashboardLayout>
   );
 }

@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Metadata } from 'next';
+import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useToastStore } from '@/lib/stores/toast-store';
 import { 
   Users as UsersIcon, 
@@ -243,7 +245,7 @@ function UserModal({ user, isOpen, onClose, onSave }: UserModalProps) {
   );
 }
 
-export default function UsersPage() {
+function UsersPage() {
   const [users, setUsers] = useState<User[]>([
     {
       id: '1',
@@ -561,5 +563,18 @@ export default function UsersPage() {
         onSave={handleSaveUser}
       />
     </div>
+  );
+}
+
+export const metadata: Metadata = {
+  title: 'User Management - WakeDock',
+  description: 'Manage user accounts and permissions for WakeDock',
+};
+
+export default function UsersPageWrapper() {
+  return (
+    <DashboardLayout>
+      <UsersPage />
+    </DashboardLayout>
   );
 }

@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Metadata } from 'next';
+import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useToastStore } from '@/lib/stores/toast-store';
 import { 
   Settings, 
@@ -36,7 +38,7 @@ const settingsSections: SettingsSection[] = [
   { id: 'system', label: 'System', icon: Server }
 ];
 
-export default function SettingsPage() {
+function SettingsPage() {
   const [activeSection, setActiveSection] = useState('general');
   const [saving, setSaving] = useState(false);
   const [settings, setSettings] = useState({
@@ -428,5 +430,18 @@ export default function SettingsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export const metadata: Metadata = {
+  title: 'Settings - WakeDock',
+  description: 'Configure your WakeDock instance',
+};
+
+export default function SettingsPageWrapper() {
+  return (
+    <DashboardLayout>
+      <SettingsPage />
+    </DashboardLayout>
   );
 }

@@ -4,8 +4,8 @@
   import Widget from '../base/Widget.svelte';
 
   export let data: {
-    cpu_usage: number;
-    memory_usage: number;
+    total_cpu_usage: number;
+    total_memory_usage: number;
     disk_usage: number;
     uptime: number;
   } | null = null;
@@ -58,16 +58,16 @@
           </div>
           <div class="metric-info">
             <h4 class="metric-title">CPU Usage</h4>
-            <p class="metric-value {getUsageColor(data.cpu_usage)}">
-              {(typeof data.cpu_usage === 'number' ? data.cpu_usage : 0).toFixed(1)}%
+            <p class="metric-value {getUsageColor(data?.total_cpu_usage || 0)}">
+              {(typeof data.total_cpu_usage === 'number' ? data.total_cpu_usage : 0).toFixed(1)}%
             </p>
           </div>
         </div>
         <div class="metric-bar">
           <div class="metric-bar-bg">
             <div
-              class="metric-bar-fill {getUsageBarColor(data.cpu_usage)}"
-              style="width: {Math.min(data.cpu_usage, 100)}%"
+              class="metric-bar-fill {getUsageBarColor(data?.total_cpu_usage || 0)}"
+              style="width: {Math.min(data?.total_cpu_usage || 0, 100)}%"
             ></div>
           </div>
         </div>
@@ -81,16 +81,16 @@
           </div>
           <div class="metric-info">
             <h4 class="metric-title">Memory Usage</h4>
-            <p class="metric-value {getUsageColor(data.memory_usage)}">
-              {(typeof data.memory_usage === 'number' ? data.memory_usage : 0).toFixed(1)}%
+            <p class="metric-value {getUsageColor(data?.total_memory_usage || 0)}">
+              {(typeof data.total_memory_usage === 'number' ? data.total_memory_usage : 0).toFixed(1)}%
             </p>
           </div>
         </div>
         <div class="metric-bar">
           <div class="metric-bar-bg">
             <div
-              class="metric-bar-fill {getUsageBarColor(data.memory_usage)}"
-              style="width: {Math.min(data.memory_usage, 100)}%"
+              class="metric-bar-fill {getUsageBarColor(data?.total_memory_usage || 0)}"
+              style="width: {Math.min(data?.total_memory_usage || 0, 100)}%"
             ></div>
           </div>
         </div>
@@ -104,7 +104,7 @@
           </div>
           <div class="metric-info">
             <h4 class="metric-title">Disk Usage</h4>
-            <p class="metric-value {getUsageColor(data.disk_usage)}">
+            <p class="metric-value {getUsageColor(data?.disk_usage || 0)}">
               {(typeof data.disk_usage === 'number' ? data.disk_usage : 0).toFixed(1)}%
             </p>
           </div>
@@ -112,8 +112,8 @@
         <div class="metric-bar">
           <div class="metric-bar-bg">
             <div
-              class="metric-bar-fill {getUsageBarColor(data.disk_usage)}"
-              style="width: {Math.min(data.disk_usage, 100)}%"
+              class="metric-bar-fill {getUsageBarColor(data?.disk_usage || 0)}"
+              style="width: {Math.min(data?.disk_usage || 0, 100)}%"
             ></div>
           </div>
         </div>
@@ -128,7 +128,7 @@
           <div class="metric-info">
             <h4 class="metric-title">System Uptime</h4>
             <p class="metric-value text-blue-600">
-              {formatUptime(data.uptime)}
+              {formatUptime(data?.uptime || 0)}
             </p>
           </div>
         </div>
@@ -139,12 +139,12 @@
     <div class="system-status mt-6">
       <div class="status-indicator">
         <div
-          class="status-dot {data.cpu_usage < 80 && data.memory_usage < 80 && data.disk_usage < 90
+          class="status-dot {(data?.total_cpu_usage || 0) < 80 && (data?.total_memory_usage || 0) < 80 && (data?.disk_usage || 0) < 90
             ? 'healthy'
             : 'warning'}"
         ></div>
         <span class="status-text">
-          {data.cpu_usage < 80 && data.memory_usage < 80 && data.disk_usage < 90
+          {(data?.total_cpu_usage || 0) < 80 && (data?.total_memory_usage || 0) < 80 && (data?.disk_usage || 0) < 90
             ? 'System Healthy'
             : 'System Under Load'}
         </span>

@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Metadata } from 'next';
+import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useServicesStore } from '@/lib/stores/services-store';
 import { useToastStore } from '@/lib/stores/toast-store';
 import { ServiceCard } from '@/components/services/service-card';
 import { ServiceDetails } from '@/components/services/service-details';
 import { Plus, Search, Filter, RefreshCw } from 'lucide-react';
 
-export default function ServicesPage() {
+function ServicesPage() {
   const { 
     services, 
     loading, 
@@ -175,5 +177,18 @@ export default function ServicesPage() {
         />
       )}
     </div>
+  );
+}
+
+export const metadata: Metadata = {
+  title: 'Docker Services - WakeDock',
+  description: 'Manage and monitor your Docker containers',
+};
+
+export default function ServicesPageWrapper() {
+  return (
+    <DashboardLayout>
+      <ServicesPage />
+    </DashboardLayout>
   );
 }

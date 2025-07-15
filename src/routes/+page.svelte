@@ -135,9 +135,9 @@
               health_status: update.health_status,
               resource_usage: update.stats
                 ? {
-                    cpu_usage: update.stats.cpu_usage,
-                    memory_usage: update.stats.memory_usage,
-                    network_io: update.stats.network_io,
+                    cpu_usage: update.stats?.cpu_usage || 0,
+                    memory_usage: update.stats?.memory_usage || 0,
+                    network_io: update.stats?.network_io || { rx: 0, tx: 0 },
                   }
                 : service.resource_usage,
             };

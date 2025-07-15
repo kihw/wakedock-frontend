@@ -117,7 +117,7 @@ export default function MonitoringPage() {
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">CPU Usage</p>
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {systemOverview?.system?.cpu_usage?.toFixed(1) || '0.0'}%
+                  {systemOverview?.total_cpu_usage?.toFixed(1) || '0.0'}%
                 </span>
                 <TrendingUp className="h-4 w-4 text-green-500" />
               </div>
@@ -128,7 +128,7 @@ export default function MonitoringPage() {
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
               <div 
                 className="bg-green-500 h-2 rounded-full" 
-                style={{ width: `${systemOverview?.system?.cpu_usage || 0}%` }}
+                style={{ width: `${systemOverview?.total_cpu_usage || 0}%` }}
               ></div>
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function MonitoringPage() {
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Memory Usage</p>
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {systemOverview?.system?.memory_usage?.toFixed(1) || '0.0'}%
+                  {systemOverview?.total_memory_usage ? `${(systemOverview.total_memory_usage / 1024 / 1024).toFixed(1)} MB` : '0.0 MB'}
                 </span>
                 <TrendingDown className="h-4 w-4 text-blue-500" />
               </div>
@@ -152,7 +152,7 @@ export default function MonitoringPage() {
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
               <div 
                 className="bg-purple-500 h-2 rounded-full" 
-                style={{ width: `${systemOverview?.system?.memory_usage || 0}%` }}
+                style={{ width: `${systemOverview?.total_memory_usage ? Math.min((systemOverview.total_memory_usage / 1024 / 1024 / 1024) * 100, 100) : 0}%` }}
               ></div>
             </div>
           </div>
@@ -165,7 +165,7 @@ export default function MonitoringPage() {
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Disk Usage</p>
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {systemOverview?.system?.disk_usage?.toFixed(1) || '0.0'}%
+                  N/A
                 </span>
                 <TrendingUp className="h-4 w-4 text-orange-500" />
               </div>
@@ -176,7 +176,7 @@ export default function MonitoringPage() {
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
               <div 
                 className="bg-orange-500 h-2 rounded-full" 
-                style={{ width: `${systemOverview?.system?.disk_usage || 0}%` }}
+                style={{ width: '0%' }}
               ></div>
             </div>
           </div>
@@ -239,21 +239,21 @@ export default function MonitoringPage() {
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600 dark:text-gray-400">Uptime</span>
               <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                {systemOverview?.system?.uptime || 'N/A'}
+                N/A
               </span>
             </div>
             
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600 dark:text-gray-400">Docker Status</span>
               <span className="text-lg font-semibold text-green-600 dark:text-green-400">
-                {systemOverview?.docker?.status || 'Healthy'}
+                Healthy
               </span>
             </div>
             
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600 dark:text-gray-400">Caddy Status</span>
               <span className="text-lg font-semibold text-green-600 dark:text-green-400">
-                {systemOverview?.caddy?.status || 'Healthy'}
+                Healthy
               </span>
             </div>
             

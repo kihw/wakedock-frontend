@@ -62,7 +62,17 @@ class TokenService {
   // Decode JWT token
   decodeToken(token: string): TokenPayload | null {
     try {
-      const base64Url = token.split('.')[1];
+      const parts = token.split('.');
+      if (parts.length !== 3) {
+        console.error('[TokenService] Invalid token format');
+        return null;
+      }
+      
+      const base64Url = parts[1];
+      if (!base64Url) {
+        console.error('[TokenService] Invalid token payload');
+        return null;
+      }
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       const jsonPayload = decodeURIComponent(
         atob(base64)
@@ -145,8 +155,14 @@ class TokenService {
     const info = this.getTokenInfo(token);
     if (!info) return null;
 
+    // Gestion robuste de l'ID utilisateur
+    let userId: number | string = info.payload.sub;
+    if (typeof userId === 'string' && /^\d+$/.test(userId)) {
+      userId = parseInt(userId, 10);
+    }
+
     return {
-      id: parseInt(info.payload.sub),
+      id: userId,
       username: info.payload.username,
       email: info.payload.email,
       role: info.payload.role,

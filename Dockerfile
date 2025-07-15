@@ -22,6 +22,8 @@ ENV NEXT_PUBLIC_API_BASE_URL=/api/v1
 ENV NEXT_PUBLIC_WS_BASE_URL=/ws
 
 RUN echo "Building Next.js application..." && \
+    echo "Checking public directory..." && \
+    ls -la public/ && \
     npm run build && \
     echo "Build completed, checking output..." && \
     ls -la .next/ && \
@@ -55,6 +57,9 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Copy public files directly from source (not from builder as they may not be in standalone)
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 # Switch to non-root user
 USER nextjs

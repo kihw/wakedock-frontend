@@ -221,7 +221,7 @@ export const MetricsChart: React.FC<MetricsChartProps> = ({
     
     return (
       <div className="relative h-32">
-        <svg width="100%" height="100%" className="overflow-visible">
+        <svg width="100%" height="100%" className="overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
           {config.showGrid && (
             <defs>
               <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -239,8 +239,8 @@ export const MetricsChart: React.FC<MetricsChartProps> = ({
               {config.fillArea && (
                 <path
                   d={`M ${data.map((point, index) => 
-                    `${(index / (data.length - 1)) * 100}% ${100 - ((point.value - minValue) / range) * 100}%`
-                  ).join(' L ')} L 100% 100% L 0% 100% Z`}
+                    `${(index / (data.length - 1)) * 100} ${100 - ((point.value - minValue) / range) * 100}`
+                  ).join(' L ')} L 100 100 L 0 100 Z`}
                   fill={primarySeries.color}
                   fillOpacity="0.2"
                 />
@@ -248,7 +248,7 @@ export const MetricsChart: React.FC<MetricsChartProps> = ({
               
               <path
                 d={`M ${data.map((point, index) => 
-                  `${(index / (data.length - 1)) * 100}% ${100 - ((point.value - minValue) / range) * 100}%`
+                  `${(index / (data.length - 1)) * 100} ${100 - ((point.value - minValue) / range) * 100}`
                 ).join(' L ')}`}
                 fill="none"
                 stroke={primarySeries.color}
@@ -259,9 +259,9 @@ export const MetricsChart: React.FC<MetricsChartProps> = ({
               {config.showPoints && data.map((point, index) => (
                 <circle
                   key={index}
-                  cx={`${(index / (data.length - 1)) * 100}%`}
-                  cy={`${100 - ((point.value - minValue) / range) * 100}%`}
-                  r="3"
+                  cx={(index / (data.length - 1)) * 100}
+                  cy={100 - ((point.value - minValue) / range) * 100}
+                  r="0.5"
                   fill={primarySeries.color}
                   stroke="white"
                   strokeWidth="1"
@@ -278,10 +278,10 @@ export const MetricsChart: React.FC<MetricsChartProps> = ({
               {data.map((point, index) => (
                 <rect
                   key={index}
-                  x={`${(index / data.length) * 100}%`}
-                  y={`${100 - ((point.value - minValue) / range) * 100}%`}
-                  width={`${80 / data.length}%`}
-                  height={`${((point.value - minValue) / range) * 100}%`}
+                  x={(index / data.length) * 100}
+                  y={100 - ((point.value - minValue) / range) * 100}
+                  width={80 / data.length}
+                  height={((point.value - minValue) / range) * 100}
                   fill={primarySeries.color}
                   className="cursor-pointer"
                   onMouseEnter={() => setHoveredPoint(point)}
@@ -303,7 +303,7 @@ export const MetricsChart: React.FC<MetricsChartProps> = ({
               
               <path
                 d={`M ${data.map((point, index) => 
-                  `${(index / (data.length - 1)) * 100}% ${100 - ((point.value - minValue) / range) * 100}%`
+                  `${(index / (data.length - 1)) * 100} ${100 - ((point.value - minValue) / range) * 100}`
                 ).join(' L ')}`}
                 fill="none"
                 stroke={primarySeries.color}

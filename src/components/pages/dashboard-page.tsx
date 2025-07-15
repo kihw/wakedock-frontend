@@ -229,7 +229,7 @@ export function DashboardPage() {
                   CPU Usage
                 </div>
                 <div className="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">
-                  {systemOverview.system.cpu_usage.toFixed(1)}%
+                  {systemOverview?.total_cpu_usage?.toFixed(1) || '0.0'}%
                 </div>
               </div>
               <div>
@@ -237,15 +237,15 @@ export function DashboardPage() {
                   Memory Usage
                 </div>
                 <div className="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">
-                  {systemOverview.system.memory_usage.toFixed(1)}%
+                  {systemOverview?.total_memory_usage ? `${(systemOverview.total_memory_usage / 1024 / 1024).toFixed(1)} MB` : '0.0 MB'}
                 </div>
               </div>
               <div>
                 <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Disk Usage
+                  Services
                 </div>
                 <div className="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">
-                  {systemOverview.system.disk_usage.toFixed(1)}%
+                  {systemOverview?.running_services || 0} / {systemOverview?.total_services || 0}
                 </div>
               </div>
             </div>

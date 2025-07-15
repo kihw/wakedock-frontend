@@ -32,35 +32,22 @@ export interface Service {
   health_status?: 'healthy' | 'unhealthy' | 'unknown';
   created_at: string;
   updated_at: string;
+  cpu?: number;
+  memory?: number;
+  uptime?: string;
 }
 
 export interface SystemOverview {
-  services: {
-    total: number;
-    running: number;
-    stopped: number;
-    error: number;
-  };
-  system: {
-    cpu_usage: number;
-    memory_usage: number;
-    disk_usage: number;
-    uptime: number;
-  };
-  docker: {
-    version: string;
-    api_version: string;
-    status: 'healthy' | 'unhealthy';
-  };
-  caddy: {
-    version: string;
-    status: 'healthy' | 'unhealthy';
-    active_routes: number;
-  };
+  total_services: number;
+  running_services: number;
+  stopped_services: number;
+  total_cpu_usage: number;
+  total_memory_usage: number;
+  timestamp: string;
 }
 
 class SimpleApiClient {
-  private baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+  private baseUrl = '/api/v1';
   private token: string | null = null;
 
   constructor() {
@@ -99,24 +86,57 @@ class SimpleApiClient {
       headers.Authorization = `Bearer ${this.token}`;
     }
 
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers,
+      });
 
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+      if (!response.ok) {
+        let errorMessage = `API Error: ${response.status} ${response.statusText}`;
+        
+        try {
+          const errorData = await response.json();
+          if (errorData.message) {
+            errorMessage = errorData.message;
+          } else if (errorData.detail) {
+            errorMessage = errorData.detail;
+          }
+        } catch {
+          // Ignore JSON parsing errors, use status text
+        }
+        
+        throw new Error(errorMessage);
+      }
+
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        return response.json();
+      } else {
+        return {} as T;
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error(`Network error: ${String(error)}`);
     }
-
-    return response.json();
   }
 
   // Auth methods
   auth = {
     login: async (credentials: { username: string; password: string }): Promise<LoginResponse> => {
-      const response = await this.request<LoginResponse>('/api/v1/auth/login', {
+      // OAuth2PasswordRequestForm requires form-urlencoded data
+      const formData = new URLSearchParams();
+      formData.append('username', credentials.username);
+      formData.append('password', credentials.password);
+      
+      const response = await this.request<LoginResponse>('/auth/login', {
         method: 'POST',
-        body: JSON.stringify(credentials),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString(),
       });
       
       this.setToken(response.access_token);
@@ -124,7 +144,7 @@ class SimpleApiClient {
     },
 
     getCurrentUser: async (): Promise<User> => {
-      return this.request<User>('/api/v1/auth/me');
+      return this.request<User>('/auth/me');
     },
 
     refreshToken: async (): Promise<LoginResponse> => {
@@ -136,7 +156,7 @@ class SimpleApiClient {
         throw new Error('No refresh token available');
       }
 
-      return this.request<LoginResponse>('/api/v1/auth/refresh', {
+      return this.request<LoginResponse>('/auth/refresh', {
         method: 'POST',
         body: JSON.stringify({ refresh_token: refreshToken }),
       });
@@ -144,7 +164,7 @@ class SimpleApiClient {
 
     logout: async (): Promise<void> => {
       try {
-        await this.request('/api/v1/auth/logout', { method: 'POST' });
+        await this.request('/auth/logout', { method: 'POST' });
       } catch (error) {
         // Ignore logout errors
       } finally {
@@ -156,31 +176,31 @@ class SimpleApiClient {
   // Services methods
   services = {
     getAll: async (): Promise<Service[]> => {
-      return this.request<Service[]>('/api/v1/services');
+      return this.request<Service[]>('/services');
     },
 
     getById: async (id: string): Promise<Service> => {
-      return this.request<Service>(`/api/v1/services/${id}`);
+      return this.request<Service>(`/services/${id}`);
     },
 
     start: async (id: string): Promise<void> => {
-      await this.request(`/api/v1/services/${id}/start`, { method: 'POST' });
+      await this.request(`/services/${id}/start`, { method: 'POST' });
     },
 
     stop: async (id: string): Promise<void> => {
-      await this.request(`/api/v1/services/${id}/stop`, { method: 'POST' });
+      await this.request(`/services/${id}/stop`, { method: 'POST' });
     },
 
     restart: async (id: string): Promise<void> => {
-      await this.request(`/api/v1/services/${id}/restart`, { method: 'POST' });
+      await this.request(`/services/${id}/restart`, { method: 'POST' });
     },
 
     delete: async (id: string): Promise<void> => {
-      await this.request(`/api/v1/services/${id}`, { method: 'DELETE' });
+      await this.request(`/services/${id}`, { method: 'DELETE' });
     },
 
     create: async (service: Partial<Service>): Promise<Service> => {
-      return this.request<Service>('/api/v1/services', {
+      return this.request<Service>('/services', {
         method: 'POST',
         body: JSON.stringify(service),
       });
@@ -190,11 +210,11 @@ class SimpleApiClient {
   // System methods
   system = {
     getOverview: async (): Promise<SystemOverview> => {
-      return this.request<SystemOverview>('/api/v1/system/overview');
+      return this.request<SystemOverview>('/system/overview');
     },
 
     getHealth: async (): Promise<{ status: string }> => {
-      return this.request<{ status: string }>('/api/v1/health');
+      return this.request<{ status: string }>('/health');
     },
   };
 

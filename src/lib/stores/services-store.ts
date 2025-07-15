@@ -246,23 +246,12 @@ export const useServicesStore = create<ServicesState>((set, get) => ({
     if (update) {
       set({
         systemOverview: {
-          services: update.services_count,
-          system: {
-            cpu_usage: update.cpu_usage,
-            memory_usage: update.memory_usage,
-            disk_usage: update.disk_usage,
-            uptime: update.uptime,
-          },
-          docker: {
-            version: '20.10.0',
-            api_version: '1.41',
-            status: 'healthy',
-          },
-          caddy: {
-            version: '2.6.0',
-            status: 'healthy',
-            active_routes: 0,
-          },
+          total_services: update.total_services || 0,
+          running_services: update.running_services || 0,
+          stopped_services: update.stopped_services || 0,
+          total_cpu_usage: update.total_cpu_usage || 0,
+          total_memory_usage: update.total_memory_usage || 0,
+          timestamp: update.timestamp || new Date().toISOString(),
         },
       });
     }

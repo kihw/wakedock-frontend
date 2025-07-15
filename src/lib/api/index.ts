@@ -12,6 +12,7 @@ export { AuthService } from './auth-service';
 export { ServicesApi } from './services-api';
 export { SystemApi } from './system-api';
 export { UsersApi } from './users-api';
+export { ContainersApi } from './containers-api';
 
 // Export types
 export type { RequestOptions } from './base-client';

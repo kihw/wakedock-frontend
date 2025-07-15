@@ -7,18 +7,21 @@ import { AuthService } from './auth-service.js';
 import { ServicesApi } from './services-api.js';
 import { SystemApi } from './system-api.js';
 import { UsersApi } from './users-api.js';
+import { ContainersApi } from './containers-api.js';
 
 export class ApiClient {
   public auth: AuthService;
   public services: ServicesApi;
   public system: SystemApi;
   public users: UsersApi;
+  public containers: ContainersApi;
 
   constructor(baseUrl?: string) {
     this.auth = new AuthService(baseUrl);
     this.services = new ServicesApi(baseUrl);
     this.system = new SystemApi(baseUrl);
     this.users = new UsersApi(baseUrl);
+    this.containers = new ContainersApi(baseUrl);
   }
 
   /**
@@ -29,6 +32,7 @@ export class ApiClient {
     this.services.setToken(token);
     this.system.setToken(token);
     this.users.setToken(token);
+    this.containers.setToken(token);
   }
 
   /**
@@ -39,6 +43,7 @@ export class ApiClient {
     this.services.clearToken();
     this.system.clearToken();
     this.users.clearToken();
+    this.containers.clearToken();
   }
 
   /**

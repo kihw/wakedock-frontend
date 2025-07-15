@@ -163,7 +163,7 @@
     <div class="stat-content">
       <div class="stat-value-section">
         <div class="stat-value {getUsageColor($stats?.system?.cpu_usage || 0).color}">
-          {(typeof $stats?.system?.cpu_usage === 'number' ? $stats.system.cpu_usage : 0).toFixed(
+          {(typeof $stats?.system?.cpu_usage === 'number' ? $stats?.system?.cpu_usage : 0).toFixed(
             1
           )}%
         </div>
@@ -174,7 +174,7 @@
         <div
           class="usage-fill {getUsageColor($stats?.system?.cpu_usage || 0).fill}"
           style="width: {Math.min(
-            typeof $stats?.system?.cpu_usage === 'number' ? $stats.system.cpu_usage : 0,
+            typeof $stats?.system?.cpu_usage === 'number' ? $stats?.system?.cpu_usage : 0,
             100
           )}%"
         ></div>
@@ -211,7 +211,7 @@
       <div class="stat-value-section">
         <div class="stat-value {getUsageColor($stats?.system?.memory_usage || 0).color}">
           {(typeof $stats?.system?.memory_usage === 'number'
-            ? $stats.system.memory_usage
+            ? $stats?.system?.memory_usage
             : 0
           ).toFixed(1)}%
         </div>
@@ -222,7 +222,7 @@
         <div
           class="usage-fill {getUsageColor($stats?.system?.memory_usage || 0).fill}"
           style="width: {Math.min(
-            typeof $stats?.system?.memory_usage === 'number' ? $stats.system.memory_usage : 0,
+            typeof $stats?.system?.memory_usage === 'number' ? $stats?.system?.memory_usage : 0,
             100
           )}%"
         ></div>

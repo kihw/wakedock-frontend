@@ -1,0 +1,116 @@
+/**
+ * Styles CSS pour les tableaux de bord personnalisables - WakeDock
+ */
+
+/* Variables CSS pour la personnalisation des dashboards */
+:root {
+  --dashboard-grid-color: rgba(0, 0, 0, 0.05);
+  --dashboard-grid-color-dark: rgba(255, 255, 255, 0.05);
+  --dashboard-widget-border: #e5e7eb;
+  --dashboard-widget-border-dark: #374151;
+  --dashboard-widget-border-hover: #3b82f6;
+  --dashboard-widget-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  --dashboard-widget-shadow-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --dashboard-drag-overlay-bg: rgba(59, 130, 246, 0.1);
+  --dashboard-drag-handle-color: #9ca3af;
+  --dashboard-widget-header-bg: #f9fafb;
+  --dashboard-widget-header-bg-dark: #1f2937;
+}
+
+/* Conteneur principal du dashboard */
+.customizable-dashboard {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-toolbar {
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.dashboard-container {
+  flex: 1;
+  position: relative;
+  min-height: calc(100vh - 80px);
+}
+
+/* Conteneur des widgets */
+.widgets-container {
+  position: relative;
+  min-height: 100%;
+}
+
+/* Style des widgets */
+.widget-container {
+  transition: all 0.2s ease-in-out;
+  will-change: transform;
+}
+
+.widget-container:hover {
+  z-index: 10;
+}
+
+.widget-container.dragging {
+  z-index: 50;
+  transform: rotate(2deg) scale(1.02);
+}
+
+/* Animation des widgets */
+@keyframes widgetFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.widget-fade-in {
+  animation: widgetFadeIn 0.3s ease-out;
+}
+
+/* États de chargement */
+.widget-loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.widget-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 0.5rem;
+  background-image: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .dashboard-container {
+    min-height: calc(100vh - 60px);
+  }
+}
+
+/* Accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  .widget-container,
+  .widget-fade-in {
+    animation: none;
+    transition: none;
+  }
+}

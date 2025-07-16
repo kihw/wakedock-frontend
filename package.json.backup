@@ -1,6 +1,6 @@
 {
     "name": "wakedock-frontend",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "description": "WakeDock Frontend - Modern Next.js Dashboard for Docker Container Management",
     "private": true,
     "scripts": {

@@ -151,7 +151,7 @@ const RecommendationsPanel: React.FC<{ recommendations: string[] }> = ({ recomme
 // Composant pour l'utilisation du stockage
 const StorageBreakdown: React.FC<{ storageUsage: StorageUsage }> = ({ storageUsage }) => {
     const { storage_breakdown, total_size_bytes } = storageUsage;
-    
+
     const breakdown = [
         { label: 'Fichiers de logs', value: storage_breakdown.log_files, color: 'bg-blue-500' },
         { label: 'Fichiers compressés', value: storage_breakdown.compressed_files, color: 'bg-green-500' },
@@ -197,7 +197,7 @@ const StorageBreakdown: React.FC<{ storageUsage: StorageUsage }> = ({ storageUsa
                         );
                     })}
                 </div>
-                
+
                 <div className="mt-6 p-4 bg-gray-50 rounded-md">
                     <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-gray-700">Économies de compression</span>
@@ -273,7 +273,7 @@ const LogsOptimizationDashboard: React.FC = () => {
     const compressLogs = async () => {
         try {
             setCompressionInProgress(true);
-            
+
             const response = await fetch('/api/v1/logs/optimization/compress', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -287,10 +287,10 @@ const LogsOptimizationDashboard: React.FC = () => {
             if (!response.ok) throw new Error('Erreur lors de la compression');
 
             const result = await response.json();
-            
+
             // Recharger les données
             await loadData();
-            
+
             alert(`Compression terminée: ${result.files_compressed.length} fichiers compressés avec ${result.compression_ratio.toFixed(1)}% de réduction`);
 
         } catch (err: any) {
@@ -303,7 +303,7 @@ const LogsOptimizationDashboard: React.FC = () => {
     const rebuildIndex = async () => {
         try {
             setRebuildInProgress(true);
-            
+
             const response = await fetch('/api/v1/logs/optimization/index/rebuild', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -327,7 +327,7 @@ const LogsOptimizationDashboard: React.FC = () => {
     const purgeOldLogs = async () => {
         try {
             setPurgeInProgress(true);
-            
+
             const response = await fetch(`/api/v1/logs/optimization/maintenance/purge?days_to_keep=${retentionDays}`, {
                 method: 'POST'
             });
@@ -335,10 +335,10 @@ const LogsOptimizationDashboard: React.FC = () => {
             if (!response.ok) throw new Error('Erreur lors de la purge');
 
             const result = await response.json();
-            
+
             // Recharger les données
             await loadData();
-            
+
             alert(`Purge programmée: ${result.logs_to_remove} logs seront supprimés`);
 
         } catch (err: any) {
@@ -357,10 +357,10 @@ const LogsOptimizationDashboard: React.FC = () => {
             if (!response.ok) throw new Error('Erreur lors du vidage du cache');
 
             const result = await response.json();
-            
+
             // Recharger les données
             await loadData();
-            
+
             alert(`Cache vidé: ${result.entries_cleared} entrées supprimées`);
 
         } catch (err: any) {
@@ -404,9 +404,8 @@ const LogsOptimizationDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <span className={`px-3 py-1 rounded text-sm font-medium ${
-                        stats?.is_running ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }`}>
+                    <span className={`px-3 py-1 rounded text-sm font-medium ${stats?.is_running ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
                         {stats?.is_running ? "Service actif" : "Service inactif"}
                     </span>
                     <button
@@ -457,7 +456,7 @@ const LogsOptimizationDashboard: React.FC = () => {
                 {performance && (
                     <RecommendationsPanel recommendations={performance.recommendations} />
                 )}
-                
+
                 {storageUsage && (
                     <StorageBreakdown storageUsage={storageUsage} />
                 )}

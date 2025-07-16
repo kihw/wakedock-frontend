@@ -3,7 +3,16 @@
   import { onMount } from 'svelte';
   import type { Writable } from 'svelte/store';
   import { page } from '$app/stores';
-  import { Home, Container, Activity, BarChart3, Users, Shield, Settings, Zap } from 'lucide-svelte';
+  import {
+    Home,
+    Container,
+    Activity,
+    BarChart3,
+    Users,
+    Shield,
+    Settings,
+    Zap,
+  } from 'lucide-svelte';
   import { manageFocus, announceToScreenReader, trapFocus } from '$lib/utils/accessibility';
   import { sanitizeInput } from '$lib/utils/validation';
 

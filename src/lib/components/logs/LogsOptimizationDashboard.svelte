@@ -77,7 +77,7 @@
       error.set(null);
     } catch (err) {
       console.error('Erreur lors de la récupération des stats:', err);
-      error.set('Impossible de charger les statistiques d\'optimisation');
+      error.set("Impossible de charger les statistiques d'optimisation");
     }
   }
 
@@ -101,14 +101,14 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           compression_type: 'lz4',
-          min_age_hours: 24
-        })
+          min_age_hours: 24,
+        }),
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       // Actualiser les stats après compression
       await fetchOptimizationStats();
     } catch (err) {
@@ -123,30 +123,30 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           full_rebuild: false,
-          preserve_cache: true
-        })
+          preserve_cache: true,
+        }),
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       await fetchOptimizationStats();
     } catch (err) {
-      console.error('Erreur lors de la reconstruction d\'index:', err);
+      console.error("Erreur lors de la reconstruction d'index:", err);
     }
   }
 
   async function clearCache() {
     try {
       const response = await fetch('/api/v1/logs-optimization/cache/clear', {
-        method: 'DELETE'
+        method: 'DELETE',
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       await fetchOptimizationStats();
     } catch (err) {
       console.error('Erreur lors du vidage du cache:', err);
@@ -156,10 +156,7 @@
   // Lifecycle
   onMount(async () => {
     loading.set(true);
-    await Promise.all([
-      fetchOptimizationStats(),
-      fetchRecommendations()
-    ]);
+    await Promise.all([fetchOptimizationStats(), fetchRecommendations()]);
     loading.set(false);
 
     // Actualisation automatique toutes les 30 secondes
@@ -183,10 +180,13 @@
     <div class="error-container">
       <Icon name="alert-circle" size="24" />
       <p>{$error}</p>
-      <button class="retry-btn" on:click={() => {
-        loading.set(true);
-        fetchOptimizationStats().finally(() => loading.set(false));
-      }}>
+      <button
+        class="retry-btn"
+        on:click={() => {
+          loading.set(true);
+          fetchOptimizationStats().finally(() => loading.set(false));
+        }}
+      >
         Réessayer
       </button>
     </div>
@@ -338,13 +338,17 @@
         <div class="storage-breakdown">
           <div class="storage-item">
             <div class="storage-bar">
-              <div 
-                class="storage-fill compressed" 
-                style="width: {($stats.storage_stats.compressed_size / $stats.storage_stats.total_size) * 100}%"
+              <div
+                class="storage-fill compressed"
+                style="width: {($stats.storage_stats.compressed_size /
+                  $stats.storage_stats.total_size) *
+                  100}%"
               ></div>
-              <div 
-                class="storage-fill uncompressed" 
-                style="width: {($stats.storage_stats.uncompressed_size / $stats.storage_stats.total_size) * 100}%"
+              <div
+                class="storage-fill uncompressed"
+                style="width: {($stats.storage_stats.uncompressed_size /
+                  $stats.storage_stats.total_size) *
+                  100}%"
               ></div>
             </div>
             <div class="storage-legend">
@@ -373,7 +377,9 @@
           </div>
           <div class="stat-item">
             <span class="stat-label">Total compressé:</span>
-            <span class="stat-value">{$stats.compression_stats.total_compressed.toLocaleString()}</span>
+            <span class="stat-value"
+              >{$stats.compression_stats.total_compressed.toLocaleString()}</span
+            >
           </div>
           <div class="stat-item">
             <span class="stat-label">Espace économisé:</span>
@@ -392,7 +398,8 @@
     margin: 0 auto;
   }
 
-  .loading-container, .error-container {
+  .loading-container,
+  .error-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -412,8 +419,12 @@
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   .retry-btn {

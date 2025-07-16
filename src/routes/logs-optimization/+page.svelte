@@ -16,7 +16,10 @@
 
 <svelte:head>
   <title>Optimisation des Logs - WakeDock</title>
-  <meta name="description" content="Tableau de bord d'optimisation et de performance des logs WakeDock" />
+  <meta
+    name="description"
+    content="Tableau de bord d'optimisation et de performance des logs WakeDock"
+  />
 </svelte:head>
 
 <div class="logs-optimization-page">
@@ -26,7 +29,8 @@
       Optimisation des Logs
     </h1>
     <p class="page-description">
-      Optimisez les performances, gérez la compression et surveillez l'utilisation du stockage de vos logs.
+      Optimisez les performances, gérez la compression et surveillez l'utilisation du stockage de
+      vos logs.
     </p>
   </div>
 

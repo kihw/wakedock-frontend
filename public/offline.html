@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WakeDock - Mode Hors Ligne</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .container {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3B82F6, #10B981, #F59E0B, #EF4444);
+        }
+
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .features {
+            text-align: left;
+            background: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .features h3 {
+            color: #374151;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .features ul {
+            list-style: none;
+        }
+
+        .features li {
+            color: #6b7280;
+            padding: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .features li::before {
+            content: '✓';
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            background: #3B82F6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: 48px; /* Touch-friendly */
+        }
+
+        .btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #fef3c7;
+            border-radius: 0.5rem;
+            color: #92400e;
+            font-weight: 500;
+        }
+
+        .connection-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ef4444;
+            animation: pulse 2s infinite;
+        }
+
+        .connection-indicator.online {
+            background: #10b981;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            }
+
+            .container {
+                background: #1f2937;
+                color: #f9fafb;
+            }
+
+            h1 {
+                color: #f9fafb;
+            }
+
+            .features {
+                background: #374151;
+            }
+
+            .features h3 {
+                color: #f9fafb;
+            }
+
+            .status {
+                background: #374151;
+                color: #fbbf24;
+            }
+        }
+
+        /* Animation d'entrée */
+        .container {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📡</div>
+        
+        <h1>Mode Hors Ligne</h1>
+        
+        <p class="subtitle">
+            Vous êtes actuellement déconnecté d'Internet. WakeDock fonctionne en mode hors ligne avec les fonctionnalités mises en cache.
+        </p>
+
+        <div class="features">
+            <h3>🚀 Fonctionnalités disponibles hors ligne :</h3>
+            <ul>
+                <li>Consultation des données mises en cache</li>
+                <li>Interface utilisateur complète</li>
+                <li>Paramètres et préférences</li>
+                <li>Historique des containers</li>
+                <li>Documentation locale</li>
+            </ul>
+        </div>
+
+        <div class="status">
+            <div class="connection-indicator" id="connectionIndicator"></div>
+            <span id="connectionStatus">Connexion interrompue</span>
+        </div>
+
+        <div class="buttons">
+            <button class="btn" onclick="checkConnection()">
+                🔄 Vérifier la connexion
+            </button>
+            
+            <button class="btn btn-secondary" onclick="goToCache()">
+                📱 Données en cache
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Vérification de la connexion
+        function checkConnection() {
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '⏳ Vérification...';
+            btn.disabled = true;
+
+            // Test de connexion
+            fetch('/api/v1/health', { 
+                method: 'GET',
+                cache: 'no-cache'
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Connexion rétablie
+                    updateConnectionStatus(true);
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1000);
+                } else {
+                    throw new Error('Connection failed');
+                }
+            })
+            .catch(() => {
+                // Toujours hors ligne
+                updateConnectionStatus(false);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        // Aller aux données en cache
+        function goToCache() {
+            // Rediriger vers la page avec données en cache
+            window.location.href = '/dashboard?offline=true';
+        }
+
+        // Mettre à jour le statut de connexion
+        function updateConnectionStatus(isOnline) {
+            const indicator = document.getElementById('connectionIndicator');
+            const status = document.getElementById('connectionStatus');
+            
+            if (isOnline) {
+                indicator.classList.add('online');
+                status.textContent = 'Connexion rétablie !';
+            } else {
+                indicator.classList.remove('online');
+                status.textContent = 'Connexion interrompue';
+            }
+        }
+
+        // Vérification automatique de la connexion
+        function autoCheckConnection() {
+            if (navigator.onLine) {
+                fetch('/api/v1/health', { 
+                    method: 'GET',
+                    cache: 'no-cache',
+                    signal: AbortSignal.timeout(5000) // Timeout 5s
+                })
+                .then(response => {
+                    if (response.ok) {
+                        updateConnectionStatus(true);
+                        setTimeout(() => {
+                            window.location.href = '/dashboard';
+                        }, 2000);
+                    }
+                })
+                .catch(() => {
+                    // Ignore les erreurs pour la vérification auto
+                });
+            }
+        }
+
+        // Écouter les changements de connexion
+        window.addEventListener('online', () => {
+            updateConnectionStatus(true);
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 1000);
+        });
+
+        window.addEventListener('offline', () => {
+            updateConnectionStatus(false);
+        });
+
+        // Vérification initiale
+        updateConnectionStatus(navigator.onLine);
+
+        // Vérification automatique toutes les 30 secondes
+        setInterval(autoCheckConnection, 30000);
+
+        // Service Worker pour la gestion du cache
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', event => {
+                if (event.data && event.data.type === 'CACHE_UPDATED') {
+                    // Notifier que de nouvelles données sont disponibles en cache
+                    const btn = document.querySelector('.btn-secondary');
+                    btn.innerHTML = '📱 Nouvelles données disponibles';
+                    btn.style.background = '#10b981';
+                }
+            });
+        }
+
+        // Gestion des raccourcis clavier
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                if (e.target.classList.contains('btn')) {
+                    e.target.click();
+                }
+            }
+            
+            // R pour refresh
+            if (e.key === 'r' || e.key === 'R') {
+                checkConnection();
+            }
+        });
+
+        // Feedback haptique sur mobile
+        if ('vibrate' in navigator) {
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    navigator.vibrate(50);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

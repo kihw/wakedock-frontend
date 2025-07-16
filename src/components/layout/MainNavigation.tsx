@@ -231,7 +231,7 @@ const defaultSections: NavigationSection[] = [
           {
             id: 'monitoring-alerts',
             label: 'Alerts',
-            href: '/monitoring/alerts',
+            href: '/alerts',
             icon: <Bell className="h-4 w-4" />,
             badge: 3
           }

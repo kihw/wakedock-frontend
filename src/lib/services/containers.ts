@@ -1,9 +1,7 @@
 /**
- * Containers API Service
- * Service pour la gestion des containers Docker
+ * Service API pour la gestion des containers Docker
  */
-
-import { BaseApiClient } from './base-client';
+import { api } from '../api';
 import type {
     Container,
     ContainerCreate,
@@ -12,52 +10,51 @@ import type {
     DockerImage,
     ImagePull,
     ContainerAction
-} from '../types/containers';
+} from '$lib/types/containers';
 
-export class ContainersApi extends BaseApiClient {
+export class ContainerService {
+    private baseUrl = '/api/v1';
 
     /**
      * Récupérer la liste des containers
      */
     async listContainers(all: boolean = false): Promise<Container[]> {
-        const query = all ? '?all=true' : '';
-        return this.request<Container[]>(`/containers${query}`);
+        const response = await api.get(`${this.baseUrl}/containers`, {
+            params: { all }
+        });
+        return response.data;
     }
 
     /**
      * Récupérer un container spécifique
      */
     async getContainer(containerId: string): Promise<Container> {
-        return this.request<Container>(`/containers/${containerId}`);
+        const response = await api.get(`${this.baseUrl}/containers/${containerId}`);
+        return response.data;
     }
 
     /**
      * Créer un nouveau container
      */
     async createContainer(containerData: ContainerCreate): Promise<Container> {
-        return this.request<Container>(`/containers`, {
-            method: 'POST',
-            body: JSON.stringify(containerData)
-        });
+        const response = await api.post(`${this.baseUrl}/containers`, containerData);
+        return response.data;
     }
 
     /**
      * Mettre à jour un container
      */
     async updateContainer(containerId: string, updates: ContainerUpdate): Promise<Container> {
-        return this.request<Container>(`/containers/${containerId}`, {
-            method: 'PUT',
-            body: JSON.stringify(updates)
-        });
+        const response = await api.put(`${this.baseUrl}/containers/${containerId}`, updates);
+        return response.data;
     }
 
     /**
      * Supprimer un container
      */
     async deleteContainer(containerId: string, force: boolean = false): Promise<void> {
-        const query = force ? '?force=true' : '';
-        return this.request<void>(`/containers/${containerId}${query}`, {
-            method: 'DELETE'
+        await api.delete(`${this.baseUrl}/containers/${containerId}`, {
+            params: { force }
         });
     }
 
@@ -65,106 +62,95 @@ export class ContainersApi extends BaseApiClient {
      * Démarrer un container
      */
     async startContainer(containerId: string): Promise<{ message: string }> {
-        return this.request<{ message: string }>(`/containers/${containerId}/start`, {
-            method: 'POST'
-        });
+        const response = await api.post(`${this.baseUrl}/containers/${containerId}/start`);
+        return response.data;
     }
 
     /**
      * Arrêter un container
      */
     async stopContainer(containerId: string, timeout: number = 10): Promise<{ message: string }> {
-        return this.request<{ message: string }>(`/containers/${containerId}/stop`, {
-            method: 'POST',
-            body: JSON.stringify({ timeout })
-        });
+        const response = await api.post(`${this.baseUrl}/containers/${containerId}/stop`, { timeout });
+        return response.data;
     }
 
     /**
      * Redémarrer un container
      */
     async restartContainer(containerId: string, timeout: number = 10): Promise<{ message: string }> {
-        return this.request<{ message: string }>(`/containers/${containerId}/restart`, {
-            method: 'POST',
-            body: JSON.stringify({ timeout })
-        });
+        const response = await api.post(`${this.baseUrl}/containers/${containerId}/restart`, { timeout });
+        return response.data;
     }
 
     /**
      * Récupérer les logs d'un container
      */
     async getContainerLogs(containerId: string, tail: number = 100, follow: boolean = false): Promise<{ logs: string }> {
-        const query = `?tail=${tail}&follow=${follow}`;
-        return this.request<{ logs: string }>(`/containers/${containerId}/logs${query}`);
+        const response = await api.get(`${this.baseUrl}/containers/${containerId}/logs`, {
+            params: { tail, follow }
+        });
+        return response.data;
     }
 
     /**
      * Récupérer les statistiques d'un container
      */
     async getContainerStats(containerId: string): Promise<{ stats: ContainerStats }> {
-        return this.request<{ stats: ContainerStats }>(`/containers/${containerId}/stats`);
+        const response = await api.get(`${this.baseUrl}/containers/${containerId}/stats`);
+        return response.data;
     }
 
     /**
      * Télécharger les logs d'un container
      */
     async downloadContainerLogs(containerId: string, tail: number = 1000): Promise<Blob> {
-        const query = `?tail=${tail}`;
-        const response = await window.fetch(`${this.baseUrl}/containers/${containerId}/logs/download${query}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': this.token ? `Bearer ${this.token}` : ''
-            }
+        const response = await api.get(`${this.baseUrl}/containers/${containerId}/logs/download`, {
+            params: { tail },
+            responseType: 'blob'
         });
-
-        if (!response.ok) {
-            throw new Error('Failed to download logs');
-        }
-
-        return response.blob();
+        return response.data;
     }
 
     /**
      * Vider les logs d'un container
      */
     async clearContainerLogs(containerId: string): Promise<{ message: string }> {
-        return this.request<{ message: string }>(`/containers/${containerId}/logs/clear`, {
-            method: 'POST'
-        });
+        const response = await api.post(`${this.baseUrl}/containers/${containerId}/logs/clear`);
+        return response.data;
     }
 
     /**
      * Récupérer la liste des images Docker
      */
     async listImages(all: boolean = false): Promise<DockerImage[]> {
-        const query = all ? '?all=true' : '';
-        return this.request<DockerImage[]>(`/images${query}`);
+        const response = await api.get(`${this.baseUrl}/images`, {
+            params: { all }
+        });
+        return response.data;
     }
 
     /**
      * Récupérer une image spécifique
      */
     async getImage(imageId: string): Promise<DockerImage> {
-        return this.request<DockerImage>(`/images/${imageId}`);
+        const response = await api.get(`${this.baseUrl}/images/${imageId}`);
+        return response.data;
     }
 
     /**
      * Télécharger une image Docker
      */
     async pullImage(imageData: ImagePull): Promise<DockerImage> {
-        return this.request<DockerImage>(`/images/pull`, {
-            method: 'POST',
-            body: JSON.stringify(imageData)
-        });
+        const response = await api.post(`${this.baseUrl}/images/pull`, imageData);
+        return response.data;
     }
 
     /**
      * Supprimer une image Docker
      */
     async deleteImage(imageId: string, force: boolean = false): Promise<void> {
-        const query = force ? '?force=true' : '';
-        return this.request<void>(`/images/${imageId}${query}`, {
-            method: 'DELETE'
+        await api.delete(`${this.baseUrl}/images/${imageId}`, {
+            params: { force }
         });
     }
 
@@ -172,15 +158,18 @@ export class ContainersApi extends BaseApiClient {
      * Rechercher des images sur Docker Hub
      */
     async searchImages(term: string, limit: number = 25): Promise<{ results: any[] }> {
-        const query = `?limit=${limit}`;
-        return this.request<{ results: any[] }>(`/images/search/${term}${query}`);
+        const response = await api.get(`${this.baseUrl}/images/search/${term}`, {
+            params: { limit }
+        });
+        return response.data;
     }
 
     /**
      * Récupérer l'historique d'une image
      */
     async getImageHistory(imageId: string): Promise<{ history: any[] }> {
-        return this.request<{ history: any[] }>(`/images/${imageId}/history`);
+        const response = await api.get(`${this.baseUrl}/images/${imageId}/history`);
+        return response.data;
     }
 
     /**
@@ -192,3 +181,6 @@ export class ContainersApi extends BaseApiClient {
         return new WebSocket(wsUrl);
     }
 }
+
+// Instance singleton du service
+export const containerService = new ContainerService();

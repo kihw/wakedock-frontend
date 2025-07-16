@@ -22,7 +22,7 @@ import { ApiClient } from './api-client';
 export const api = new ApiClient();
 
 // Re-export types for backward compatibility
-export type { 
+export type {
   ApiError,
   User,
   LoginRequest,

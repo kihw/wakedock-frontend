@@ -3,21 +3,27 @@
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { 
-    containers, 
-    filteredContainers, 
-    containerFilter, 
-    searchQuery, 
-    isLoadingContainers, 
+  import {
+    containers,
+    filteredContainers,
+    containerFilter,
+    searchQuery,
+    isLoadingContainers,
     containerError,
-    containerActions 
+    containerActions,
   } from '$lib/stores/containers';
   import ContainerCard from './ContainerCard.svelte';
   import ContainerCreateModal from './ContainerCreateModal.svelte';
   import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
   import { Button } from '$lib/components/ui/button';
   import { Input } from '$lib/components/ui/input';
-  import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '$lib/components/ui/select';
+  import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from '$lib/components/ui/select';
   import { AlertCircle, Plus, RefreshCw } from 'lucide-svelte';
 
   let showCreateModal = false;
@@ -50,11 +56,7 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold">Containers Docker</h1>
     <div class="flex space-x-2">
-      <Button 
-        variant="outline" 
-        on:click={handleRefresh}
-        disabled={$isLoadingContainers}
-      >
+      <Button variant="outline" on:click={handleRefresh} disabled={$isLoadingContainers}>
         <RefreshCw class="w-4 h-4 mr-2" class:animate-spin={$isLoadingContainers} />
         Actualiser
       </Button>
@@ -96,9 +98,9 @@
       <div class="flex items-center">
         <AlertCircle class="w-5 h-5 text-red-500 mr-2" />
         <span class="text-red-700">{$containerError}</span>
-        <Button 
-          variant="ghost" 
-          size="sm" 
+        <Button
+          variant="ghost"
+          size="sm"
           class="ml-auto text-red-600"
           on:click={containerActions.clearError}
         >
@@ -119,18 +121,17 @@
       <div class="w-24 h-24 mx-auto mb-4 text-gray-300">
         <!-- Icône de container vide -->
         <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M2 3v18h20V3H2zm18 16H4V5h16v14z"/>
-          <path d="M6 7h12v2H6zm0 4h12v2H6zm0 4h8v2H6z"/>
+          <path d="M2 3v18h20V3H2zm18 16H4V5h16v14z" />
+          <path d="M6 7h12v2H6zm0 4h12v2H6zm0 4h8v2H6z" />
         </svg>
       </div>
       <h3 class="text-lg font-medium text-gray-900 mb-2">
         {$searchQuery || $containerFilter !== 'all' ? 'Aucun container trouvé' : 'Aucun container'}
       </h3>
       <p class="text-gray-500 mb-4">
-        {$searchQuery || $containerFilter !== 'all' 
+        {$searchQuery || $containerFilter !== 'all'
           ? 'Essayez de modifier vos critères de recherche.'
-          : 'Commencez par créer votre premier container Docker.'
-        }
+          : 'Commencez par créer votre premier container Docker.'}
       </p>
       {#if !$searchQuery && $containerFilter === 'all'}
         <Button on:click={handleCreateContainer}>
@@ -146,14 +147,20 @@
         <ContainerCard {container} />
       {/each}
     </div>
-    
+
     <!-- Statistiques -->
     <div class="mt-8 flex justify-center">
       <div class="bg-gray-50 rounded-lg p-4">
         <div class="flex space-x-6 text-sm text-gray-600">
           <span>Total: <strong>{$containers.length}</strong></span>
-          <span>En cours: <strong>{$containers.filter(c => c.status === 'running').length}</strong></span>
-          <span>Arrêtés: <strong>{$containers.filter(c => c.status !== 'running').length}</strong></span>
+          <span
+            >En cours: <strong>{$containers.filter((c) => c.status === 'running').length}</strong
+            ></span
+          >
+          <span
+            >Arrêtés: <strong>{$containers.filter((c) => c.status !== 'running').length}</strong
+            ></span
+          >
         </div>
       </div>
     </div>
@@ -162,8 +169,8 @@
 
 <!-- Modal de création -->
 {#if showCreateModal}
-  <ContainerCreateModal 
-    on:close={() => showCreateModal = false}
+  <ContainerCreateModal
+    on:close={() => (showCreateModal = false)}
     on:created={() => {
       showCreateModal = false;
       containerActions.loadContainers();

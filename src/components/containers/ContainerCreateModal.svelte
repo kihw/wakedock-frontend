@@ -25,7 +25,7 @@
     volumes: [{ hostPath: '', containerPath: '' }],
     command: '',
     workingDir: '',
-    restartPolicy: 'no'
+    restartPolicy: 'no',
   };
 
   let isSubmitting = false;
@@ -73,7 +73,7 @@
     }
 
     if (!formData.image.trim()) {
-      errors.image = 'L\'image Docker est requise';
+      errors.image = "L'image Docker est requise";
     }
 
     // Valider les variables d'environnement
@@ -120,17 +120,17 @@
         name: formData.name.trim(),
         image: formData.image.trim(),
         environment: formData.environment
-          .filter(env => env.key && env.value)
+          .filter((env) => env.key && env.value)
           .reduce((acc, env) => ({ ...acc, [env.key]: env.value }), {}),
         ports: formData.ports
-          .filter(port => port.containerPort && port.hostPort)
+          .filter((port) => port.containerPort && port.hostPort)
           .reduce((acc, port) => ({ ...acc, [port.containerPort]: port.hostPort }), {}),
         volumes: formData.volumes
-          .filter(volume => volume.hostPath && volume.containerPath)
+          .filter((volume) => volume.hostPath && volume.containerPath)
           .reduce((acc, volume) => ({ ...acc, [volume.hostPath]: volume.containerPath }), {}),
         command: formData.command.trim() || undefined,
         working_dir: formData.workingDir.trim() || undefined,
-        restart_policy: formData.restartPolicy
+        restart_policy: formData.restartPolicy,
       };
 
       if (editMode) {
@@ -164,12 +164,14 @@
           <h2 class="text-xl font-semibold">
             {editMode ? 'Modifier le container' : 'Créer un nouveau container'}
           </h2>
-          <button 
-            on:click={handleClose}
-            class="text-gray-400 hover:text-gray-600"
-          >
+          <button on:click={handleClose} class="text-gray-400 hover:text-gray-600">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -263,7 +265,12 @@
                   class="px-3 py-2 text-red-600 hover:text-red-800"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
                   </svg>
                 </button>
               </div>
@@ -274,9 +281,7 @@
         <!-- Ports -->
         <div>
           <div class="flex items-center justify-between mb-3">
-            <label class="block text-sm font-medium text-gray-700">
-              Mapping des ports
-            </label>
+            <label class="block text-sm font-medium text-gray-700"> Mapping des ports </label>
             <button
               type="button"
               on:click={addPort}
@@ -311,7 +316,12 @@
                   class="px-3 py-2 text-red-600 hover:text-red-800"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
                   </svg>
                 </button>
               </div>
@@ -325,9 +335,7 @@
         <!-- Volumes -->
         <div>
           <div class="flex items-center justify-between mb-3">
-            <label class="block text-sm font-medium text-gray-700">
-              Volumes
-            </label>
+            <label class="block text-sm font-medium text-gray-700"> Volumes </label>
             <button
               type="button"
               on:click={addVolume}
@@ -360,7 +368,12 @@
                   class="px-3 py-2 text-red-600 hover:text-red-800"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
                   </svg>
                 </button>
               </div>
@@ -431,9 +444,25 @@
           disabled={isSubmitting}
         >
           {#if isSubmitting}
-            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <svg
+              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
           {/if}
           {editMode ? 'Modifier' : 'Créer'}

@@ -8,22 +8,22 @@
   import { Button } from '$lib/components/ui/button';
   import { Badge } from '$lib/components/ui/badge';
   import { Card, CardContent, CardHeader } from '$lib/components/ui/card';
-  import { 
-    Play, 
-    Square, 
-    RotateCcw, 
-    Trash2, 
-    MoreVertical, 
+  import {
+    Play,
+    Square,
+    RotateCcw,
+    Trash2,
+    MoreVertical,
     Terminal,
     Info,
-    Settings 
+    Settings,
   } from 'lucide-svelte';
-  import { 
-    DropdownMenu, 
-    DropdownMenuContent, 
-    DropdownMenuItem, 
-    DropdownMenuSeparator, 
-    DropdownMenuTrigger 
+  import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
   } from '$lib/components/ui/dropdown-menu';
 
   export let container: Container;
@@ -39,11 +39,16 @@
 
   function getStatusColor(status: string): string {
     switch (status) {
-      case 'running': return 'bg-green-100 text-green-800';
-      case 'exited': return 'bg-red-100 text-red-800';
-      case 'paused': return 'bg-yellow-100 text-yellow-800';
-      case 'created': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'running':
+        return 'bg-green-100 text-green-800';
+      case 'exited':
+        return 'bg-red-100 text-red-800';
+      case 'paused':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'created':
+        return 'bg-blue-100 text-blue-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   }
 
@@ -53,7 +58,7 @@
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   }
 
@@ -61,7 +66,7 @@
     if (!container.ports || Object.keys(container.ports).length === 0) {
       return 'Aucun port exposé';
     }
-    
+
     const portMappings = Object.entries(container.ports)
       .map(([containerPort, hostPorts]) => {
         if (Array.isArray(hostPorts) && hostPorts.length > 0) {
@@ -151,7 +156,7 @@
       </div>
     </div>
   </CardHeader>
-  
+
   <CardContent class="pt-0">
     <div class="space-y-3">
       <!-- Informations du container -->
@@ -187,41 +192,22 @@
       <!-- Actions -->
       <div class="flex space-x-2 pt-2">
         {#if isRunning}
-          <Button 
-            variant="outline" 
-            size="sm" 
-            on:click={handleStop}
-            class="flex-1"
-          >
+          <Button variant="outline" size="sm" on:click={handleStop} class="flex-1">
             <Square class="w-4 h-4 mr-1" />
             Stop
           </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            on:click={handleRestart}
-            class="flex-1"
-          >
+          <Button variant="outline" size="sm" on:click={handleRestart} class="flex-1">
             <RotateCcw class="w-4 h-4 mr-1" />
             Restart
           </Button>
         {:else}
-          <Button 
-            variant="default" 
-            size="sm" 
-            on:click={handleStart}
-            class="flex-1"
-          >
+          <Button variant="default" size="sm" on:click={handleStart} class="flex-1">
             <Play class="w-4 h-4 mr-1" />
             Start
           </Button>
         {/if}
-        
-        <Button 
-          variant="outline" 
-          size="sm" 
-          on:click={handleViewLogs}
-        >
+
+        <Button variant="outline" size="sm" on:click={handleViewLogs}>
           <Terminal class="w-4 h-4" />
         </Button>
       </div>

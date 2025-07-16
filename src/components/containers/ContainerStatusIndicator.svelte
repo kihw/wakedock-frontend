@@ -30,7 +30,7 @@
           borderColor: 'border-green-200',
           text: 'En cours',
           icon: '●',
-          pulse: true
+          pulse: true,
         };
       case 'stopped':
       case 'exited':
@@ -40,7 +40,7 @@
           borderColor: 'border-red-200',
           text: 'Arrêté',
           icon: '■',
-          pulse: false
+          pulse: false,
         };
       case 'paused':
         return {
@@ -49,7 +49,7 @@
           borderColor: 'border-yellow-200',
           text: 'En pause',
           icon: '⏸',
-          pulse: false
+          pulse: false,
         };
       case 'created':
         return {
@@ -58,7 +58,7 @@
           borderColor: 'border-blue-200',
           text: 'Créé',
           icon: '○',
-          pulse: false
+          pulse: false,
         };
       case 'restarting':
         return {
@@ -67,7 +67,7 @@
           borderColor: 'border-orange-200',
           text: 'Redémarrage',
           icon: '↻',
-          pulse: true
+          pulse: true,
         };
       case 'dead':
         return {
@@ -76,7 +76,7 @@
           borderColor: 'border-gray-200',
           text: 'Mort',
           icon: '✕',
-          pulse: false
+          pulse: false,
         };
       default:
         return {
@@ -85,7 +85,7 @@
           borderColor: 'border-gray-200',
           text: 'Inconnu',
           icon: '?',
-          pulse: false
+          pulse: false,
         };
     }
   }
@@ -96,36 +96,33 @@
         return {
           container: 'px-2 py-1 text-xs',
           icon: 'text-xs',
-          text: 'text-xs'
+          text: 'text-xs',
         };
       case 'lg':
         return {
           container: 'px-4 py-2 text-base',
           icon: 'text-base',
-          text: 'text-base'
+          text: 'text-base',
         };
       default: // md
         return {
           container: 'px-3 py-1 text-sm',
           icon: 'text-sm',
-          text: 'text-sm'
+          text: 'text-sm',
         };
     }
   }
 </script>
 
-<div 
+<div
   class="inline-flex items-center rounded-full border {statusConfig.bgColor} {statusConfig.borderColor} {statusConfig.color} {sizeClasses.container}"
   class:animate-pulse={animated && statusConfig.pulse}
 >
-  <span 
-    class="mr-1 {sizeClasses.icon}"
-    class:animate-pulse={animated && statusConfig.pulse}
-  >
+  <span class="mr-1 {sizeClasses.icon}" class:animate-pulse={animated && statusConfig.pulse}>
     {statusConfig.icon}
   </span>
   {#if showText}
-    <span class="{sizeClasses.text}">
+    <span class={sizeClasses.text}>
       {statusConfig.text}
     </span>
   {/if}
@@ -133,14 +130,15 @@
 
 <style>
   @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
     }
     50% {
       opacity: 0.7;
     }
   }
-  
+
   .animate-pulse {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }

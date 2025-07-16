@@ -32,13 +32,13 @@ const ServiceDependencyVisualizer = () => {
       const response = await fetch(`/api/v1/compose/stacks/${stackId}/dependencies`);
       if (!response.ok) throw new Error('Failed to load dependency graph');
       const data = await response.json();
-      
+
       // Calculate positions for graph visualization
       const nodes = data.nodes.map((node: ServiceNode, index: number) => ({
         ...node,
         position: calculateNodePosition(index, data.nodes.length)
       }));
-      
+
       setGraph({ ...data, nodes });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -53,7 +53,7 @@ const ServiceDependencyVisualizer = () => {
     const centerX = 300;
     const centerY = 300;
     const angle = (index / total) * 2 * Math.PI;
-    
+
     return {
       x: centerX + radius * Math.cos(angle),
       y: centerY + radius * Math.sin(angle)
@@ -77,9 +77,8 @@ const ServiceDependencyVisualizer = () => {
     onClick: () => void;
   }) => (
     <div
-      className={`absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 ${
-        isSelected ? 'z-10' : 'z-0'
-      }`}
+      className={`absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 ${isSelected ? 'z-10' : 'z-0'
+        }`}
       style={{
         left: service.position?.x || 0,
         top: service.position?.y || 0
@@ -109,7 +108,7 @@ const ServiceDependencyVisualizer = () => {
   }) => {
     const fromNode = nodes.find(n => n.name === from);
     const toNode = nodes.find(n => n.name === to);
-    
+
     if (!fromNode?.position || !toNode?.position) return null;
 
     const dx = toNode.position.x - fromNode.position.x;
@@ -210,21 +209,19 @@ const ServiceDependencyVisualizer = () => {
         <div className="flex space-x-2">
           <button
             onClick={() => setViewMode('graph')}
-            className={`px-4 py-2 rounded ${
-              viewMode === 'graph' 
-                ? 'bg-blue-600 text-white' 
+            className={`px-4 py-2 rounded ${viewMode === 'graph'
+                ? 'bg-blue-600 text-white'
                 : 'bg-gray-200 text-gray-700'
-            }`}
+              }`}
           >
             Graph View
           </button>
           <button
             onClick={() => setViewMode('list')}
-            className={`px-4 py-2 rounded ${
-              viewMode === 'list' 
-                ? 'bg-blue-600 text-white' 
+            className={`px-4 py-2 rounded ${viewMode === 'list'
+                ? 'bg-blue-600 text-white'
                 : 'bg-gray-200 text-gray-700'
-            }`}
+              }`}
           >
             List View
           </button>
@@ -260,7 +257,7 @@ const ServiceDependencyVisualizer = () => {
                       nodes={graph.nodes}
                     />
                   ))}
-                  
+
                   {/* Service nodes */}
                   {graph.nodes.map((service) => (
                     <ServiceNode
@@ -285,20 +282,19 @@ const ServiceDependencyVisualizer = () => {
                         ({batch.length} service{batch.length !== 1 ? 's' : ''})
                       </span>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {batch.map((serviceName) => {
                         const service = graph.nodes.find(n => n.name === serviceName);
                         if (!service) return null;
-                        
+
                         return (
                           <div
                             key={serviceName}
-                            className={`p-3 border rounded cursor-pointer ${
-                              selectedService === serviceName
+                            className={`p-3 border rounded cursor-pointer ${selectedService === serviceName
                                 ? 'border-blue-500 bg-blue-50'
                                 : 'border-gray-200 hover:border-gray-300'
-                            }`}
+                              }`}
                             onClick={() => setSelectedService(serviceName)}
                           >
                             <div className="flex items-center">
@@ -411,7 +407,7 @@ const ServiceDependencyVisualizer = () => {
                   No Service Selected
                 </h3>
                 <p className="text-sm text-gray-500">
-                  {viewMode === 'graph' 
+                  {viewMode === 'graph'
                     ? 'Click on a service node to view its details'
                     : 'Click on a service in the list to view its details'
                   }

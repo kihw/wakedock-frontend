@@ -3,7 +3,7 @@
   import { onMount } from 'svelte';
   import type { Writable } from 'svelte/store';
   import { page } from '$app/stores';
-  import { Home, Container, Activity, BarChart3, Users, Shield, Settings } from 'lucide-svelte';
+  import { Home, Container, Activity, BarChart3, Users, Shield, Settings, Zap } from 'lucide-svelte';
   import { manageFocus, announceToScreenReader, trapFocus } from '$lib/utils/accessibility';
   import { sanitizeInput } from '$lib/utils/validation';
 
@@ -51,6 +51,13 @@
       icon: BarChart3,
       description: 'Usage insights',
       shortcut: '4',
+    },
+    {
+      label: 'Logs Optimization',
+      href: '/logs-optimization',
+      icon: Zap,
+      description: 'Performance & storage',
+      shortcut: '5',
     },
   ];
 

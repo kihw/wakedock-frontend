@@ -51,7 +51,7 @@ const EnvFileEditor = () => {
   // Save env file
   const saveEnvFile = async () => {
     if (!envFile) return;
-    
+
     setLoading(true);
     try {
       const requestData = {
@@ -75,7 +75,7 @@ const EnvFileEditor = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestData)
       });
-      
+
       if (!response.ok) throw new Error('Failed to save env file');
       const data = await response.json();
       setEnvFile(data);
@@ -90,7 +90,7 @@ const EnvFileEditor = () => {
   // Validate env file
   const validateEnvFile = async () => {
     if (!envFile) return;
-    
+
     setLoading(true);
     try {
       const requestData = {
@@ -114,7 +114,7 @@ const EnvFileEditor = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestData)
       });
-      
+
       if (!response.ok) throw new Error('Validation failed');
       const data = await response.json();
       setValidation(data);
@@ -232,11 +232,10 @@ const EnvFileEditor = () => {
       )}
 
       {validation && (
-        <div className={`mb-6 p-4 rounded-md ${
-          validation.is_valid 
-            ? 'bg-green-50 border border-green-200' 
+        <div className={`mb-6 p-4 rounded-md ${validation.is_valid
+            ? 'bg-green-50 border border-green-200'
             : 'bg-yellow-50 border border-yellow-200'
-        }`}>
+          }`}>
           <div className="flex items-center mb-2">
             {validation.is_valid ? (
               <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
@@ -247,10 +246,10 @@ const EnvFileEditor = () => {
               Validation {validation.is_valid ? 'Passed' : 'Issues Found'}
             </span>
           </div>
-          
+
           <div className="text-sm space-y-1">
             <div>Variables: {validation.variables_count} (Secrets: {validation.secret_variables_count})</div>
-            
+
             {validation.errors.length > 0 && (
               <div>
                 <strong className="text-red-700">Errors:</strong>
@@ -261,7 +260,7 @@ const EnvFileEditor = () => {
                 </ul>
               </div>
             )}
-            
+
             {validation.warnings.length > 0 && (
               <div>
                 <strong className="text-yellow-700">Warnings:</strong>
@@ -333,7 +332,7 @@ const EnvFileEditor = () => {
           {/* Variables list */}
           <div className="space-y-3">
             <h3 className="font-medium">Environment Variables ({Object.keys(envFile.variables).length})</h3>
-            
+
             {Object.entries(envFile.variables).length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 No environment variables defined
@@ -353,7 +352,7 @@ const EnvFileEditor = () => {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Value
@@ -366,7 +365,7 @@ const EnvFileEditor = () => {
                         disabled={variable.is_secret && !showSecrets}
                       />
                     </div>
-                    
+
                     <div className="lg:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Description (optional)
@@ -379,7 +378,7 @@ const EnvFileEditor = () => {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
-                    
+
                     <div className="lg:col-span-2 flex items-center justify-between">
                       <div className="flex space-x-4">
                         <label className="flex items-center">
@@ -391,7 +390,7 @@ const EnvFileEditor = () => {
                           />
                           <span className="text-sm">Secret variable</span>
                         </label>
-                        
+
                         <label className="flex items-center">
                           <input
                             type="checkbox"
@@ -402,7 +401,7 @@ const EnvFileEditor = () => {
                           <span className="text-sm">Required</span>
                         </label>
                       </div>
-                      
+
                       <button
                         onClick={() => removeVariable(name)}
                         className="text-red-600 hover:text-red-800"

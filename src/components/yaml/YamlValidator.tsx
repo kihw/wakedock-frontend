@@ -89,7 +89,7 @@ networks:
       const response = await fetch('/api/v1/compose/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           compose_content: content,
           validate_syntax: true,
           validate_services: true
@@ -111,7 +111,7 @@ networks:
 
         lines.forEach((line, index) => {
           const lineNum = index + 1;
-          
+
           // Check for basic YAML syntax issues
           if (line.includes('\t')) {
             errors.push({
@@ -221,7 +221,7 @@ networks:
       } else if (warningLines.has(index)) {
         className = 'bg-yellow-100 border-l-4 border-yellow-500';
       }
-      
+
       return (
         <div key={index} className={`${className} px-2`}>
           {line || ' '}
@@ -284,20 +284,18 @@ networks:
 
       {/* Validation Status */}
       {validation && (
-        <div className={`mb-6 p-4 rounded-md border ${
-          validation.is_valid 
-            ? 'bg-green-50 border-green-200' 
+        <div className={`mb-6 p-4 rounded-md border ${validation.is_valid
+            ? 'bg-green-50 border-green-200'
             : 'bg-red-50 border-red-200'
-        }`}>
+          }`}>
           <div className="flex items-center mb-2">
             {validation.is_valid ? (
               <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
             ) : (
               <XCircle className="h-5 w-5 text-red-400 mr-2" />
             )}
-            <span className={`font-medium ${
-              validation.is_valid ? 'text-green-800' : 'text-red-800'
-            }`}>
+            <span className={`font-medium ${validation.is_valid ? 'text-green-800' : 'text-red-800'
+              }`}>
               {validation.is_valid ? 'Valid YAML' : 'Invalid YAML'}
             </span>
           </div>
@@ -333,26 +331,24 @@ networks:
               <div className="flex space-x-2">
                 <button
                   onClick={() => setActiveTab('editor')}
-                  className={`px-3 py-1 rounded text-sm ${
-                    activeTab === 'editor'
+                  className={`px-3 py-1 rounded text-sm ${activeTab === 'editor'
                       ? 'bg-blue-100 text-blue-700'
                       : 'text-gray-600 hover:text-gray-800'
-                  }`}
+                    }`}
                 >
                   Editor
                 </button>
                 <button
                   onClick={() => setActiveTab('preview')}
-                  className={`px-3 py-1 rounded text-sm ${
-                    activeTab === 'preview'
+                  className={`px-3 py-1 rounded text-sm ${activeTab === 'preview'
                       ? 'bg-blue-100 text-blue-700'
                       : 'text-gray-600 hover:text-gray-800'
-                  }`}
+                    }`}
                 >
                   Preview
                 </button>
               </div>
-              
+
               {loading && (
                 <div className="text-sm text-gray-500">Validating...</div>
               )}
@@ -365,7 +361,7 @@ networks:
                   <div className="bg-gray-50 px-3 py-4 text-sm text-gray-500 font-mono select-none border-r border-gray-200">
                     <pre className="whitespace-pre">{getLineNumbers()}</pre>
                   </div>
-                  
+
                   {/* Editor */}
                   <div className="flex-1">
                     <textarea
@@ -383,7 +379,7 @@ networks:
                   <div className="bg-gray-50 px-3 py-4 text-sm text-gray-500 font-mono select-none border-r border-gray-200">
                     <pre className="whitespace-pre">{getLineNumbers()}</pre>
                   </div>
-                  
+
                   {/* Highlighted content */}
                   <div className="flex-1 p-4 font-mono text-sm whitespace-pre overflow-auto h-96">
                     {getHighlightedContent()}
@@ -400,7 +396,7 @@ networks:
             <div className="p-4 border-b border-gray-200">
               <h3 className="text-lg font-medium">Validation Issues</h3>
             </div>
-            
+
             <div className="max-h-96 overflow-y-auto">
               {!validation ? (
                 <div className="p-4 text-center text-gray-500">
@@ -429,7 +425,7 @@ networks:
                       </div>
                     </div>
                   ))}
-                  
+
                   {/* Warnings */}
                   {validation.warnings.map((warning, index) => (
                     <div key={`warning-${index}`} className="p-4">
@@ -456,7 +452,7 @@ networks:
             <div className="p-4 border-b border-gray-200">
               <h3 className="text-lg font-medium">Quick Actions</h3>
             </div>
-            
+
             <div className="p-4 space-y-3">
               <button
                 onClick={() => validateYaml(yamlContent)}
@@ -465,14 +461,14 @@ networks:
               >
                 Re-validate
               </button>
-              
+
               <button
                 onClick={loadSample}
                 className="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
               >
                 Load Sample
               </button>
-              
+
               <button
                 onClick={() => {
                   const formatted = yamlContent

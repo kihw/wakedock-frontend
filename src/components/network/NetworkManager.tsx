@@ -67,9 +67,9 @@ const NetworkManager = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(createForm)
       });
-      
+
       if (!response.ok) throw new Error('Failed to create network');
-      
+
       setShowCreateDialog(false);
       setCreateForm({ name: '', driver: 'bridge' });
       await fetchNetworks();
@@ -83,15 +83,15 @@ const NetworkManager = () => {
   // Delete network
   const deleteNetwork = async (networkId: string) => {
     if (!confirm('Are you sure you want to delete this network?')) return;
-    
+
     setLoading(true);
     try {
       const response = await fetch(`/api/v1/networks/${networkId}`, {
         method: 'DELETE'
       });
-      
+
       if (!response.ok) throw new Error('Failed to delete network');
-      
+
       if (selectedNetwork?.id === networkId) {
         setSelectedNetwork(null);
       }
@@ -119,7 +119,7 @@ const NetworkManager = () => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <h3 className="text-lg font-medium mb-4">Create Network</h3>
-        
+
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -133,7 +133,7 @@ const NetworkManager = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Driver
@@ -149,7 +149,7 @@ const NetworkManager = () => {
               <option value="none">None</option>
             </select>
           </div>
-          
+
           {createForm.driver === 'bridge' && (
             <>
               <div>
@@ -164,7 +164,7 @@ const NetworkManager = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Gateway (optional)
@@ -180,7 +180,7 @@ const NetworkManager = () => {
             </>
           )}
         </div>
-        
+
         <div className="flex justify-end space-x-3 mt-6">
           <button
             onClick={() => setShowCreateDialog(false)}
@@ -242,7 +242,7 @@ const NetworkManager = () => {
             <div className="p-4 border-b border-gray-200">
               <h2 className="text-lg font-medium">Networks ({networks.length})</h2>
             </div>
-            
+
             <div className="divide-y divide-gray-200 max-h-96 overflow-y-auto">
               {loading && networks.length === 0 ? (
                 <div className="p-4 text-center text-gray-500">Loading...</div>
@@ -252,11 +252,10 @@ const NetworkManager = () => {
                 networks.map((network) => (
                   <div
                     key={network.id}
-                    className={`p-4 cursor-pointer transition-colors ${
-                      selectedNetwork?.id === network.id
+                    className={`p-4 cursor-pointer transition-colors ${selectedNetwork?.id === network.id
                         ? 'bg-blue-50 border-r-2 border-r-blue-500'
                         : 'hover:bg-gray-50'
-                    }`}
+                      }`}
                     onClick={() => setSelectedNetwork(network)}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -265,7 +264,7 @@ const NetworkManager = () => {
                         {network.driver}
                       </span>
                     </div>
-                    
+
                     <div className="text-sm text-gray-600">
                       <div className="flex items-center">
                         <Network className="w-4 h-4 mr-1" />
@@ -276,7 +275,7 @@ const NetworkManager = () => {
                         <span>{network.containers.length} containers</span>
                       </div>
                     </div>
-                    
+
                     {network.name !== 'bridge' && network.name !== 'host' && network.name !== 'none' && (
                       <div className="mt-2">
                         <button
@@ -315,7 +314,7 @@ const NetworkManager = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-6 space-y-6">
                 {/* Basic Info */}
                 <div>
@@ -343,7 +342,7 @@ const NetworkManager = () => {
                         <label className="block text-gray-600 mb-1">IPAM Driver</label>
                         <span className="text-sm">{selectedNetwork.ipam.driver}</span>
                       </div>
-                      
+
                       {selectedNetwork.ipam.config.map((config, index) => (
                         <div key={index} className="bg-gray-50 p-3 rounded">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -367,7 +366,7 @@ const NetworkManager = () => {
                   <h3 className="text-lg font-medium mb-3">
                     Connected Containers ({selectedNetwork.containers.length})
                   </h3>
-                  
+
                   {selectedNetwork.containers.length === 0 ? (
                     <div className="text-center py-8 text-gray-500">
                       No containers connected to this network

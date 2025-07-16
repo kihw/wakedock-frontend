@@ -4,13 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Upload, 
-  Play, 
-  Square, 
-  Trash2, 
-  FileText, 
-  Settings, 
+import {
+  Upload,
+  Play,
+  Square,
+  Trash2,
+  FileText,
+  Settings,
   Network,
   Database,
   Globe,
@@ -93,7 +93,7 @@ const ComposeStackManager = () => {
   // Delete stack
   const deleteStack = async (stackId: string) => {
     if (!confirm('Are you sure you want to delete this stack?')) return;
-    
+
     setLoading(true);
     try {
       const response = await fetch(`/api/v1/compose/stacks/${stackId}`, {
@@ -142,20 +142,20 @@ const ComposeStackManager = () => {
           <h4 className="font-medium">{service.name}</h4>
           <StatusBadge status={service.status} />
         </div>
-        
+
         <div className="text-sm text-gray-600 space-y-1">
           <div className="flex items-center">
             <Database className="w-4 h-4 mr-2" />
             <span>{service.image}</span>
           </div>
-          
+
           {service.ports.length > 0 && (
             <div className="flex items-center">
               <Globe className="w-4 h-4 mr-2" />
               <span>{service.ports.join(', ')}</span>
             </div>
           )}
-          
+
           {service.depends_on.length > 0 && (
             <div className="flex items-center">
               <Network className="w-4 h-4 mr-2" />
@@ -210,13 +210,12 @@ const ComposeStackManager = () => {
               ) : (
                 <div className="space-y-2">
                   {stacks.map((stack) => (
-                    <Card 
+                    <Card
                       key={stack.id}
-                      className={`cursor-pointer transition-colors ${
-                        selectedStack?.id === stack.id 
-                          ? 'border-blue-500 bg-blue-50' 
+                      className={`cursor-pointer transition-colors ${selectedStack?.id === stack.id
+                          ? 'border-blue-500 bg-blue-50'
                           : 'hover:bg-gray-50'
-                      }`}
+                        }`}
                       onClick={() => setSelectedStack(stack)}
                     >
                       <CardContent className="p-4">
@@ -224,16 +223,16 @@ const ComposeStackManager = () => {
                           <h3 className="font-medium">{stack.name}</h3>
                           <StatusBadge status={stack.status} />
                         </div>
-                        
+
                         <div className="text-sm text-gray-600">
                           <div>{stack.services.length} services</div>
                           <div>Created: {new Date(stack.created_at).toLocaleDateString()}</div>
                         </div>
-                        
+
                         <div className="flex space-x-2 mt-3">
                           {stack.status === 'stopped' ? (
-                            <Button 
-                              size="sm" 
+                            <Button
+                              size="sm"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 deployStack(stack.id);
@@ -244,8 +243,8 @@ const ComposeStackManager = () => {
                               Deploy
                             </Button>
                           ) : (
-                            <Button 
-                              size="sm" 
+                            <Button
+                              size="sm"
                               variant="outline"
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -257,9 +256,9 @@ const ComposeStackManager = () => {
                               Stop
                             </Button>
                           )}
-                          
-                          <Button 
-                            size="sm" 
+
+                          <Button
+                            size="sm"
                             variant="destructive"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -301,7 +300,7 @@ const ComposeStackManager = () => {
                   </div>
                 </div>
               </CardHeader>
-              
+
               <CardContent>
                 <Tabs defaultValue="services" className="w-full">
                   <TabsList className="grid w-full grid-cols-3">
@@ -309,7 +308,7 @@ const ComposeStackManager = () => {
                     <TabsTrigger value="networks">Networks</TabsTrigger>
                     <TabsTrigger value="volumes">Volumes</TabsTrigger>
                   </TabsList>
-                  
+
                   <TabsContent value="services" className="mt-4">
                     <div className="space-y-2">
                       {selectedStack.services.map((service) => (
@@ -317,13 +316,13 @@ const ComposeStackManager = () => {
                       ))}
                     </div>
                   </TabsContent>
-                  
+
                   <TabsContent value="networks" className="mt-4">
                     <div className="text-center py-8 text-gray-500">
                       Networks management coming soon...
                     </div>
                   </TabsContent>
-                  
+
                   <TabsContent value="volumes" className="mt-4">
                     <div className="text-center py-8 text-gray-500">
                       Volumes management coming soon...

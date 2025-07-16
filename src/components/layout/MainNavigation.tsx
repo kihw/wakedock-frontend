@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
-import { 
+import {
   ChevronDown,
   ChevronRight,
   Home,
@@ -308,7 +308,7 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
   const [isSticky, setIsSticky] = useState(false)
   const navRef = useRef<HTMLDivElement>(null)
   const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({})
-  
+
   const sizeClasses = {
     sm: {
       item: 'px-2 py-1 text-sm',
@@ -326,7 +326,7 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
       badge: 'px-2 py-1 text-sm'
     }
   }
-  
+
   const variantClasses = {
     default: {
       container: 'bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800',
@@ -353,27 +353,27 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
       dropdown: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg'
     }
   }
-  
+
   const currentVariant = variantClasses[variant]
   const currentSize = sizeClasses[size]
-  
+
   // Handle sticky behavior
   useEffect(() => {
     if (stickyTop === undefined) return
-    
+
     const handleScroll = () => {
       if (navRef.current) {
         const rect = navRef.current.getBoundingClientRect()
         setIsSticky(rect.top <= stickyTop)
       }
     }
-    
+
     window.addEventListener('scroll', handleScroll)
     handleScroll()
-    
+
     return () => window.removeEventListener('scroll', handleScroll)
   }, [stickyTop])
-  
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -381,28 +381,28 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
       const isInsideDropdown = Object.values(dropdownRefs.current).some(ref =>
         ref?.contains(target)
       )
-      
+
       if (!isInsideDropdown) {
         setActiveDropdown(null)
       }
     }
-    
+
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
-  
+
   const isItemActive = (item: NavigationItem): boolean => {
     if (item.active) return true
     if (currentPath) {
-      return item.href === currentPath || 
-             (item.children?.some(child => child.href === currentPath))
+      return item.href === currentPath ||
+        (item.children?.some(child => child.href === currentPath))
     }
     return false
   }
-  
+
   const handleItemClick = (item: NavigationItem, event?: React.MouseEvent) => {
     if (item.disabled) return
-    
+
     if (item.children && item.children.length > 0 && allowDropdowns) {
       event?.preventDefault()
       setActiveDropdown(activeDropdown === item.id ? null : item.id)
@@ -410,20 +410,20 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
       setActiveDropdown(null)
       onItemClick?.(item)
       item.onClick?.()
-      
+
       if (isItemActive(item)) {
         onActiveChange?.(item.id)
       }
     }
   }
-  
+
   const handleItemMouseEnter = (item: NavigationItem) => {
     setHoveredItem(item.id)
     if (item.children && item.children.length > 0 && allowDropdowns && orientation === 'horizontal') {
       setActiveDropdown(item.id)
     }
   }
-  
+
   const handleItemMouseLeave = () => {
     setHoveredItem(null)
     // Don't close dropdown immediately to allow mouse movement to dropdown
@@ -433,12 +433,12 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
       }
     }, 150)
   }
-  
+
   const renderDropdown = (item: NavigationItem) => {
     if (!item.children || item.children.length === 0 || !allowDropdowns) return null
-    
+
     const isOpen = activeDropdown === item.id
-    
+
     return (
       <div
         ref={el => dropdownRefs.current[item.id] = el}
@@ -462,8 +462,8 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
                 child.disabled
                   ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
                   : isItemActive(child)
-                  ? currentVariant.active
-                  : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+                    ? currentVariant.active
+                    : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
               )}
             >
               {showIcons && child.icon && (
@@ -471,11 +471,11 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
                   {child.icon}
                 </span>
               )}
-              
+
               <span className="flex-1 truncate">
                 {child.label}
               </span>
-              
+
               {showBadges && child.badge && (
                 <span className={cn(
                   'ml-auto font-medium rounded-full',
@@ -487,7 +487,7 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
                   {child.badge}
                 </span>
               )}
-              
+
               {child.external && (
                 <ExternalLink className="h-3 w-3 text-gray-400" />
               )}
@@ -497,11 +497,11 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
       </div>
     )
   }
-  
+
   const renderItem = (item: NavigationItem) => {
     const isActive = isItemActive(item)
     const hasDropdown = item.children && item.children.length > 0 && allowDropdowns
-    
+
     return (
       <div
         key={item.id}
@@ -518,8 +518,8 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
             item.disabled
               ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
               : isActive
-              ? currentVariant.active
-              : currentVariant.item,
+                ? currentVariant.active
+                : currentVariant.item,
             orientation === 'vertical' && 'w-full justify-start',
             variant === 'underline' && orientation === 'horizontal' && 'pb-3'
           )}
@@ -530,11 +530,11 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
               {item.icon}
             </span>
           )}
-          
+
           <span className="truncate">
             {item.label}
           </span>
-          
+
           {showBadges && item.badge && (
             <span className={cn(
               'ml-1 font-medium rounded-full',
@@ -548,7 +548,7 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
               {item.badge}
             </span>
           )}
-          
+
           {hasDropdown && (
             <ChevronDown className={cn(
               'h-3 w-3 transition-transform duration-200',
@@ -556,17 +556,17 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
               orientation === 'vertical' && 'ml-auto'
             )} />
           )}
-          
+
           {item.external && (
             <ExternalLink className="h-3 w-3 text-gray-400" />
           )}
         </button>
-        
+
         {renderDropdown(item)}
       </div>
     )
   }
-  
+
   const renderSection = (section: NavigationSection) => {
     return (
       <div key={section.id} className={cn(
@@ -577,12 +577,12 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
             {section.title}
           </h3>
         )}
-        
+
         {section.items.map(renderItem)}
       </div>
     )
   }
-  
+
   return (
     <nav
       ref={navRef}
@@ -602,7 +602,7 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
       )}>
         {sections.map(renderSection)}
       </div>
-      
+
       {/* Descriptions tooltip for horizontal layout */}
       {showDescriptions && orientation === 'horizontal' && hoveredItem && (
         <div className="absolute z-50 px-3 py-2 mt-2 text-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded shadow-lg pointer-events-none">

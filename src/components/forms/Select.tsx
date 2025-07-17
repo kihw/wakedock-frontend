@@ -1,8 +1,8 @@
 import React, { forwardRef, useCallback, useState, useRef, useImperativeHandle } from 'react';
 import { clsx } from 'clsx';
 import { AlertCircle } from 'lucide-react';
-import { sanitizeInput } from '@/lib/utils/validation';
-import { announceToScreenReader } from '@/lib/utils/accessibility';
+import { sanitizeInput } from '../../lib/utils/validation';
+import { announceToScreenReader } from '../../lib/utils/accessibility';
 
 export interface SelectOption {
   value: string | number;

@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'outlined' | 'elevated' | 'ghost'
@@ -33,23 +33,23 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       elevated: 'bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700',
       ghost: 'bg-gray-50 dark:bg-gray-900 border border-transparent',
     }
-    
+
     const sizes = {
       sm: 'rounded-md',
       md: 'rounded-lg',
       lg: 'rounded-xl',
     }
-    
+
     const paddings = {
       none: '',
       sm: 'p-3',
       md: 'p-4',
       lg: 'p-6',
     }
-    
+
     const hoverStyles = hoverable && !loading ? 'hover:shadow-md transition-shadow duration-200' : ''
     const clickableStyles = clickable && !loading ? 'cursor-pointer' : ''
-    
+
     if (loading) {
       return (
         <div
@@ -71,7 +71,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         </div>
       )
     }
-    
+
     return (
       <div
         ref={ref}
@@ -173,7 +173,7 @@ export const CardFooter: React.FC<CardFooterProps> = ({
     right: 'justify-end',
     between: 'justify-between',
   }
-  
+
   return (
     <div
       className={cn(
@@ -199,6 +199,27 @@ export const InfoCard: React.FC<CardProps> = (props) => (
 
 export const MetricCard: React.FC<CardProps> = (props) => (
   <Card variant="default" size="sm" {...props} />
+)
+
+// Simple CardTitle and CardContent for compatibility
+export const CardTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <h3 className={cn("text-lg font-semibold", className)} {...props}>
+    {children}
+  </h3>
+)
+
+export const CardContent: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <div className={cn("p-4", className)} {...props}>
+    {children}
+  </div>
 )
 
 export default Card

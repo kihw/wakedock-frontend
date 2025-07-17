@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 import {
   ChevronDown,
   ChevronRight,
@@ -19,7 +19,6 @@ import {
   Search,
   Package,
   Container,
-  Network,
   HardDrive,
   Cpu,
   MemoryStick,
@@ -92,7 +91,6 @@ import {
   Smartphone,
   Tablet,
   Laptop,
-  Desktop,
   Watch,
   Headphones,
   Speaker,
@@ -103,8 +101,7 @@ import {
   Mic,
   Webcam,
   Router,
-  Modem,
-  Ethernet,
+  Network,
   Bluetooth,
   Usb,
   Cloud,
@@ -441,7 +438,7 @@ export const MainNavigation: React.FC<MainNavigationProps> = ({
 
     return (
       <div
-        ref={el => dropdownRefs.current[item.id] = el}
+        ref={(el) => { if (el) dropdownRefs.current[item.id] = el; }}
         className={cn(
           'absolute z-50 min-w-48 py-1 transition-all duration-200',
           currentVariant.dropdown,

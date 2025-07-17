@@ -1,23 +1,24 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { cn } from '@/lib/utils'
-import { 
-  Menu, 
-  X, 
-  Search, 
-  Bell, 
-  Settings, 
-  User, 
-  LogOut, 
-  Sun, 
-  Moon, 
+import { cn } from '../../lib/utils'
+import {
+  Menu,
+  X,
+  Search,
+  Bell,
+  Settings,
+  User,
+  LogOut,
+  Sun,
+  Moon,
   Monitor,
   ChevronDown,
   Command,
   Home,
   Server,
   Activity,
+  Check,
   Database,
   Shield,
   Users,
@@ -108,15 +109,10 @@ import {
   Cpu,
   HardDrive,
   MemoryStick,
-  Network,
   Bluetooth,
   Usb,
-  Ethernet,
-  Router,
-  Modem,
   Satellite,
   Antenna,
-  Tower,
   Cloud,
   CloudUpload,
   CloudDownload,
@@ -300,40 +296,40 @@ export const Header: React.FC<HeaderProps> = ({
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [showStatusDropdown, setShowStatusDropdown] = useState(false)
   const [currentTheme, setCurrentTheme] = useState<ThemeMode>('system')
-  
+
   const unreadCount = notifications.filter(n => !n.read).length
   const statusConf = systemStatus ? statusConfig[systemStatus.status] : statusConfig.connected
   const StatusIcon = statusConf.icon
-  
+
   const formatUptime = (seconds: number) => {
     const days = Math.floor(seconds / 86400)
     const hours = Math.floor((seconds % 86400) / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    
+
     if (days > 0) return `${days}d ${hours}h ${minutes}m`
     if (hours > 0) return `${hours}h ${minutes}m`
     return `${minutes}m`
   }
-  
+
   const formatLastLogin = (timestamp: string) => {
     const date = new Date(timestamp)
     const now = new Date()
     const diffMs = now.getTime() - date.getTime()
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-    
+
     if (diffHours < 24) {
       return date.toLocaleTimeString(undefined, {
         hour: '2-digit',
         minute: '2-digit',
       })
     }
-    
+
     return date.toLocaleDateString(undefined, {
       month: 'short',
       day: 'numeric',
     })
   }
-  
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim()) {
@@ -342,13 +338,13 @@ export const Header: React.FC<HeaderProps> = ({
       setShowSearchInput(false)
     }
   }
-  
+
   const handleThemeToggle = () => {
     const nextTheme: ThemeMode = currentTheme === 'light' ? 'dark' : currentTheme === 'dark' ? 'system' : 'light'
     setCurrentTheme(nextTheme)
     onThemeChange?.(nextTheme)
   }
-  
+
   const renderLogo = () => {
     return (
       <div className="flex items-center gap-3">
@@ -363,10 +359,10 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
     )
   }
-  
+
   const renderNavigation = () => {
     if (navigation.length === 0) return null
-    
+
     return (
       <nav className="hidden md:flex items-center space-x-1">
         {navigation.map((item, index) => (
@@ -391,7 +387,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <ChevronDown className="h-3 w-3 ml-1" />
               )}
             </button>
-            
+
             {/* Dropdown for navigation items with children */}
             {item.children && (
               <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
@@ -414,10 +410,10 @@ export const Header: React.FC<HeaderProps> = ({
       </nav>
     )
   }
-  
+
   const renderSearch = () => {
     if (!showSearch) return null
-    
+
     return (
       <div className="flex-1 max-w-lg mx-4">
         {showSearchInput ? (
@@ -461,10 +457,10 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
     )
   }
-  
+
   const renderNotifications = () => {
     if (!showNotifications) return null
-    
+
     return (
       <div className="relative">
         <button
@@ -478,7 +474,7 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
           )}
         </button>
-        
+
         {showNotificationDropdown && (
           <>
             <div
@@ -497,7 +493,7 @@ export const Header: React.FC<HeaderProps> = ({
                   </button>
                 )}
               </div>
-              
+
               <div className="max-h-96 overflow-y-auto">
                 {notifications.length === 0 ? (
                   <div className="p-8 text-center">
@@ -522,8 +518,8 @@ export const Header: React.FC<HeaderProps> = ({
                           <div className={cn(
                             'w-2 h-2 rounded-full mt-2',
                             notification.type === 'error' ? 'bg-red-500' :
-                            notification.type === 'warning' ? 'bg-yellow-500' :
-                            notification.type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+                              notification.type === 'warning' ? 'bg-yellow-500' :
+                                notification.type === 'success' ? 'bg-green-500' : 'bg-blue-500'
                           )} />
                           <div className="flex-1 min-w-0">
                             <h4 className="font-medium text-gray-900 dark:text-white text-sm">
@@ -551,10 +547,10 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
     )
   }
-  
+
   const renderSystemStatus = () => {
     if (!showSystemStatus || !systemStatus) return null
-    
+
     return (
       <div className="relative">
         <button
@@ -569,7 +565,7 @@ export const Header: React.FC<HeaderProps> = ({
           <StatusIcon className={cn('h-4 w-4', systemStatus.status === 'reconnecting' && 'animate-spin')} />
           <span className="hidden sm:inline">{statusConf.label}</span>
         </button>
-        
+
         {showStatusDropdown && (
           <>
             <div
@@ -579,46 +575,46 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="absolute top-full right-0 mt-2 w-72 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
               <div className="p-4">
                 <h3 className="font-medium text-gray-900 dark:text-white mb-3">System Status</h3>
-                
+
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Environment:</span>
                     <span className={cn(
                       'text-sm font-medium px-2 py-1 rounded',
                       systemStatus.environment === 'production' ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' :
-                      systemStatus.environment === 'staging' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' :
-                      'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+                        systemStatus.environment === 'staging' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' :
+                          'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
                     )}>
                       {systemStatus.environment}
                     </span>
                   </div>
-                  
+
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Version:</span>
                     <span className="text-sm text-gray-900 dark:text-white font-mono">{systemStatus.version}</span>
                   </div>
-                  
+
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Uptime:</span>
                     <span className="text-sm text-gray-900 dark:text-white">{formatUptime(systemStatus.uptime)}</span>
                   </div>
-                  
+
                   <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
                     <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Health Status</h4>
                     <div className="grid grid-cols-2 gap-2">
                       {Object.entries(systemStatus.health).map(([service, healthy]) => (
                         <div key={service} className="flex items-center gap-2">
                           {healthy ? (
-                            <CheckCircle className="h-3 w-3 text-green-500" />
+                            <Check className="h-3 w-3 text-green-500" />
                           ) : (
-                            <XCircle className="h-3 w-3 text-red-500" />
+                            <X className="h-3 w-3 text-red-500" />
                           )}
                           <span className="text-xs text-gray-600 dark:text-gray-400 capitalize">{service}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
                     <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Metrics</h4>
                     <div className="space-y-2">
@@ -648,10 +644,10 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
     )
   }
-  
+
   const renderThemeToggle = () => {
     if (!showThemeToggle) return null
-    
+
     return (
       <button
         onClick={handleThemeToggle}
@@ -668,12 +664,12 @@ export const Header: React.FC<HeaderProps> = ({
       </button>
     )
   }
-  
+
   const renderUserMenu = () => {
     if (!showUserMenu || !user) return null
-    
+
     const roleConf = roleConfig[user.role]
-    
+
     return (
       <div className="relative">
         <button
@@ -691,7 +687,7 @@ export const Header: React.FC<HeaderProps> = ({
               <User className="h-4 w-4 text-gray-600 dark:text-gray-400" />
             </div>
           )}
-          
+
           <div className="hidden md:block text-left">
             <div className="text-sm font-medium text-gray-900 dark:text-white">
               {user.name}
@@ -700,14 +696,14 @@ export const Header: React.FC<HeaderProps> = ({
               {roleConf.label}
             </div>
           </div>
-          
+
           <ChevronDown className="h-4 w-4 text-gray-400" />
-          
+
           {user.isOnline && (
             <div className="absolute top-0 right-0 h-3 w-3 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full" />
           )}
         </button>
-        
+
         {showUserDropdown && (
           <>
             <div
@@ -728,7 +724,7 @@ export const Header: React.FC<HeaderProps> = ({
                       <User className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                     </div>
                   )}
-                  
+
                   <div className="flex-1">
                     <div className="font-medium text-gray-900 dark:text-white">
                       {user.name}
@@ -741,14 +737,14 @@ export const Header: React.FC<HeaderProps> = ({
                     </div>
                   </div>
                 </div>
-                
+
                 {user.lastLogin && (
                   <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                     Last login: {formatLastLogin(user.lastLogin)}
                   </div>
                 )}
               </div>
-              
+
               <div className="p-2">
                 <button
                   onClick={() => {
@@ -760,7 +756,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <User className="h-4 w-4" />
                   Profile
                 </button>
-                
+
                 <button
                   onClick={() => {
                     onUserAction?.('settings')
@@ -771,9 +767,9 @@ export const Header: React.FC<HeaderProps> = ({
                   <Settings className="h-4 w-4" />
                   Settings
                 </button>
-                
+
                 <div className="my-2 border-t border-gray-200 dark:border-gray-700" />
-                
+
                 <button
                   onClick={() => {
                     onUserAction?.('logout')
@@ -791,7 +787,7 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
     )
   }
-  
+
   return (
     <header className={cn(
       'sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800',
@@ -808,17 +804,17 @@ export const Header: React.FC<HeaderProps> = ({
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
-            
+
             {/* Logo */}
             {renderLogo()}
-            
+
             {/* Navigation */}
             {renderNavigation()}
           </div>
-          
+
           {/* Center section */}
           {renderSearch()}
-          
+
           {/* Right section */}
           <div className="flex items-center gap-2">
             {renderSystemStatus()}

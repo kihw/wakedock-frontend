@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,8 +52,15 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         h1 {
@@ -125,7 +133,8 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            min-height: 48px; /* Touch-friendly */
+            min-height: 48px;
+            /* Touch-friendly */
         }
 
         .btn:hover {
@@ -171,8 +180,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
         /* Responsive */
@@ -240,6 +256,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -247,14 +264,16 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="icon">📡</div>
-        
+
         <h1>Mode Hors Ligne</h1>
-        
+
         <p class="subtitle">
-            Vous êtes actuellement déconnecté d'Internet. WakeDock fonctionne en mode hors ligne avec les fonctionnalités mises en cache.
+            Vous êtes actuellement déconnecté d'Internet. WakeDock fonctionne en mode hors ligne avec les
+            fonctionnalités mises en cache.
         </p>
 
         <div class="features">
@@ -277,7 +296,7 @@
             <button class="btn" onclick="checkConnection()">
                 🔄 Vérifier la connexion
             </button>
-            
+
             <button class="btn btn-secondary" onclick="goToCache()">
                 📱 Données en cache
             </button>
@@ -289,32 +308,32 @@
         function checkConnection() {
             const btn = event.target;
             const originalText = btn.innerHTML;
-            
+
             btn.innerHTML = '⏳ Vérification...';
             btn.disabled = true;
 
             // Test de connexion
-            fetch('/api/v1/health', { 
+            fetch('/api/v1/health', {
                 method: 'GET',
                 cache: 'no-cache'
             })
-            .then(response => {
-                if (response.ok) {
-                    // Connexion rétablie
-                    updateConnectionStatus(true);
-                    setTimeout(() => {
-                        window.location.href = '/dashboard';
-                    }, 1000);
-                } else {
-                    throw new Error('Connection failed');
-                }
-            })
-            .catch(() => {
-                // Toujours hors ligne
-                updateConnectionStatus(false);
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            });
+                .then(response => {
+                    if (response.ok) {
+                        // Connexion rétablie
+                        updateConnectionStatus(true);
+                        setTimeout(() => {
+                            window.location.href = '/dashboard';
+                        }, 1000);
+                    } else {
+                        throw new Error('Connection failed');
+                    }
+                })
+                .catch(() => {
+                    // Toujours hors ligne
+                    updateConnectionStatus(false);
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                });
         }
 
         // Aller aux données en cache
@@ -327,7 +346,7 @@
         function updateConnectionStatus(isOnline) {
             const indicator = document.getElementById('connectionIndicator');
             const status = document.getElementById('connectionStatus');
-            
+
             if (isOnline) {
                 indicator.classList.add('online');
                 status.textContent = 'Connexion rétablie !';
@@ -340,22 +359,22 @@
         // Vérification automatique de la connexion
         function autoCheckConnection() {
             if (navigator.onLine) {
-                fetch('/api/v1/health', { 
+                fetch('/api/v1/health', {
                     method: 'GET',
                     cache: 'no-cache',
                     signal: AbortSignal.timeout(5000) // Timeout 5s
                 })
-                .then(response => {
-                    if (response.ok) {
-                        updateConnectionStatus(true);
-                        setTimeout(() => {
-                            window.location.href = '/dashboard';
-                        }, 2000);
-                    }
-                })
-                .catch(() => {
-                    // Ignore les erreurs pour la vérification auto
-                });
+                    .then(response => {
+                        if (response.ok) {
+                            updateConnectionStatus(true);
+                            setTimeout(() => {
+                                window.location.href = '/dashboard';
+                            }, 2000);
+                        }
+                    })
+                    .catch(() => {
+                        // Ignore les erreurs pour la vérification auto
+                    });
             }
         }
 
@@ -396,7 +415,7 @@
                     e.target.click();
                 }
             }
-            
+
             // R pour refresh
             if (e.key === 'r' || e.key === 'R') {
                 checkConnection();
@@ -413,4 +432,5 @@
         }
     </script>
 </body>
+
 </html>

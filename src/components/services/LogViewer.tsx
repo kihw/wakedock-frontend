@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef, useMemo } from 'react'
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 import { 
   Play, 
   Pause, 
@@ -151,7 +151,7 @@ export const LogViewer: React.FC<LogViewerProps> = ({
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-      fractionalSecondDigits: 3,
+      // fractionalSecondDigits: 3,
     })
   }
   

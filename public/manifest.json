@@ -8,7 +8,11 @@
   "orientation": "portrait-primary",
   "scope": "/",
   "start_url": "/dashboard",
-  "categories": ["productivity", "developer", "utilities"],
+  "categories": [
+    "productivity",
+    "developer",
+    "utilities"
+  ],
   "lang": "fr-FR",
   "dir": "ltr",
   "icons": [
@@ -79,6 +83,10 @@
   "launch_handler": {
     "client_mode": "navigate-existing"
   },
-  "display_override": ["window-controls-overlay", "minimal-ui", "browser"],
+  "display_override": [
+    "window-controls-overlay",
+    "minimal-ui",
+    "browser"
+  ],
   "id": "wakedock-pwa"
 }

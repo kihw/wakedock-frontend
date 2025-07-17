@@ -5,19 +5,19 @@ import React, { useEffect } from 'react';
 import { useThemeStore } from '../stores/theme';
 
 interface ThemeProviderProps {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const { initTheme, isInitialized } = useThemeStore();
+    const { initTheme, isInitialized } = useThemeStore();
 
-  useEffect(() => {
-    if (!isInitialized) {
-      initTheme();
-    }
-  }, [initTheme, isInitialized]);
+    useEffect(() => {
+        if (!isInitialized) {
+            initTheme();
+        }
+    }, [initTheme, isInitialized]);
 
-  return <>{children}</>;
+    return <>{children}</>;
 };
 
 export default ThemeProvider;

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import Card, { CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
+import Button from '@/components/ui/Button';
+import Badge from '@/components/ui/Badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Upload,
@@ -213,8 +213,8 @@ const ComposeStackManager = () => {
                     <Card
                       key={stack.id}
                       className={`cursor-pointer transition-colors ${selectedStack?.id === stack.id
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'hover:bg-gray-50'
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'hover:bg-gray-50'
                         }`}
                       onClick={() => setSelectedStack(stack)}
                     >
@@ -259,7 +259,7 @@ const ComposeStackManager = () => {
 
                           <Button
                             size="sm"
-                            variant="destructive"
+                            variant="error"
                             onClick={(e) => {
                               e.stopPropagation();
                               deleteStack(stack.id);

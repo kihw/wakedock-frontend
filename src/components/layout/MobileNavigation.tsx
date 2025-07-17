@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { cn } from '@/lib/utils'
-import { 
+import { cn } from '../../lib/utils'
+import {
   Menu,
   X,
   ChevronDown,
@@ -22,7 +22,6 @@ import {
   Search,
   Package,
   Container,
-  Network,
   HardDrive,
   Cpu,
   MemoryStick,
@@ -94,7 +93,6 @@ import {
   Smartphone,
   Tablet,
   Laptop,
-  Desktop,
   Watch,
   Headphones,
   Speaker,
@@ -105,8 +103,7 @@ import {
   Mic,
   Webcam,
   Router,
-  Modem,
-  Ethernet,
+  Network,
   Bluetooth,
   Usb,
   Cloud,
@@ -317,7 +314,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   const [searchQuery, setSearchQuery] = useState('')
   const [isClosing, setIsClosing] = useState(false)
   const navRef = useRef<HTMLDivElement>(null)
-  
+
   // Handle escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -325,11 +322,11 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
         handleClose()
       }
     }
-    
+
     document.addEventListener('keydown', handleEscape)
     return () => document.removeEventListener('keydown', handleEscape)
   }, [isOpen])
-  
+
   // Prevent body scroll when open
   useEffect(() => {
     if (isOpen) {
@@ -337,12 +334,12 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
     } else {
       document.body.style.overflow = ''
     }
-    
+
     return () => {
       document.body.style.overflow = ''
     }
   }, [isOpen])
-  
+
   const handleClose = () => {
     setIsClosing(true)
     setTimeout(() => {
@@ -350,10 +347,10 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
       onClose?.()
     }, 300)
   }
-  
+
   const handleItemClick = (item: MobileNavigationItem) => {
     if (item.disabled) return
-    
+
     if (item.children && item.children.length > 0) {
       handleItemToggle(item.id)
     } else {
@@ -362,7 +359,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
       handleClose()
     }
   }
-  
+
   const handleItemToggle = (itemId: string) => {
     setExpandedItems(prev =>
       prev.includes(itemId)
@@ -370,7 +367,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
         : [...prev, itemId]
     )
   }
-  
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim()) {
@@ -379,19 +376,19 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
       handleClose()
     }
   }
-  
+
   const isItemActive = (item: MobileNavigationItem): boolean => {
     if (item.active) return true
     if (currentPath) {
-      return item.href === currentPath || 
-             (item.children?.some(child => child.href === currentPath))
+      return item.href === currentPath ||
+        (item.children?.some(child => child.href === currentPath))
     }
     return false
   }
-  
+
   const getContainerClasses = () => {
     const baseClasses = 'fixed z-50 bg-white dark:bg-gray-900 transition-transform duration-300 ease-in-out'
-    
+
     switch (position) {
       case 'left':
         return cn(
@@ -421,10 +418,10 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
         return baseClasses
     }
   }
-  
+
   const renderHeader = () => {
     if (!showHeader) return null
-    
+
     return (
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
         <div className="flex items-center gap-3">
@@ -437,7 +434,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             </div>
           )}
         </div>
-        
+
         <button
           onClick={handleClose}
           className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
@@ -447,10 +444,10 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
       </div>
     )
   }
-  
+
   const renderSearch = () => {
     if (!showSearch) return null
-    
+
     return (
       <div className="p-4 border-b border-gray-200 dark:border-gray-800">
         <form onSubmit={handleSearch} className="relative">
@@ -466,12 +463,12 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
       </div>
     )
   }
-  
+
   const renderItem = (item: MobileNavigationItem, level = 0) => {
     const hasChildren = item.children && item.children.length > 0
     const isExpanded = expandedItems.includes(item.id)
     const isActive = isItemActive(item)
-    
+
     return (
       <div key={item.id}>
         <button
@@ -483,8 +480,8 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             item.disabled
               ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
               : isActive
-              ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-              : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
           )}
         >
           {showIcons && item.icon && (
@@ -492,11 +489,11 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
               {item.icon}
             </div>
           )}
-          
+
           <span className="flex-1 truncate font-medium">
             {item.label}
           </span>
-          
+
           {showBadges && item.badge && (
             <span className={cn(
               'px-2 py-0.5 text-xs font-medium rounded-full',
@@ -507,19 +504,19 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
               {item.badge}
             </span>
           )}
-          
+
           {hasChildren && (
             <ChevronDown className={cn(
               'h-4 w-4 transition-transform duration-200',
               isExpanded && 'rotate-180'
             )} />
           )}
-          
+
           {item.external && (
             <ExternalLink className="h-4 w-4 text-gray-400" />
           )}
         </button>
-        
+
         {/* Children */}
         {hasChildren && isExpanded && (
           <div className="bg-gray-50 dark:bg-gray-800/50">
@@ -529,7 +526,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
       </div>
     )
   }
-  
+
   const renderSection = (section: MobileNavigationSection) => {
     return (
       <div key={section.id} className="mb-6">
@@ -540,17 +537,17 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             </h3>
           </div>
         )}
-        
+
         <nav className="space-y-1">
           {section.items.map(item => renderItem(item))}
         </nav>
       </div>
     )
   }
-  
+
   const renderUser = () => {
     if (!user) return null
-    
+
     return (
       <div className="p-4 border-t border-gray-200 dark:border-gray-800">
         <div className="flex items-center gap-3 mb-4">
@@ -565,7 +562,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
               <User className="h-5 w-5 text-gray-600 dark:text-gray-400" />
             </div>
           )}
-          
+
           <div className="flex-1 min-w-0">
             <div className="font-medium text-gray-900 dark:text-white truncate">
               {user.name}
@@ -578,7 +575,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             </div>
           </div>
         </div>
-        
+
         <div className="space-y-1">
           <button
             onClick={() => {
@@ -590,7 +587,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             <User className="h-4 w-4" />
             Profile
           </button>
-          
+
           <button
             onClick={() => {
               onUserAction?.('settings')
@@ -601,7 +598,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             <Settings className="h-4 w-4" />
             Settings
           </button>
-          
+
           {onThemeToggle && (
             <button
               onClick={() => {
@@ -615,7 +612,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
               Theme
             </button>
           )}
-          
+
           <button
             onClick={() => {
               onUserAction?.('logout')
@@ -630,10 +627,10 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
       </div>
     )
   }
-  
+
   const renderFooter = () => {
     if (!showFooter) return null
-    
+
     return (
       <div className="p-4 border-t border-gray-200 dark:border-gray-800">
         {footer || (
@@ -644,9 +641,9 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
       </div>
     )
   }
-  
+
   if (!isOpen && !isClosing) return null
-  
+
   return (
     <>
       {/* Backdrop */}
@@ -659,7 +656,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
           onClick={handleClose}
         />
       )}
-      
+
       {/* Navigation */}
       <div
         ref={navRef}
@@ -668,11 +665,11 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
         <div className="flex flex-col h-full">
           {renderHeader()}
           {renderSearch()}
-          
+
           <div className="flex-1 overflow-y-auto py-4">
             {sections.map(renderSection)}
           </div>
-          
+
           {renderUser()}
           {renderFooter()}
         </div>

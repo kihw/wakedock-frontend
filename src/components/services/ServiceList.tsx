@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 import { Search, Filter, Grid, List, Plus, RefreshCw } from 'lucide-react'
 import { ServiceCard, Service } from './ServiceCard'
 

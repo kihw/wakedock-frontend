@@ -1,13 +1,13 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import { cn } from '@/lib/utils'
-import { 
-  Activity, 
-  CheckCircle, 
-  XCircle, 
-  AlertTriangle, 
-  Clock, 
+import { cn } from '../../lib/utils'
+import {
+  Activity,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+  Clock,
   RefreshCw,
   Settings,
   Filter,
@@ -36,14 +36,13 @@ import {
   Calendar,
   Target,
   CheckCircle2,
-  XCircle2,
   Timer,
   BarChart3,
   PieChart,
   List,
   Grid3x3,
   User,
-  Tool,
+  Wrench,
   Bug,
   ArrowRight,
   ExternalLink,
@@ -191,7 +190,7 @@ const categoryConfig = {
     color: 'text-red-600 dark:text-red-400',
   },
   custom: {
-    icon: Tool,
+    icon: Wrench,
     label: 'Custom',
     color: 'text-gray-600 dark:text-gray-400',
   },
@@ -223,7 +222,7 @@ const typeConfig = {
     label: 'Elasticsearch',
   },
   custom: {
-    icon: Tool,
+    icon: Wrench,
     label: 'Custom',
   },
 }
@@ -253,10 +252,10 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [expandedCheck, setExpandedCheck] = useState<string | null>(null)
   const [selectedChecks, setSelectedChecks] = useState<string[]>([])
-  
+
   const filteredChecks = useMemo(() => {
     let filtered = checks
-    
+
     // Apply search filter
     if (searchQuery) {
       filtered = filtered.filter(check =>
@@ -266,29 +265,29 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
         check.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
       )
     }
-    
+
     // Apply category filter
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(check => check.category === selectedCategory)
     }
-    
+
     // Apply status filter
     if (selectedStatus !== 'all') {
       filtered = filtered.filter(check => check.status === selectedStatus)
     }
-    
+
     // Sort by criticality and status
     filtered.sort((a, b) => {
       if (a.critical && !b.critical) return -1
       if (!a.critical && b.critical) return 1
-      
+
       const statusOrder = { unhealthy: 0, degraded: 1, unknown: 2, healthy: 3 }
       return statusOrder[a.status] - statusOrder[b.status]
     })
-    
+
     return filtered
   }, [checks, searchQuery, selectedCategory, selectedStatus])
-  
+
   const healthStats = useMemo(() => {
     const stats = {
       total: checks.length,
@@ -299,45 +298,45 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
       critical: checks.filter(c => c.critical).length,
       avgResponseTime: 0,
     }
-    
+
     if (checks.length > 0) {
       stats.avgResponseTime = checks.reduce((sum, c) => sum + c.responseTime, 0) / checks.length
     }
-    
+
     return stats
   }, [checks])
-  
+
   const formatResponseTime = (ms: number) => {
     if (ms < 1000) return `${ms}ms`
     if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`
     return `${(ms / 60000).toFixed(1)}m`
   }
-  
+
   const formatLastChecked = (timestamp: string) => {
     const date = new Date(timestamp)
     const now = new Date()
     const diffMs = now.getTime() - date.getTime()
     const diffMinutes = Math.floor(diffMs / (1000 * 60))
-    
+
     if (diffMinutes < 1) return 'Just now'
     if (diffMinutes < 60) return `${diffMinutes}m ago`
     if (diffMinutes < 1440) return `${Math.floor(diffMinutes / 60)}h ago`
     return `${Math.floor(diffMinutes / 1440)}d ago`
   }
-  
+
   const getStatusTrend = (history: { timestamp: string; status: HealthStatus; responseTime: number }[]) => {
     if (!history || history.length < 2) return null
-    
+
     const recent = history.slice(-5)
     const healthyCount = recent.filter(h => h.status === 'healthy').length
     const totalCount = recent.length
     const healthyRatio = healthyCount / totalCount
-    
+
     if (healthyRatio >= 0.8) return 'up'
     if (healthyRatio <= 0.4) return 'down'
     return 'stable'
   }
-  
+
   const toggleCheckSelection = (checkId: string) => {
     setSelectedChecks(prev =>
       prev.includes(checkId)
@@ -345,15 +344,15 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
         : [...prev, checkId]
     )
   }
-  
+
   const selectAllChecks = () => {
     setSelectedChecks(filteredChecks.map(check => check.id))
   }
-  
+
   const clearSelection = () => {
     setSelectedChecks([])
   }
-  
+
   const renderCheckCard = (check: HealthCheckResult) => {
     const statusConf = statusConfig[check.status]
     const categoryConf = categoryConfig[check.category]
@@ -364,7 +363,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
     const isExpanded = expandedCheck === check.id
     const isSelected = selectedChecks.includes(check.id)
     const trend = getStatusTrend(check.history)
-    
+
     return (
       <div
         key={check.id}
@@ -389,7 +388,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
                 }}
                 className="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              
+
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <CategoryIcon className={cn('h-4 w-4', categoryConf.color)} />
@@ -402,33 +401,33 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
                     </span>
                   )}
                 </div>
-                
+
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                   {check.description}
                 </p>
-                
+
                 <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                   <div className="flex items-center gap-1">
                     <TypeIcon className="h-3 w-3" />
                     <span>{typeConf.label}</span>
                   </div>
-                  
+
                   <div className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
                     <span>{formatResponseTime(check.responseTime)}</span>
                   </div>
-                  
+
                   <span>Last: {formatLastChecked(check.lastChecked)}</span>
                 </div>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2">
               <div className={cn('flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium', statusConf.bg, statusConf.color)}>
                 <StatusIcon className="h-3 w-3" />
                 {statusConf.label}
               </div>
-              
+
               {trend && (
                 <div className="flex items-center">
                   {trend === 'up' ? (
@@ -440,7 +439,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
                   )}
                 </div>
               )}
-              
+
               <div className="flex items-center gap-1">
                 {onRunCheck && (
                   <button
@@ -454,7 +453,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
                     <Play className="h-3 w-3" />
                   </button>
                 )}
-                
+
                 {onToggleCheck && (
                   <button
                     onClick={(e) => {
@@ -467,7 +466,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
                     {check.enabled ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
                   </button>
                 )}
-                
+
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
@@ -480,7 +479,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
               </div>
             </div>
           </div>
-          
+
           {check.endpoint && (
             <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">
               <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
@@ -488,7 +487,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
               </code>
             </div>
           )}
-          
+
           {check.tags && check.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-2">
               {check.tags.map((tag, index) => (
@@ -499,7 +498,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
             </div>
           )}
         </div>
-        
+
         {/* Expanded Details */}
         {isExpanded && (
           <div className="px-4 pb-4 border-t border-gray-200 dark:border-gray-700">
@@ -521,7 +520,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
                   </div>
                 </div>
               </div>
-              
+
               <div>
                 <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Status Details</h4>
                 <div className="space-y-1 text-sm">
@@ -540,7 +539,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
                 </div>
               </div>
             </div>
-            
+
             {check.details?.metrics && Object.keys(check.details.metrics).length > 0 && (
               <div className="mt-4">
                 <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Metrics</h4>
@@ -554,7 +553,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
                 </div>
               </div>
             )}
-            
+
             {showHistory && check.history && check.history.length > 0 && (
               <div className="mt-4">
                 <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Recent History</h4>
@@ -562,7 +561,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
                   {check.history.slice(-5).map((entry, index) => {
                     const entryStatusConf = statusConfig[entry.status]
                     const EntryIcon = entryStatusConf.icon
-                    
+
                     return (
                       <div key={index} className="flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2">
@@ -583,7 +582,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
       </div>
     )
   }
-  
+
   if (loading) {
     return (
       <div className={cn('space-y-6 animate-pulse', className)}>
@@ -600,7 +599,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
       </div>
     )
   }
-  
+
   if (error) {
     return (
       <div className={cn('text-center py-8', className)}>
@@ -621,10 +620,10 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
       </div>
     )
   }
-  
+
   const overallStatusConf = statusConfig[overallStatus]
   const OverallIcon = overallStatusConf.icon
-  
+
   return (
     <div className={cn('space-y-6', className)}>
       {/* Header */}
@@ -641,12 +640,12 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
               </p>
             </div>
           </div>
-          
+
           <div className={cn('px-3 py-1 rounded-full text-sm font-medium', overallStatusConf.bg, overallStatusConf.color)}>
             {overallStatusConf.label}
           </div>
         </div>
-        
+
         <div className="flex items-center gap-2">
           {selectedChecks.length > 0 && (
             <div className="flex items-center gap-2">
@@ -661,21 +660,21 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
               </button>
             </div>
           )}
-          
+
           <button
             onClick={() => setShowFilters(!showFilters)}
             className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
             <Filter className="h-4 w-4" />
           </button>
-          
+
           <button
             onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
             className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
             {viewMode === 'grid' ? <List className="h-4 w-4" /> : <Grid3x3 className="h-4 w-4" />}
           </button>
-          
+
           {onExport && (
             <button
               onClick={onExport}
@@ -684,7 +683,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
               <Download className="h-4 w-4" />
             </button>
           )}
-          
+
           {onRefresh && (
             <button
               onClick={onRefresh}
@@ -695,7 +694,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
           )}
         </div>
       </div>
-      
+
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
@@ -709,7 +708,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
             <AlertTriangle className="h-5 w-5 text-yellow-500" />
@@ -721,7 +720,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
             <XCircle className="h-5 w-5 text-red-500" />
@@ -733,7 +732,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
             <Clock className="h-5 w-5 text-blue-500" />
@@ -746,7 +745,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
           </div>
         </div>
       </div>
-      
+
       {/* Filters */}
       {showFilters && (
         <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-4">
@@ -760,7 +759,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
               className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          
+
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Category:</label>
@@ -775,7 +774,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
                 ))}
               </select>
             </div>
-            
+
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Status:</label>
               <select
@@ -792,7 +791,7 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
           </div>
         </div>
       )}
-      
+
       {/* Controls */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -804,12 +803,12 @@ export const HealthCheck: React.FC<HealthCheckProps> = ({
           />
           <span className="text-sm text-gray-700 dark:text-gray-300">Select All</span>
         </div>
-        
+
         <div className="text-sm text-gray-500 dark:text-gray-400">
           {filteredChecks.length} of {healthStats.total} checks
         </div>
       </div>
-      
+
       {/* Health Checks */}
       {filteredChecks.length === 0 ? (
         <div className="text-center py-12">

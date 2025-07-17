@@ -4,7 +4,6 @@ import {
     IconButton,
     Input,
     Badge,
-    Avatar,
     Icon,
     Spinner,
     Tooltip,

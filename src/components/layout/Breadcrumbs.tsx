@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState } from 'react'
-import { cn } from '@/lib/utils'
-import { 
+import { cn } from '../../lib/utils';
+import {
   ChevronRight,
   ChevronDown,
   Home,
@@ -66,7 +66,7 @@ import {
   Smartphone,
   Tablet,
   Laptop,
-  Desktop,
+  Monitor as Desktop,
   Watch,
   Headphones,
   Speaker,
@@ -77,8 +77,8 @@ import {
   Mic,
   Webcam,
   Router,
-  Modem,
-  Ethernet,
+  Cable as Modem,
+  Cable as Ethernet,
   Bluetooth,
   Usb,
   Cloud,
@@ -183,80 +183,80 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   const [expandedDropdown, setExpandedDropdown] = useState<string | null>(null)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [isExpanded, setIsExpanded] = useState(false)
-  
+
   const visibleItems = collapsible && !isExpanded && items.length > maxItems
     ? [
-        ...items.slice(0, 1),
-        {
-          id: 'more',
-          label: '...',
-          href: '#',
-          dropdown: {
-            items: items.slice(1, -1).map(item => ({
-              id: item.id,
-              label: item.label,
-              href: item.href,
-              icon: item.icon,
-              description: item.metadata?.description
-            }))
-          }
-        },
-        ...items.slice(-1)
-      ]
+      ...items.slice(0, 1),
+      {
+        id: 'more',
+        label: '...',
+        href: '#',
+        dropdown: {
+          items: items.slice(1, -1).map(item => ({
+            id: item.id,
+            label: item.label,
+            href: item.href,
+            icon: item.icon,
+            description: item.metadata?.description
+          }))
+        }
+      },
+      ...items.slice(-1)
+    ]
     : items
-  
+
   const getSeparatorIcon = () => {
     if (customSeparator) return customSeparator
     if (separator === 'custom') return null
-    
+
     const SeparatorComponent = separatorIcons[separator]
     return <SeparatorComponent className="h-4 w-4 text-gray-400" />
   }
-  
+
   const getFullPath = () => {
     const path = items.map(item => item.label).join(' / ')
     return showHome ? `Home / ${path}` : path
   }
-  
+
   const handleItemClick = (item: BreadcrumbItem, event?: React.MouseEvent) => {
     if (item.disabled) return
-    
+
     if (item.id === 'more') {
       event?.preventDefault()
       setIsExpanded(true)
       return
     }
-    
+
     if (item.dropdown) {
       event?.preventDefault()
       setExpandedDropdown(expandedDropdown === item.id ? null : item.id)
       return
     }
-    
+
     onItemClick?.(item)
   }
-  
+
   const handleItemHover = (item: BreadcrumbItem | null) => {
     setHoveredItem(item?.id || null)
     onItemHover?.(item)
   }
-  
+
   const handleCopy = (event: React.MouseEvent) => {
     event.stopPropagation()
     const path = getFullPath()
     onCopy?.(path)
     navigator.clipboard.writeText(path)
   }
-  
+
   const handleShare = (event: React.MouseEvent) => {
     event.stopPropagation()
     const path = getFullPath()
     onShare?.(path)
   }
-  
+
   const renderDropdown = (item: BreadcrumbItem) => {
     if (!item.dropdown || !expandedDropdown || expandedDropdown !== item.id) return null
-    
+
     return (
       <div className="absolute top-full left-0 mt-1 min-w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 py-1">
         {item.dropdown.items.map((dropdownItem) => (
@@ -286,10 +286,10 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
       </div>
     )
   }
-  
+
   const renderMetadata = (item: BreadcrumbItem) => {
     if (!showMetadata || !item.metadata || !hoveredItem || hoveredItem !== item.id) return null
-    
+
     return (
       <div className="absolute top-full left-0 mt-1 min-w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 p-3">
         <div className="space-y-2">
@@ -321,11 +321,11 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
       </div>
     )
   }
-  
+
   const renderItem = (item: BreadcrumbItem, index: number, isLast: boolean) => {
     const isActive = item.active || isLast
     const hasDropdown = item.dropdown && item.dropdown.items.length > 0
-    
+
     const baseClasses = cn(
       'inline-flex items-center gap-2 transition-colors relative',
       variant === 'pills' && 'px-3 py-1 rounded-full',
@@ -334,15 +334,15 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
       item.disabled
         ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
         : isActive
-        ? 'text-gray-900 dark:text-white font-medium'
-        : interactive
-        ? 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer'
-        : 'text-gray-600 dark:text-gray-400',
+          ? 'text-gray-900 dark:text-white font-medium'
+          : interactive
+            ? 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer'
+            : 'text-gray-600 dark:text-gray-400',
       interactive && !item.disabled && !isActive && variant === 'pills' && 'hover:bg-gray-100 dark:hover:bg-gray-800',
       interactive && !item.disabled && !isActive && variant === 'detailed' && 'hover:bg-gray-100 dark:hover:bg-gray-800',
       isActive && variant === 'pills' && 'bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
     )
-    
+
     return (
       <div key={item.id} className="relative">
         <button
@@ -358,14 +358,14 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               {item.icon}
             </span>
           )}
-          
+
           <span className={cn(
             'truncate',
             variant === 'compact' ? 'max-w-32' : 'max-w-48'
           )}>
             {item.label}
           </span>
-          
+
           {hasDropdown && (
             <ChevronDown className={cn(
               'h-3 w-3 transition-transform duration-200',
@@ -373,16 +373,16 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
             )} />
           )}
         </button>
-        
+
         {renderDropdown(item)}
         {renderMetadata(item)}
       </div>
     )
   }
-  
+
   const renderControls = () => {
     if (!interactive || (!onCopy && !onShare)) return null
-    
+
     return (
       <div className="flex items-center gap-1 ml-2">
         {onCopy && (
@@ -394,7 +394,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
             <Copy className="h-3 w-3" />
           </button>
         )}
-        
+
         {onShare && (
           <button
             onClick={handleShare}
@@ -407,16 +407,16 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
       </div>
     )
   }
-  
+
   // Close dropdown when clicking outside
   React.useEffect(() => {
     const handleClickOutside = () => setExpandedDropdown(null)
     document.addEventListener('click', handleClickOutside)
     return () => document.removeEventListener('click', handleClickOutside)
   }, [])
-  
+
   if (items.length === 0) return null
-  
+
   return (
     <nav
       className={cn(
@@ -442,7 +442,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
             {homeIcon}
             {variant === 'detailed' && <span>Home</span>}
           </button>
-          
+
           {items.length > 0 && (
             <span className="flex-shrink-0">
               {getSeparatorIcon()}
@@ -450,15 +450,15 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
           )}
         </>
       )}
-      
+
       {/* Breadcrumb items */}
       {visibleItems.map((item, index) => {
         const isLast = index === visibleItems.length - 1
-        
+
         return (
           <React.Fragment key={item.id}>
             {renderItem(item, index, isLast)}
-            
+
             {!isLast && (
               <span className="flex-shrink-0">
                 {getSeparatorIcon()}
@@ -467,10 +467,10 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
           </React.Fragment>
         )
       })}
-      
+
       {/* Controls */}
       {renderControls()}
-      
+
       {/* Expand button for collapsed state */}
       {collapsible && !isExpanded && items.length > maxItems && (
         <button
@@ -481,7 +481,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
           <MoreHorizontal className="h-4 w-4" />
         </button>
       )}
-      
+
       {/* Collapse button for expanded state */}
       {collapsible && isExpanded && items.length > maxItems && (
         <button

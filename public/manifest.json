@@ -1,12 +1,20 @@
 {
   "name": "WakeDock - Docker Management Platform",
   "short_name": "WakeDock",
-  "description": "Modern Docker container management platform with real-time monitoring",
-  "start_url": "/",
+  "description": "Plateforme complète de gestion et monitoring Docker avec interface web moderne",
+  "theme_color": "#3B82F6",
+  "background_color": "#FFFFFF",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#40E0D0",
   "orientation": "portrait-primary",
+  "scope": "/",
+  "start_url": "/dashboard",
+  "categories": [
+    "productivity",
+    "developer",
+    "utilities"
+  ],
+  "lang": "fr-FR",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/favicon.png",
@@ -31,7 +39,54 @@
       "type": "image/png"
     }
   ],
-  "categories": ["developer", "utilities", "productivity"],
-  "lang": "en",
-  "dir": "ltr"
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Accéder au dashboard principal",
+      "url": "/dashboard",
+      "icons": [
+        {
+          "src": "/favicon.png",
+          "sizes": "32x32"
+        }
+      ]
+    },
+    {
+      "name": "Containers",
+      "short_name": "Containers",
+      "description": "Gérer les containers Docker",
+      "url": "/containers",
+      "icons": [
+        {
+          "src": "/favicon.png",
+          "sizes": "32x32"
+        }
+      ]
+    },
+    {
+      "name": "Monitoring",
+      "short_name": "Monitoring",
+      "description": "Surveiller les métriques système",
+      "url": "/monitoring",
+      "icons": [
+        {
+          "src": "/favicon.png",
+          "sizes": "32x32"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "display_override": [
+    "window-controls-overlay",
+    "minimal-ui",
+    "browser"
+  ],
+  "id": "wakedock-pwa"
 }

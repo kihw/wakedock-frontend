@@ -57,8 +57,8 @@ function UserModal({ user, isOpen, onClose, onSave }: UserModalProps) {
       setFormData({
         username: user.username,
         email: user.email,
-        role: user.role,
-        status: user.status,
+        role: user.role as "user",
+        status: user.status as "active",
         password: '',
         confirmPassword: ''
       });

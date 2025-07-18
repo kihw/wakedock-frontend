@@ -8,9 +8,9 @@ import { Eye, EyeOff, LogIn } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, isAuthenticated, loading, error: authError, clearError } = useAuthStore();
+  const { login, isAuthenticated, isLoading, error: authError } = useAuthStore();
   const { error: showError } = useToastStore();
-  
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -28,20 +28,19 @@ export default function LoginPage() {
   useEffect(() => {
     if (authError) {
       showError('Login Failed', authError);
-      clearError();
     }
-  }, [authError, showError, clearError]);
+  }, [authError, showError]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.username || !formData.password) {
       showError('Validation Error', 'Please fill in all fields');
       return;
     }
 
     try {
-      await login(formData.username, formData.password);
+      await login({ username: formData.username, password: formData.password });
       // Redirect is handled by the useEffect above
     } catch (error) {
       // Error is already handled by the auth store and shown via useEffect
@@ -75,7 +74,7 @@ export default function LoginPage() {
             Manage your Docker containers with ease
           </p>
         </div>
-        
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
@@ -94,7 +93,7 @@ export default function LoginPage() {
                 placeholder="Enter your username or email"
               />
             </div>
-            
+
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Password
@@ -149,10 +148,10 @@ export default function LoginPage() {
           <div>
             <button
               type="submit"
-              disabled={loading}
+              disabled={isLoading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? (
+              {isLoading ? (
                 <div className="flex items-center gap-2">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                   Signing in...

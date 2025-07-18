@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 import { CheckCircle, XCircle, AlertCircle, Clock, Zap, Pause, Play, Square } from 'lucide-react'
 
 export type StatusType = 

@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState } from 'react'
-import { cn } from '@/lib/utils'
-import { 
+import { cn } from '../../lib/utils'
+import {
   Container,
   Heart,
   Globe,
@@ -51,9 +51,9 @@ import {
   Instagram,
   Facebook,
   Slack,
-  Discord,
-  Telegram,
-  WhatsApp,
+  // Discord,
+  // Telegram,
+  // WhatsApp,
   Bell,
   Calendar,
   Cloud,
@@ -69,7 +69,7 @@ import {
   Minus,
   X,
   Check,
-  Refresh,
+  RefreshCw,
   Power,
   PowerOff,
   Volume2,
@@ -193,8 +193,8 @@ const socialIcons = {
   youtube: Youtube,
   instagram: Instagram,
   facebook: Facebook,
-  telegram: Telegram,
-  whatsapp: WhatsApp,
+  // telegram: Telegram,
+  // whatsapp: WhatsApp,
   rss: Rss,
 }
 
@@ -220,17 +220,17 @@ export const Footer: React.FC<FooterProps> = ({
   className,
 }) => {
   const [currentTheme, setCurrentTheme] = useState(theme)
-  
+
   const handleThemeToggle = () => {
     const nextTheme = currentTheme === 'light' ? 'dark' : currentTheme === 'dark' ? 'system' : 'light'
     setCurrentTheme(nextTheme)
     onThemeChange?.(nextTheme)
   }
-  
+
   const handleBackToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
-  
+
   const handleLinkClick = (href: string, external?: boolean) => {
     if (external) {
       window.open(href, '_blank', 'noopener,noreferrer')
@@ -238,10 +238,10 @@ export const Footer: React.FC<FooterProps> = ({
       onLinkClick?.(href)
     }
   }
-  
+
   const renderLogo = () => {
     if (!showLogo) return null
-    
+
     return (
       <div className="flex items-center gap-3 mb-4">
         {logo || (
@@ -255,22 +255,22 @@ export const Footer: React.FC<FooterProps> = ({
       </div>
     )
   }
-  
+
   const renderStatus = () => {
     if (!showStatus || !status) return null
-    
+
     const statusColors = {
       green: 'text-green-600 dark:text-green-400',
       yellow: 'text-yellow-600 dark:text-yellow-400',
       red: 'text-red-600 dark:text-red-400',
     }
-    
+
     return (
       <div className="flex items-center gap-2 mb-4">
         <div className={cn(
           'w-2 h-2 rounded-full',
           status.color === 'green' ? 'bg-green-500' :
-          status.color === 'yellow' ? 'bg-yellow-500' : 'bg-red-500'
+            status.color === 'yellow' ? 'bg-yellow-500' : 'bg-red-500'
         )} />
         {status.url ? (
           <button
@@ -287,10 +287,10 @@ export const Footer: React.FC<FooterProps> = ({
       </div>
     )
   }
-  
+
   const renderSocialLinks = () => {
     if (socialLinks.length === 0) return null
-    
+
     return (
       <div className="flex items-center gap-4 mb-6">
         {socialLinks.map((social, index) => {
@@ -309,7 +309,7 @@ export const Footer: React.FC<FooterProps> = ({
       </div>
     )
   }
-  
+
   const renderSection = (section: FooterSection) => {
     return (
       <div key={section.title} className="space-y-4">
@@ -339,10 +339,10 @@ export const Footer: React.FC<FooterProps> = ({
       </div>
     )
   }
-  
+
   const renderContact = () => {
     if (!contact) return null
-    
+
     return (
       <div className="space-y-4">
         <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">
@@ -377,10 +377,10 @@ export const Footer: React.FC<FooterProps> = ({
       </div>
     )
   }
-  
+
   const renderControls = () => {
     const controls = []
-    
+
     if (showThemeToggle) {
       controls.push(
         <button
@@ -399,7 +399,7 @@ export const Footer: React.FC<FooterProps> = ({
         </button>
       )
     }
-    
+
     if (showBackToTop) {
       controls.push(
         <button
@@ -412,16 +412,16 @@ export const Footer: React.FC<FooterProps> = ({
         </button>
       )
     }
-    
+
     if (controls.length === 0) return null
-    
+
     return (
       <div className="flex items-center gap-2">
         {controls}
       </div>
     )
   }
-  
+
   const renderMinimalFooter = () => {
     return (
       <footer className={cn('bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800', className)}>
@@ -433,7 +433,7 @@ export const Footer: React.FC<FooterProps> = ({
                 {copyright || `© ${new Date().getFullYear()} ${companyName}. All rights reserved.`}
               </div>
             </div>
-            
+
             <div className="flex items-center gap-4">
               {renderSocialLinks()}
               {renderControls()}
@@ -443,7 +443,7 @@ export const Footer: React.FC<FooterProps> = ({
       </footer>
     )
   }
-  
+
   const renderCompactFooter = () => {
     return (
       <footer className={cn('bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-800', className)}>
@@ -459,14 +459,14 @@ export const Footer: React.FC<FooterProps> = ({
               {renderStatus()}
               {renderSocialLinks()}
             </div>
-            
+
             <div className="md:col-span-2">
               <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
                 {sections.slice(0, 3).map(renderSection)}
               </div>
             </div>
           </div>
-          
+
           <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
             <div className="text-sm text-gray-600 dark:text-gray-400">
               {copyright || `© ${new Date().getFullYear()} ${companyName}. All rights reserved.`}
@@ -480,7 +480,7 @@ export const Footer: React.FC<FooterProps> = ({
       </footer>
     )
   }
-  
+
   const renderDetailedFooter = () => {
     return (
       <footer className={cn('bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-800', className)}>
@@ -496,16 +496,16 @@ export const Footer: React.FC<FooterProps> = ({
               {renderStatus()}
               {renderSocialLinks()}
             </div>
-            
+
             {sections.map(renderSection)}
-            
+
             {contact && (
               <div className="lg:col-span-1">
                 {renderContact()}
               </div>
             )}
           </div>
-          
+
           <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -521,7 +521,7 @@ export const Footer: React.FC<FooterProps> = ({
       </footer>
     )
   }
-  
+
   const renderDefaultFooter = () => {
     return (
       <footer className={cn('bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800', className)}>
@@ -536,10 +536,10 @@ export const Footer: React.FC<FooterProps> = ({
               )}
               {renderStatus()}
             </div>
-            
+
             {sections.map(renderSection)}
           </div>
-          
+
           <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-6">
@@ -552,7 +552,7 @@ export const Footer: React.FC<FooterProps> = ({
                   </div>
                 )}
               </div>
-              
+
               <div className="flex items-center gap-4">
                 {renderSocialLinks()}
                 {renderControls()}
@@ -563,7 +563,7 @@ export const Footer: React.FC<FooterProps> = ({
       </footer>
     )
   }
-  
+
   switch (variant) {
     case 'minimal':
       return renderMinimalFooter()

@@ -3,7 +3,7 @@ export interface Service {
   id: string;
   name: string;
   image: string;
-  status: 'running' | 'stopped' | 'starting' | 'stopping' | 'restarting' | 'error';
+  status: 'running' | 'stopped' | 'starting' | 'stopping' | 'restarting' | 'paused' | 'error';
   health_status: 'healthy' | 'unhealthy' | 'starting' | 'unknown';
   ports: Port[];
   environment: Record<string, string>;
@@ -17,6 +17,9 @@ export interface Service {
   container_id?: string;
   log_driver?: string;
   log_options?: Record<string, string>;
+  subdomain?: string;
+  // Nouvelles propriétés pour compatibilité v0.6.4
+  created: string;
 }
 
 export interface Port {

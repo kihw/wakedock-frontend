@@ -12,11 +12,11 @@ import { Plus, Search, Filter, RefreshCw } from 'lucide-react';
 function ServicesPage() {
   const { 
     services, 
-    loading, 
+    isLoading, 
     error, 
     fetchServices, 
     selectedService,
-    setSelectedService 
+    selectService 
   } = useServicesStore();
   
   const { success: showSuccess, error: showError } = useToastStore();
@@ -43,7 +43,7 @@ function ServicesPage() {
   });
 
   const handleServiceSelect = (service: any) => {
-    setSelectedService(service);
+    selectService(service);
     setShowDetails(true);
   };
 
@@ -78,10 +78,10 @@ function ServicesPage() {
         <div className="flex gap-2">
           <button
             onClick={handleRefresh}
-            disabled={loading}
+            disabled={isLoading}
             className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
           >
-            <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
             Refresh
           </button>
           
@@ -122,7 +122,7 @@ function ServicesPage() {
       </div>
 
       {/* Services Grid */}
-      {loading ? (
+      {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 animate-pulse">

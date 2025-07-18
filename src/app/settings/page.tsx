@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react';
 import { Metadata } from 'next';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useToastStore } from '@/lib/stores/toast-store';
-import { 
-  Settings, 
-  Save, 
-  RefreshCw, 
-  Shield, 
-  Database, 
-  Server, 
+import {
+  Settings,
+  Save,
+  RefreshCw,
+  Shield,
+  Database,
+  Server,
   Monitor,
   Bell,
   Globe,
@@ -47,29 +47,29 @@ function SettingsPage() {
     siteDescription: 'Docker Container Management Platform',
     timezone: 'UTC',
     language: 'en',
-    
+
     // Appearance settings
     theme: 'system',
     primaryColor: 'blue',
     compactMode: false,
-    
+
     // Notification settings
     emailNotifications: true,
     pushNotifications: false,
     maintenanceAlerts: true,
     serviceStatusAlerts: true,
-    
+
     // Security settings
     sessionTimeout: 30,
     requireStrongPasswords: true,
     twoFactorAuth: false,
     loginAttempts: 5,
-    
+
     // Database settings
     backupInterval: 24,
     autoCleanup: true,
     retentionDays: 30,
-    
+
     // Monitoring settings
     refreshInterval: 30,
     alertThresholds: {
@@ -77,7 +77,7 @@ function SettingsPage() {
       memory: 85,
       disk: 90
     },
-    
+
     // System settings
     logLevel: 'info',
     debugMode: false,
@@ -107,13 +107,16 @@ function SettingsPage() {
   };
 
   const handleNestedSettingChange = (section: string, key: string, value: any) => {
-    setSettings(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section as keyof typeof prev],
-        [key]: value
-      }
-    }));
+    setSettings(prev => {
+      const currentSection = prev[section as keyof typeof prev] as Record<string, any> || {};
+      return {
+        ...prev,
+        [section]: {
+          ...currentSection,
+          [key]: value
+        }
+      };
+    });
   };
 
   const renderGeneralSettings = () => (
@@ -198,11 +201,10 @@ function SettingsPage() {
             <button
               key={value}
               onClick={() => handleSettingChange('theme', value)}
-              className={`p-3 border rounded-lg flex flex-col items-center gap-2 ${
-                settings.theme === value
+              className={`p-3 border rounded-lg flex flex-col items-center gap-2 ${settings.theme === value
                   ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                   : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
-              }`}
+                }`}
             >
               <Icon className="h-5 w-5" />
               <span className="text-sm">{label}</span>
@@ -220,9 +222,8 @@ function SettingsPage() {
             <button
               key={color}
               onClick={() => handleSettingChange('primaryColor', color)}
-              className={`w-8 h-8 rounded-full border-2 ${
-                settings.primaryColor === color ? 'border-gray-900 dark:border-white' : 'border-transparent'
-              }`}
+              className={`w-8 h-8 rounded-full border-2 ${settings.primaryColor === color ? 'border-gray-900 dark:border-white' : 'border-transparent'
+                }`}
               style={{ backgroundColor: `var(--color-${color}-500)` }}
             />
           ))}
@@ -240,14 +241,12 @@ function SettingsPage() {
         </div>
         <button
           onClick={() => handleSettingChange('compactMode', !settings.compactMode)}
-          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-            settings.compactMode ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'
-          }`}
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings.compactMode ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'
+            }`}
         >
           <span
-            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-              settings.compactMode ? 'translate-x-6' : 'translate-x-1'
-            }`}
+            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings.compactMode ? 'translate-x-6' : 'translate-x-1'
+              }`}
           />
         </button>
       </div>
@@ -273,14 +272,12 @@ function SettingsPage() {
           </div>
           <button
             onClick={() => handleSettingChange(key, !settings[key as keyof typeof settings])}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              settings[key as keyof typeof settings] ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'
-            }`}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings[key as keyof typeof settings] ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'
+              }`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                settings[key as keyof typeof settings] ? 'translate-x-6' : 'translate-x-1'
-              }`}
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings[key as keyof typeof settings] ? 'translate-x-6' : 'translate-x-1'
+                }`}
             />
           </button>
         </div>
@@ -319,14 +316,12 @@ function SettingsPage() {
           </div>
           <button
             onClick={() => handleSettingChange(key, !settings[key as keyof typeof settings])}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              settings[key as keyof typeof settings] ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'
-            }`}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings[key as keyof typeof settings] ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'
+              }`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                settings[key as keyof typeof settings] ? 'translate-x-6' : 'translate-x-1'
-              }`}
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings[key as keyof typeof settings] ? 'translate-x-6' : 'translate-x-1'
+                }`}
             />
           </button>
         </div>
@@ -371,7 +366,7 @@ function SettingsPage() {
             Configure your WakeDock instance
           </p>
         </div>
-        
+
         <button
           onClick={handleSave}
           disabled={saving}
@@ -398,11 +393,10 @@ function SettingsPage() {
                   <button
                     key={section.id}
                     onClick={() => setActiveSection(section.id)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      activeSection === section.id
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeSection === section.id
                         ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                    }`}
+                      }`}
                   >
                     <Icon className="h-4 w-4" />
                     {section.label}
@@ -424,7 +418,7 @@ function SettingsPage() {
                 Configure your {settingsSections.find(s => s.id === activeSection)?.label.toLowerCase()} preferences
               </p>
             </div>
-            
+
             {renderCurrentSection()}
           </div>
         </div>

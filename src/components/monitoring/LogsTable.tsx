@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 import { 
   FileText, 
   Filter, 
@@ -239,7 +239,7 @@ export const LogsTable: React.FC<LogsTableProps> = ({
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-      fractionalSecondDigits: 3,
+      // fractionalSecondDigits: 3,
     })
   }
   

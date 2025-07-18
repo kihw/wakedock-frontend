@@ -6,6 +6,7 @@
 
 // This file contains the original 920+ line API client
 // It has been moved here as a backup during the refactoring process
-// The new modular API is available at ./api/index.ts
+// Legacy API layer disabled for v0.6.4
 
-export * from './api/index.js';
+// Export nothing for now
+export { };

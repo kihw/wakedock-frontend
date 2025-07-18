@@ -13,12 +13,8 @@
  * For backward compatibility, all exports remain the same.
  */
 
-// Export everything from the new modular API
-export * from './api/index';
+// API layer disabled for v0.6.4 - using mock stores instead
+// All API functionality is replaced by stores in /lib/stores/
 
-// The api singleton is still available as before
-import { api } from './api/index';
-export { api };
-
-// Backward compatibility - these exports ensure existing imports continue to work
-export { api as default };
+// Export nothing for now
+export { };

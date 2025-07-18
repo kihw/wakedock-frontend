@@ -55,8 +55,12 @@ export type LoginCredentials = LoginRequest;
 export interface LoginResponse {
   user: User;
   token: string;
+  access_token: string; // Alias pour compatibilité
   refreshToken: string;
+  refresh_token: string; // Alias pour compatibilité
+  token_type: string;
   expiresIn: number;
+  expires_in: number; // Alias pour compatibilité
   requiresTwoFactor?: boolean;
   twoFactorToken?: string;
 }
@@ -98,8 +102,11 @@ export interface User {
   firstName: string;
   lastName: string;
   roles: string[];
+  role: 'admin' | 'user' | 'viewer'; // Alias pour compatibilité
   permissions: string[];
   isActive: boolean;
+  active: boolean; // Alias pour compatibilité
+  status: 'active' | 'inactive' | 'suspended';
   lastLogin?: string;
   createdAt: string;
   updatedAt: string;
@@ -579,7 +586,7 @@ export interface Settings {
   };
 }
 
-export interface UpdateSettingsRequest extends Partial<Settings> {}
+export interface UpdateSettingsRequest extends Partial<Settings> { }
 
 // WebSocket Events
 export interface WebSocketMessage {

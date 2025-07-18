@@ -1,0 +1,433 @@
+/**
+ * CSS utilitaires pour responsive design et mobile-friendly
+ * Styles optimisés pour appareils tactiles et différentes résolutions
+ */
+
+/* ==========================================================================
+   Variables CSS pour responsive design
+   ========================================================================== */
+
+:root {
+    /* Breakpoints */
+    --breakpoint-xs: 320px;
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+
+    /* Safe areas pour mobile */
+    --safe-area-top: env(safe-area-inset-top, 0);
+    --safe-area-right: env(safe-area-inset-right, 0);
+    --safe-area-bottom: env(safe-area-inset-bottom, 0);
+    --safe-area-left: env(safe-area-inset-left, 0);
+
+    /* Tailles tactiles recommandées */
+    --touch-target-min: 44px;
+    --touch-target-comfort: 48px;
+    --touch-target-large: 56px;
+
+    /* Espacements adaptatifs */
+    --spacing-mobile: 1rem;
+    --spacing-tablet: 1.5rem;
+    --spacing-desktop: 2rem;
+
+    /* Typographie responsive */
+    --text-xs-mobile: 0.75rem;
+    --text-sm-mobile: 0.875rem;
+    --text-base-mobile: 1rem;
+    --text-lg-mobile: 1.125rem;
+    --text-xl-mobile: 1.25rem;
+    --text-2xl-mobile: 1.5rem;
+
+    /* Animations et transitions */
+    --transition-fast: 150ms ease-in-out;
+    --transition-normal: 250ms ease-in-out;
+    --transition-slow: 350ms ease-in-out;
+
+    /* Z-index layers */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+}
+
+/* ==========================================================================
+   Classes utilitaires responsive
+   ========================================================================== */
+
+/* Safe area utilities */
+.safe-area-top {
+    padding-top: var(--safe-area-top);
+}
+
+.safe-area-right {
+    padding-right: var(--safe-area-right);
+}
+
+.safe-area-bottom {
+    padding-bottom: var(--safe-area-bottom);
+}
+
+.safe-area-left {
+    padding-left: var(--safe-area-left);
+}
+
+.safe-area-inset {
+    padding: var(--safe-area-top) var(--safe-area-right) var(--safe-area-bottom) var(--safe-area-left);
+}
+
+/* Touch target utilities */
+.touch-target {
+    min-width: var(--touch-target-min);
+    min-height: var(--touch-target-min);
+}
+
+.touch-target-comfort {
+    min-width: var(--touch-target-comfort);
+    min-height: var(--touch-target-comfort);
+}
+
+.touch-target-large {
+    min-width: var(--touch-target-large);
+    min-height: var(--touch-target-large);
+}
+
+/* Touch manipulation for better mobile performance */
+.touch-action-auto {
+    touch-action: auto;
+}
+
+.touch-action-none {
+    touch-action: none;
+}
+
+.touch-action-pan-x {
+    touch-action: pan-x;
+}
+
+.touch-action-pan-y {
+    touch-action: pan-y;
+}
+
+.touch-action-manipulation {
+    touch-action: manipulation;
+}
+
+/* Smooth scrolling */
+.smooth-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbars on mobile while keeping functionality */
+.scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+}
+
+/* Mobile-first container utilities */
+.container-mobile {
+    width: 100%;
+    padding-left: var(--spacing-mobile);
+    padding-right: var(--spacing-mobile);
+}
+
+@media (min-width: 768px) {
+    .container-mobile {
+        padding-left: var(--spacing-tablet);
+        padding-right: var(--spacing-tablet);
+    }
+}
+
+@media (min-width: 1024px) {
+    .container-mobile {
+        padding-left: var(--spacing-desktop);
+        padding-right: var(--spacing-desktop);
+    }
+}
+
+/* ==========================================================================
+   Responsive typography
+   ========================================================================== */
+
+/* Fluid typography scales */
+.text-responsive-xs {
+    font-size: clamp(0.75rem, 0.6875rem + 0.3125vw, 0.875rem);
+}
+
+.text-responsive-sm {
+    font-size: clamp(0.875rem, 0.8125rem + 0.3125vw, 1rem);
+}
+
+.text-responsive-base {
+    font-size: clamp(1rem, 0.9375rem + 0.3125vw, 1.125rem);
+}
+
+.text-responsive-lg {
+    font-size: clamp(1.125rem, 1.0625rem + 0.3125vw, 1.25rem);
+}
+
+.text-responsive-xl {
+    font-size: clamp(1.25rem, 1.125rem + 0.625vw, 1.5rem);
+}
+
+.text-responsive-2xl {
+    font-size: clamp(1.5rem, 1.25rem + 1.25vw, 2rem);
+}
+
+.text-responsive-3xl {
+    font-size: clamp(1.875rem, 1.5rem + 1.875vw, 2.5rem);
+}
+
+/* ==========================================================================
+   Layout utilities
+   ========================================================================== */
+
+/* Flexible grids */
+.grid-responsive {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-mobile);
+}
+
+@media (min-width: 640px) {
+    .grid-responsive-sm {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .grid-responsive {
+        gap: var(--spacing-tablet);
+    }
+
+    .grid-responsive-md {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid-responsive {
+        gap: var(--spacing-desktop);
+    }
+
+    .grid-responsive-lg {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Flexible layouts */
+.stack-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-mobile);
+}
+
+@media (min-width: 768px) {
+    .stack-mobile {
+        flex-direction: row;
+        gap: var(--spacing-tablet);
+    }
+}
+
+/* ==========================================================================
+   Interactive elements
+   ========================================================================== */
+
+/* Button styles optimized for touch */
+.btn-touch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-target-comfort);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-touch:active {
+    transform: scale(0.98);
+}
+
+/* Card component mobile-optimized */
+.card-mobile {
+    background: white;
+    border-radius: 0.75rem;
+    padding: var(--spacing-mobile);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-normal);
+}
+
+@media (min-width: 768px) {
+    .card-mobile {
+        padding: var(--spacing-tablet);
+        border-radius: 1rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .card-mobile {
+        padding: var(--spacing-desktop);
+    }
+}
+
+.card-mobile:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   Media queries utilities
+   ========================================================================== */
+
+/* Show/hide based on device type */
+@media (max-width: 767px) {
+    .hidden-mobile {
+        display: none !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .hidden-tablet {
+        display: none !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hidden-desktop {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .visible-mobile {
+        display: block !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .visible-tablet {
+        display: block !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .visible-desktop {
+        display: block !important;
+    }
+}
+
+/* Touch device specific styles */
+@media (hover: none) and (pointer: coarse) {
+    .hover-touch-disabled:hover {
+        background-color: inherit;
+        color: inherit;
+    }
+
+    .touch-feedback:active {
+        opacity: 0.7;
+        transform: scale(0.98);
+    }
+}
+
+/* ==========================================================================
+   Accessibility and performance
+   ========================================================================== */
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+    .card-mobile {
+        border: 2px solid currentColor;
+    }
+
+    .btn-touch {
+        border: 2px solid currentColor;
+    }
+}
+
+/* Focus styles for keyboard navigation */
+.focus-ring {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+.focus-ring:focus-visible {
+    outline: 2px solid #3B82F6;
+    outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Loading and performance optimizations
+   ========================================================================== */
+
+/* Skeleton loading states */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, transparent 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Lazy loading optimizations */
+.fade-in {
+    opacity: 0;
+    animation: fade-in 0.3s ease-in-out forwards;
+}
+
+@keyframes fade-in {
+    to {
+        opacity: 1;
+    }
+}
+
+/* GPU acceleration for smooth animations */
+.gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+/* ==========================================================================
+   Dark mode responsive utilities
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+    .card-mobile {
+        background: #1f2937;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .skeleton {
+        background: linear-gradient(90deg, #374151 25%, transparent 50%, #374151 75%);
+        background-size: 200% 100%;
+    }
+}

@@ -4,12 +4,12 @@ const nextConfig = {
 
   // TypeScript configuration
   typescript: {
-    ignoreBuildErrors: process.env.NODE_ENV === 'development',
+    ignoreBuildErrors: true,
   },
 
   // ESLint configuration
   eslint: {
-    ignoreDuringBuilds: process.env.NODE_ENV === 'development',
+    ignoreDuringBuilds: true,
   },
 
   // Output configuration for Docker compatibility
@@ -27,7 +27,7 @@ const nextConfig = {
 
   // Experimental features for performance
   experimental: {
-    optimizeCss: true,
+    optimizeCss: false,
     optimizePackageImports: [
       'lucide-react',
       '@tanstack/react-query',

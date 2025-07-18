@@ -6,6 +6,7 @@ export { default as Icon } from './Icon';
 export { default as Spinner } from './Spinner';
 export { default as Tooltip } from './Tooltip';
 export { default as Card } from './Card';
+export { default as Avatar } from './Avatar';
 
 // Additional shadcn-style components
 export { Alert, AlertDescription, AlertTitle } from './alert';
@@ -29,5 +30,6 @@ export type { BadgeProps } from './Badge';
 export type { IconProps } from './Icon';
 export type { SpinnerProps } from './Spinner';
 export type { TooltipProps } from './Tooltip';
+export type { AvatarProps } from './Avatar';
 export type { LoadingSpinnerProps } from '../LoadingSpinner';
 export type { EmptyStateProps } from '../EmptyState';

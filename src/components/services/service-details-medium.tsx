@@ -4,7 +4,8 @@
 import React from 'react';
 import { Service } from '@/lib/types/service';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import Button from '@/components/ui/Button';
+import Badge from '@/components/ui/Badge';
 import {
   Play,
   Square,
@@ -157,7 +158,7 @@ export function ServiceDetails({ service, onClose, onAction }: ServiceDetailsPro
               )}
               <Button
                 size="sm"
-                variant="destructive"
+                variant="error"
                 onClick={() => onAction(service.id, 'delete')}
               >
                 <Trash2 className="h-4 w-4 mr-1" />

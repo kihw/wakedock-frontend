@@ -5,6 +5,7 @@ import Badge from '@/components/ui/Badge';
 import ServiceCreationWizard from '@/components/services/ServiceCreationWizard';
 import DockerComposeEditor from '@/components/compose/DockerComposeEditor';
 import GitHubIntegration from '@/components/github/GitHubIntegration';
+import { StackManagement } from '@/components/dashboard/StackManagement';
 import {
   Plus,
   FileText,
@@ -21,7 +22,8 @@ import {
   Eye,
   Terminal,
   BarChart3,
-  Monitor
+  Monitor,
+  Layers
 } from 'lucide-react';
 
 interface Service {
@@ -68,7 +70,7 @@ const ServiceManagementDashboard: React.FC = () => {
     diskUsage: 0
   });
   const [isWizardOpen, setIsWizardOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'wizard' | 'compose' | 'github'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'wizard' | 'compose' | 'github' | 'stacks'>('overview');
   const [isLoading, setIsLoading] = useState(true);
   const [realTimeMetrics, setRealTimeMetrics] = useState<Map<string, ContainerMetrics>>(new Map());
 
@@ -500,6 +502,13 @@ const ServiceManagementDashboard: React.FC = () => {
           <Github className="h-4 w-4 mr-2 inline" />
           GitHub Integration
         </button>
+        <button
+          className={`px-4 py-2 ${activeTab === 'stacks' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}
+          onClick={() => setActiveTab('stacks')}
+        >
+          <Layers className="h-4 w-4 mr-2 inline" />
+          Stack Management
+        </button>
       </div>
 
       {/* Tab Content */}
@@ -527,6 +536,11 @@ const ServiceManagementDashboard: React.FC = () => {
             <GitHubIntegration
               onDeploy={handleGitHubDeploy}
             />
+          </div>
+        )}
+        {activeTab === 'stacks' && (
+          <div className="py-4">
+            <StackManagement />
           </div>
         )}
       </div>

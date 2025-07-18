@@ -114,8 +114,6 @@ import {
   Satellite,
   Antenna,
   Cloud,
-  CloudUpload,
-  CloudDownload,
   CloudLightning,
   CloudRain,
   CloudSnow,
@@ -364,7 +362,7 @@ export const Header: React.FC<HeaderProps> = ({
     if (navigation.length === 0) return null
 
     return (
-      <nav className="hidden md:flex items-center space-x-1">
+      <nav className="flex items-center space-x-1">
         {navigation.map((item, index) => (
           <div key={index} className="relative group">
             <button

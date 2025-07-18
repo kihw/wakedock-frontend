@@ -1,6 +1,6 @@
 {
   "name": "wakedock-frontend",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "WakeDock Frontend - Advanced Service & Container Orchestration Dashboard",
   "private": true,
   "scripts": {

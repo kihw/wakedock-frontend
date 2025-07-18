@@ -148,6 +148,8 @@ export const AnalyticsDashboard: React.FC = () => {
   ];
 
   const loadDashboardData = async () => {
+    if (typeof window === 'undefined') return; // Skip on SSR
+    
     try {
       setLoading(true);
       const response = await api.get('/api/v1/analytics/dashboard');
@@ -174,6 +176,8 @@ export const AnalyticsDashboard: React.FC = () => {
   }, [autoRefresh]);
 
   const handleExport = async () => {
+    if (typeof window === 'undefined') return; // Skip on SSR
+    
     try {
       const response = await api.post('/api/v1/analytics/export');
       toast.success('Analytics data exported successfully');

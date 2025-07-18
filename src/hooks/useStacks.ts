@@ -33,6 +33,8 @@ export const useStacks = (): UseStacksReturn => {
   const [error, setError] = useState<string | null>(null);
 
   const refreshStacks = useCallback(async () => {
+    if (typeof window === 'undefined') return; // Skip on SSR
+    
     setLoading(true);
     setError(null);
     
@@ -72,6 +74,8 @@ export const useStacks = (): UseStacksReturn => {
   }, []);
 
   const executeStackAction = useCallback(async (stackName: string, action: string) => {
+    if (typeof window === 'undefined') return; // Skip on SSR
+    
     try {
       const response = await api.post(`/api/v1/stacks/${stackName}/action`, {
         action
@@ -91,6 +95,8 @@ export const useStacks = (): UseStacksReturn => {
   }, [refreshStacks]);
 
   const getStackLogs = useCallback(async (stackName: string, tail: number = 100) => {
+    if (typeof window === 'undefined') return; // Skip on SSR
+    
     try {
       const response = await api.get(`/api/v1/stacks/${stackName}/logs?tail=${tail}`);
       return response.data;

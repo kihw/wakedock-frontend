@@ -1,5 +1,5 @@
 /**
- * Store global pour le comportement SPA
+ * Store global pour le comportement de l'application
  * Gère l'état de navigation, le cache et les préférences
  */
 
@@ -29,7 +29,7 @@ interface CacheEntry {
     ttl: number
 }
 
-interface SPAStore {
+interface AppStore {
     // Navigation state
     navigation: NavigationState
 
@@ -77,7 +77,7 @@ const initialState = {
     cache: new Map<string, CacheEntry>()
 }
 
-export const useSPAStore = create<SPAStore>()(
+export const useAppStore = create<AppStore>()(
     persist(
         (set, get) => ({
             ...initialState,
@@ -185,7 +185,7 @@ export const useSPAStore = create<SPAStore>()(
             }
         }),
         {
-            name: 'wakedock-spa-store',
+            name: 'wakedock-app-store',
             partialize: (state) => ({
                 preferences: state.preferences,
                 navigation: {
@@ -201,7 +201,7 @@ export const useSPAStore = create<SPAStore>()(
 
 // Hook pour les préférences utilisateur
 export const useUserPreferences = () => {
-    const { preferences, updatePreferences } = useSPAStore()
+    const { preferences, updatePreferences } = useAppStore()
 
     const toggleAnimations = () => {
         updatePreferences({ enableAnimations: !preferences.enableAnimations })
@@ -247,7 +247,7 @@ export const useUserPreferences = () => {
 
 // Hook pour la navigation
 export const useNavigation = () => {
-    const { navigation, setNavigationState, addToHistory } = useSPAStore()
+    const { navigation, setNavigationState, addToHistory } = useAppStore()
 
     const startNavigation = (path: string) => {
         setNavigationState({ isNavigating: true })
@@ -274,8 +274,8 @@ export const useNavigation = () => {
 }
 
 // Hook pour le cache
-export const useSPACache = () => {
-    const { cache, setCache, getCache, clearCache } = useSPAStore()
+export const useAppCache = () => {
+    const { cache, setCache, getCache, clearCache } = useAppStore()
 
     const cacheSize = cache.size
     const cacheKeys = Array.from(cache.keys())
@@ -306,7 +306,7 @@ export const useSPACache = () => {
 
 // Hook pour les routes préchargées
 export const usePrefetch = () => {
-    const { navigation, addPrefetchedRoute, isPrefetched } = useSPAStore()
+    const { navigation, addPrefetchedRoute, isPrefetched } = useAppStore()
     const { enablePrefetch } = useUserPreferences().preferences
 
     const prefetchRoute = async (route: string) => {

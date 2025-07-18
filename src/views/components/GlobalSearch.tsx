@@ -5,8 +5,8 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useSPA } from '@/controllers/hooks/useSPA'
-import { useSPAStore } from '@/store/spaStore'
+import { useApp } from '@/controllers/hooks/useApp'
+import { useAppStore } from '@/store/appStore'
 
 interface SearchResult {
     id: string
@@ -164,7 +164,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) =
     const [isLoading, setIsLoading] = useState(false)
 
     const inputRef = useRef<HTMLInputElement>(null)
-    const { navigateToPage } = useSPA()
+    const { navigateToPage } = useApp()
 
     // Fonction de recherche
     const searchFunction = (searchQuery: string): SearchResult[] => {

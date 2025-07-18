@@ -6,9 +6,9 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
-import { SPALink } from '@/views/layouts/SPALayout'
-import { useSPAStore, useUserPreferences } from '@/store/spaStore'
-import { useSPA } from '@/controllers/hooks/useSPA'
+import { AppLink } from '@/views/layouts/Layout'
+import { useAppStore, useUserPreferences } from '@/store/appStore'
+import { useApp } from '@/controllers/hooks/useApp'
 
 // Icônes pour la navigation (utilisation d'icônes simples en attendant)
 const ChartBarIcon = ({ className = '' }) => (
@@ -250,13 +250,13 @@ const NavigationItemComponent: React.FC<{
     )
 }
 
-// Composant principal de navigation SPA
-export const SPANavigation: React.FC<SPANavigationProps> = ({ className = '' }) => {
+// Composant principal de navigation
+export const Navigation: React.FC<SPANavigationProps> = ({ className = '' }) => {
     const router = useRouter()
     const [isCollapsed, setIsCollapsed] = useState(false)
     const [isMobileOpen, setIsMobileOpen] = useState(false)
     const { preferences } = useUserPreferences()
-    const { navigateToPage } = useSPA()
+    const { navigateToPage } = useApp()
 
     // Déterminer l'élément actif
     const getActiveItem = (path: string): string => {
@@ -478,4 +478,4 @@ export const useNavigationState = () => {
     }
 }
 
-export default SPANavigation
+export default Navigation

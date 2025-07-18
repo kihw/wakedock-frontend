@@ -1,19 +1,19 @@
 /**
- * Composant principal SPA App
- * Intègre tous les composants SPA pour un comportement fluide
+ * Composant principal Application
+ * Intègre tous les composants pour un comportement fluide
  */
 
 import React, { useEffect, useState } from 'react'
-import { AppProps } from 'next/app'
-import { SPALayout } from '@/views/layouts/SPALayout'
-import { SPANavigation } from '@/views/components/SPANavigation'
+import { AppProps as NextAppProps } from 'next/app'
+import { Layout } from '@/views/layouts/Layout'
+import { Navigation } from '@/views/components/Navigation'
 import { GlobalSearch, useGlobalSearch } from '@/views/components/GlobalSearch'
-import { useSPAStore, useUserPreferences } from '@/store/spaStore'
-import { useSPA } from '@/controllers/hooks/useSPA'
+import { useAppStore, useUserPreferences } from '@/store/appStore'
+import { useApp } from '@/controllers/hooks/useApp'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 
-interface SPAAppProps extends AppProps {
+interface AppComponentProps extends NextAppProps {
     Component: React.ComponentType<any>
     pageProps: any
     router: any
@@ -69,12 +69,12 @@ const GlobalLoader: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     )
 }
 
-// Composant principal SPA
-export const SPAApp: React.FC<SPAAppProps> = ({ Component, pageProps }) => {
+// Composant principal Application
+export const App: React.FC<AppComponentProps> = ({ Component, pageProps }) => {
     const router = useRouter()
     const { preferences } = useUserPreferences()
-    const { navigation, setNavigationState } = useSPAStore()
-    const { isNavigating } = useSPA()
+    const { navigation, setNavigationState } = useAppStore()
+    const { isNavigating } = useApp()
     const { isOpen: isSearchOpen, openSearch, closeSearch } = useGlobalSearch()
 
     // Initialisation du thème
@@ -182,13 +182,13 @@ export const SPAApp: React.FC<SPAAppProps> = ({ Component, pageProps }) => {
     }, [router])
 
     return (
-        <div className="spa-app min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <div className="app min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
             {/* Navigation */}
-            <SPANavigation />
+            <Navigation />
 
             {/* Contenu principal */}
             <main className="md:ml-64 transition-all duration-300">
-                <SPALayout>
+                <Layout>
                     {/* Animations de page si activées */}
                     {preferences.enableAnimations ? (
                         <AnimatePresence mode="wait" initial={false}>
@@ -207,7 +207,7 @@ export const SPAApp: React.FC<SPAAppProps> = ({ Component, pageProps }) => {
                     ) : (
                         <Component {...pageProps} />
                     )}
-                </SPALayout>
+                </Layout>
             </main>
 
             {/* Loader global */}
@@ -236,7 +236,7 @@ export const SPAApp: React.FC<SPAAppProps> = ({ Component, pageProps }) => {
 }
 
 // Hook pour la gestion des erreurs SPA
-export const useSPAErrorHandler = () => {
+export const useAppErrorHandler = () => {
     const router = useRouter()
 
     const handleError = (error: Error, errorInfo?: any) => {
@@ -262,7 +262,7 @@ export const useSPAErrorHandler = () => {
 }
 
 // Hook pour les performances SPA
-export const useSPAPerformance = () => {
+export const useAppPerformance = () => {
     const [metrics, setMetrics] = React.useState({
         navigationTime: 0,
         renderTime: 0,
@@ -292,4 +292,4 @@ export const useSPAPerformance = () => {
     return metrics
 }
 
-export default SPAApp
+export default App

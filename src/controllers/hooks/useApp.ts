@@ -1,12 +1,12 @@
 /**
- * Hook pour gérer le comportement SPA complet
+ * Hook pour gérer le comportement de l'application
  * Gère la navigation, les transitions et l'état global
  */
 
 import { useRouter } from 'next/router'
 import { useEffect, useState, useCallback, useRef } from 'react'
 
-interface SPAState {
+interface AppState {
     isNavigating: boolean
     currentPage: string
     previousPage: string | null
@@ -15,14 +15,14 @@ interface SPAState {
     prefetchedRoutes: Set<string>
 }
 
-interface SPAOptions {
+interface AppOptions {
     enablePrefetch?: boolean
     transitionDuration?: number
     maxHistoryLength?: number
     enablePageTransitions?: boolean
 }
 
-export const useSPA = (options: SPAOptions = {}) => {
+export const useApp = (options: AppOptions = {}) => {
     const router = useRouter()
     const {
         enablePrefetch = true,
@@ -31,7 +31,7 @@ export const useSPA = (options: SPAOptions = {}) => {
         enablePageTransitions = true
     } = options
 
-    const [spaState, setSpaState] = useState<SPAState>({
+    const [appState, setAppState] = useState<AppState>({
         isNavigating: false,
         currentPage: router.pathname,
         previousPage: null,
@@ -48,11 +48,11 @@ export const useSPA = (options: SPAOptions = {}) => {
         url: string,
         options: { shallow?: boolean; scroll?: boolean } = {}
     ) => {
-        if (spaState.isNavigating) return
+        if (appState.isNavigating) return
 
         navigationStartTime.current = Date.now()
 
-        setSpaState(prev => ({
+        setAppState(prev => ({
             ...prev,
             isNavigating: true,
             previousPage: prev.currentPage
@@ -66,22 +66,22 @@ export const useSPA = (options: SPAOptions = {}) => {
         } catch (error) {
             console.error('Navigation error:', error)
         }
-    }, [router, spaState.isNavigating])
+    }, [router, appState.isNavigating])
 
     // Préchargement des routes
     const prefetchRoute = useCallback(async (url: string) => {
-        if (!enablePrefetch || spaState.prefetchedRoutes.has(url)) return
+        if (!enablePrefetch || appState.prefetchedRoutes.has(url)) return
 
         try {
             await router.prefetch(url)
-            setSpaState(prev => ({
+            setAppState(prev => ({
                 ...prev,
                 prefetchedRoutes: new Set([...prev.prefetchedRoutes, url])
             }))
         } catch (error) {
             console.error('Prefetch error:', error)
         }
-    }, [router, enablePrefetch, spaState.prefetchedRoutes])
+    }, [router, enablePrefetch, appState.prefetchedRoutes])
 
     // Préchargement automatique des liens visibles
     const handleLinkHover = useCallback((url: string) => {
@@ -99,10 +99,10 @@ export const useSPA = (options: SPAOptions = {}) => {
 
     // Navigation programmatique avec historique
     const goBack = useCallback(() => {
-        if (spaState.navigationHistory.length > 1) {
+        if (appState.navigationHistory.length > 1) {
             router.back()
         }
-    }, [router, spaState.navigationHistory])
+    }, [router, appState.navigationHistory])
 
     const goForward = useCallback(() => {
         router.forward()
@@ -112,7 +112,7 @@ export const useSPA = (options: SPAOptions = {}) => {
     useEffect(() => {
         const handleRouteChangeStart = (url: string) => {
             navigationStartTime.current = Date.now()
-            setSpaState(prev => ({
+            setAppState(prev => ({
                 ...prev,
                 isNavigating: true,
                 previousPage: prev.currentPage
@@ -122,7 +122,7 @@ export const useSPA = (options: SPAOptions = {}) => {
         const handleRouteChangeComplete = (url: string) => {
             const loadTime = Date.now() - navigationStartTime.current
 
-            setSpaState(prev => ({
+            setAppState(prev => ({
                 ...prev,
                 isNavigating: false,
                 currentPage: url,
@@ -138,7 +138,7 @@ export const useSPA = (options: SPAOptions = {}) => {
         }
 
         const handleRouteChangeError = (err: Error, url: string) => {
-            setSpaState(prev => ({
+            setAppState(prev => ({
                 ...prev,
                 isNavigating: false
             }))
@@ -173,13 +173,13 @@ export const useSPA = (options: SPAOptions = {}) => {
     }, [enablePrefetch, prefetchRoute])
 
     return {
-        ...spaState,
+        ...appState,
         navigateToPage,
         prefetchRoute,
         handleLinkHover,
         goBack,
         goForward,
-        canGoBack: spaState.navigationHistory.length > 1,
+        canGoBack: appState.navigationHistory.length > 1,
         canGoForward: typeof window !== 'undefined' && window.history.length > 1
     }
 }
@@ -204,7 +204,7 @@ const getPageTitle = (url: string): string => {
 
 // Hook pour les transitions de page
 export const usePageTransition = () => {
-    const { isNavigating, currentPage, previousPage } = useSPA()
+    const { isNavigating, currentPage, previousPage } = useApp()
     const [transitionState, setTransitionState] = useState<'idle' | 'exiting' | 'entering'>('idle')
 
     useEffect(() => {
@@ -225,7 +225,7 @@ export const usePageTransition = () => {
 }
 
 // Hook pour la gestion du cache SPA
-export const useSPACache = () => {
+export const useAppCache = () => {
     const [cache, setCache] = useState<Map<string, any>>(new Map())
 
     const cacheData = useCallback((key: string, data: any, ttl: number = 5 * 60 * 1000) => {

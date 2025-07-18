@@ -6,7 +6,7 @@
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
-import { useSPA, usePageTransition } from '@/controllers/hooks/useSPA'
+import { useApp, usePageTransition } from '@/controllers/hooks/useApp'
 
 interface SPALayoutProps {
     children: React.ReactNode
@@ -74,9 +74,9 @@ const NavigationLoader: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
 }
 
 // Composant principal SPA Layout
-export const SPALayout: React.FC<SPALayoutProps> = ({ children, className = '' }) => {
+export const Layout: React.FC<SPALayoutProps> = ({ children, className = '' }) => {
     const router = useRouter()
-    const { isNavigating, currentPage, handleLinkHover } = useSPA({
+    const { isNavigating, currentPage, handleLinkHover } = useApp({
         enablePrefetch: true,
         transitionDuration: 400,
         enablePageTransitions: true
@@ -144,10 +144,10 @@ export const SPALayout: React.FC<SPALayoutProps> = ({ children, className = '' }
 }
 
 // Hook pour les liens SPA
-export const useSPALink = () => {
-    const { navigateToPage, prefetchRoute } = useSPA()
+export const useAppLink = () => {
+    const { navigateToPage, prefetchRoute } = useApp()
 
-    const createSPALink = (href: string, options: { prefetch?: boolean } = {}) => {
+    const createAppLink = (href: string, options: { prefetch?: boolean } = {}) => {
         return {
             href,
             onClick: (e: React.MouseEvent) => {
@@ -158,11 +158,11 @@ export const useSPALink = () => {
         }
     }
 
-    return { createSPALink, navigateToPage }
+    return { createAppLink, navigateToPage }
 }
 
 // Composant Link SPA personnalisé
-interface SPALinkProps {
+interface AppLinkProps {
     href: string
     children: React.ReactNode
     className?: string
@@ -170,14 +170,14 @@ interface SPALinkProps {
     external?: boolean
 }
 
-export const SPALink: React.FC<SPALinkProps> = ({
+export const AppLink: React.FC<AppLinkProps> = ({
     href,
     children,
     className = '',
     prefetch = true,
     external = false
 }) => {
-    const { createSPALink } = useSPALink()
+    const { createAppLink } = useAppLink()
 
     // Liens externes
     if (external || href.startsWith('http')) {
@@ -194,7 +194,7 @@ export const SPALink: React.FC<SPALinkProps> = ({
     }
 
     // Liens internes SPA
-    const linkProps = createSPALink(href, { prefetch })
+    const linkProps = createAppLink(href, { prefetch })
 
     return (
         <a
@@ -218,7 +218,7 @@ interface SPABreadcrumbsProps {
     className?: string
 }
 
-export const SPABreadcrumbs: React.FC<SPABreadcrumbsProps> = ({ items, className = '' }) => {
+export const Breadcrumbs: React.FC<SPABreadcrumbsProps> = ({ items, className = '' }) => {
     return (
         <nav className={`spa-breadcrumbs ${className}`} aria-label="Breadcrumb">
             <ol className="flex items-center space-x-2">
@@ -242,12 +242,12 @@ export const SPABreadcrumbs: React.FC<SPABreadcrumbsProps> = ({ items, className
                                 {item.label}
                             </span>
                         ) : (
-                            <SPALink
+                            <AppLink
                                 href={item.href}
                                 className="text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
                             >
                                 {item.label}
-                            </SPALink>
+                            </AppLink>
                         )}
                     </li>
                 ))}
@@ -257,4 +257,7 @@ export const SPABreadcrumbs: React.FC<SPABreadcrumbsProps> = ({ items, className
 }
 
 // Export des types
-export type { SPALayoutProps, SPALinkProps, BreadcrumbItem }
+export type { SPALayoutProps, AppLinkProps, BreadcrumbItem }
+
+// Export par défaut
+export default Layout

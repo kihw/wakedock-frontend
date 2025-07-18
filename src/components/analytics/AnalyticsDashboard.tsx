@@ -1,7 +1,9 @@
+'use client';
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
 import { LoadingSpinner } from '../ui/loading-spinner';
 import { 
   Activity, 

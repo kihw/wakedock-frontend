@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Interface principale de visualisation des logs centralisés
  */

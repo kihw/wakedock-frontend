@@ -7,6 +7,8 @@ import Badge from '@/components/ui/Badge';
 import ServiceCreationWizard from '@/components/services/ServiceCreationWizard';
 import DockerComposeEditor from '@/components/compose/DockerComposeEditor';
 import GitHubIntegration from '@/components/github/GitHubIntegration';
+import { ServiceGroup } from '@/components/stacks/ServiceGroup';
+import { useStacks } from '@/hooks/useStacks';
 import {
     Plus,
     Code,
@@ -25,7 +27,12 @@ import {
     Cpu,
     HardDrive,
     Network,
-    Clock
+    Clock,
+    Server,
+    Package,
+    Grid,
+    List,
+    Filter
 } from 'lucide-react';
 
 interface ServiceStatus {
@@ -43,6 +50,9 @@ interface ServiceStatus {
     image: string;
     created: string;
     lastUpdated: string;
+    stack_name?: string;
+    stack_id?: string;
+    containers?: any[];
 }
 
 interface ServiceManagementDashboardProps {
@@ -61,7 +71,10 @@ const MOCK_SERVICES: ServiceStatus[] = [
         ports: ['80:80', '443:443'],
         image: 'nginx:alpine',
         created: '2024-01-15T10:30:00Z',
-        lastUpdated: '2024-01-17T14:22:00Z'
+        lastUpdated: '2024-01-17T14:22:00Z',
+        stack_name: 'webstack',
+        stack_id: 'stack-1',
+        containers: [{ id: 'cont-1', name: 'nginx-web-1', status: 'running' }]
     },
     {
         id: 'srv-2',
@@ -74,7 +87,10 @@ const MOCK_SERVICES: ServiceStatus[] = [
         ports: ['5432:5432'],
         image: 'postgres:15-alpine',
         created: '2024-01-10T09:15:00Z',
-        lastUpdated: '2024-01-17T14:21:00Z'
+        lastUpdated: '2024-01-17T14:21:00Z',
+        stack_name: 'datastack',
+        stack_id: 'stack-2',
+        containers: [{ id: 'cont-2', name: 'postgres-db-1', status: 'running' }]
     },
     {
         id: 'srv-3',
@@ -87,7 +103,24 @@ const MOCK_SERVICES: ServiceStatus[] = [
         ports: ['6379:6379'],
         image: 'redis:7-alpine',
         created: '2024-01-12T16:45:00Z',
-        lastUpdated: '2024-01-17T11:30:00Z'
+        lastUpdated: '2024-01-17T11:30:00Z',
+        stack_name: 'datastack',
+        stack_id: 'stack-2',
+        containers: [{ id: 'cont-3', name: 'redis-cache-1', status: 'stopped' }]
+    },
+    {
+        id: 'srv-4',
+        name: 'standalone-app',
+        status: 'running',
+        uptime: '1d 2h 15m',
+        cpu: 8.2,
+        memory: 128.5,
+        network: { rx: 256, tx: 512 },
+        ports: ['3000:3000'],
+        image: 'node:18-alpine',
+        created: '2024-01-16T12:00:00Z',
+        lastUpdated: '2024-01-17T14:20:00Z',
+        containers: [{ id: 'cont-4', name: 'standalone-app-1', status: 'running' }]
     }
 ];
 
@@ -97,6 +130,11 @@ export const ServiceManagementDashboard: React.FC<ServiceManagementDashboardProp
     const [activeTab, setActiveTab] = useState<'overview' | 'create' | 'compose' | 'github'>('overview');
     const [services, setServices] = useState<ServiceStatus[]>(MOCK_SERVICES);
     const [isWizardOpen, setIsWizardOpen] = useState(false);
+    const [viewMode, setViewMode] = useState<'services' | 'stacks'>('services');
+    const [statusFilter, setStatusFilter] = useState<string>('all');
+    
+    // Hook pour les stacks
+    const { stacks, overview, loading: stacksLoading, executeStackAction } = useStacks();
     const [selectedService, setSelectedService] = useState<ServiceStatus | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -199,6 +237,62 @@ export const ServiceManagementDashboard: React.FC<ServiceManagementDashboardProp
             setIsWizardOpen(false);
         } catch (error) {
             console.error('Failed to create service:', error);
+        }
+    };
+
+    // Groupement des services par stack
+    const groupedServices = React.useMemo(() => {
+        const stackServices = new Map<string, ServiceStatus[]>();
+        const standaloneServices: ServiceStatus[] = [];
+
+        services.forEach(service => {
+            if (service.stack_name) {
+                if (!stackServices.has(service.stack_name)) {
+                    stackServices.set(service.stack_name, []);
+                }
+                stackServices.get(service.stack_name)!.push(service);
+            } else {
+                standaloneServices.push(service);
+            }
+        });
+
+        return {
+            standalone: standaloneServices,
+            stacks: Array.from(stackServices.entries()).map(([stackName, stackServices]) => ({
+                name: stackName,
+                services: stackServices,
+                stack: stacks.find(s => s.name === stackName)
+            }))
+        };
+    }, [services, stacks]);
+
+    // Filtrage par statut
+    const filteredServices = React.useMemo(() => {
+        const filterByStatus = (serviceList: ServiceStatus[]) => {
+            if (statusFilter === 'all') return serviceList;
+            return serviceList.filter(service => service.status === statusFilter);
+        };
+
+        return {
+            standalone: filterByStatus(groupedServices.standalone),
+            stacks: groupedServices.stacks.map(stack => ({
+                ...stack,
+                services: filterByStatus(stack.services)
+            })).filter(stack => stack.services.length > 0)
+        };
+    }, [groupedServices, statusFilter]);
+
+    // Gestion des actions sur les services
+    const handleServiceAction = async (serviceId: string, action: string) => {
+        await handleServiceControl(serviceId, action as any);
+    };
+
+    // Gestion des actions sur les stacks
+    const handleStackAction = async (stackName: string, action: string) => {
+        try {
+            await executeStackAction(stackName, action);
+        } catch (error) {
+            console.error(`Failed to ${action} stack ${stackName}:`, error);
         }
     };
 
@@ -308,9 +402,107 @@ export const ServiceManagementDashboard: React.FC<ServiceManagementDashboardProp
 
             {/* Services List */}
             <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Services</h3>
-                <div className="space-y-3">
-                    {services.map((service) => {
+                <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold">Services</h3>
+                    <div className="flex items-center gap-3">
+                        {/* Status Filter */}
+                        <div className="flex items-center gap-2">
+                            <Filter className="w-4 h-4 text-gray-500" />
+                            <select
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                                className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm"
+                            >
+                                <option value="all">All Status</option>
+                                <option value="running">Running</option>
+                                <option value="stopped">Stopped</option>
+                                <option value="paused">Paused</option>
+                                <option value="error">Error</option>
+                            </select>
+                        </div>
+                        
+                        {/* View Toggle */}
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant={viewMode === 'services' ? 'default' : 'outline'}
+                                size="sm"
+                                onClick={() => setViewMode('services')}
+                                className="flex items-center gap-2"
+                            >
+                                <List className="w-4 h-4" />
+                                Services
+                            </Button>
+                            <Button
+                                variant={viewMode === 'stacks' ? 'default' : 'outline'}
+                                size="sm"
+                                onClick={() => setViewMode('stacks')}
+                                className="flex items-center gap-2"
+                            >
+                                <Grid className="w-4 h-4" />
+                                Stacks
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Services/Stacks View */}
+                {viewMode === 'stacks' ? (
+                    <div className="space-y-4">
+                        {/* Stack Groups */}
+                        {filteredServices.stacks.map((stackGroup) => (
+                            <ServiceGroup
+                                key={stackGroup.name}
+                                stack={stackGroup.stack}
+                                services={stackGroup.services.map(service => ({
+                                    id: service.id,
+                                    name: service.name,
+                                    status: service.status,
+                                    image: service.image,
+                                    ports: service.ports.reduce((acc, port) => {
+                                        const [external, internal] = port.split(':');
+                                        acc[internal] = external;
+                                        return acc;
+                                    }, {} as Record<string, any>),
+                                    created: service.created,
+                                    containers: service.containers || []
+                                }))}
+                                title={`Stack: ${stackGroup.name}`}
+                                expanded={false}
+                                onServiceAction={handleServiceAction}
+                                onContainerAction={async (containerId, action) => {
+                                    console.log(`Container ${containerId} action: ${action}`);
+                                }}
+                            />
+                        ))}
+                        
+                        {/* Standalone Services */}
+                        {filteredServices.standalone.length > 0 && (
+                            <ServiceGroup
+                                services={filteredServices.standalone.map(service => ({
+                                    id: service.id,
+                                    name: service.name,
+                                    status: service.status,
+                                    image: service.image,
+                                    ports: service.ports.reduce((acc, port) => {
+                                        const [external, internal] = port.split(':');
+                                        acc[internal] = external;
+                                        return acc;
+                                    }, {} as Record<string, any>),
+                                    created: service.created,
+                                    containers: service.containers || []
+                                }))}
+                                title="Standalone Services"
+                                expanded={false}
+                                onServiceAction={handleServiceAction}
+                                onContainerAction={async (containerId, action) => {
+                                    console.log(`Container ${containerId} action: ${action}`);
+                                }}
+                            />
+                        )}
+                    </div>
+                ) : (
+                    <div className="space-y-3">
+                    {(statusFilter === 'all' ? services : services.filter(s => s.status === statusFilter)).map((service) => {
                         const StatusIcon = getStatusIcon(service.status);
                         return (
                             <Card key={service.id} className="p-4">
@@ -428,7 +620,8 @@ export const ServiceManagementDashboard: React.FC<ServiceManagementDashboardProp
                             </Card>
                         );
                     })}
-                </div>
+                    </div>
+                )}
             </div>
 
             {/* Service Creation Wizard */}

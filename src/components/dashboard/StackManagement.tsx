@@ -79,8 +79,12 @@ export function StackManagement() {
             const stacksData = await stacksResponse.json();
             const overviewData = await overviewResponse.json();
 
-            setStacks(stacksData);
-            setOverview(overviewData);
+            // Adapter les données pour la compatibilité avec les nouveaux endpoints
+            const adaptedStacks = Array.isArray(stacksData) ? stacksData : [];
+            const adaptedOverview = overviewData.overview || overviewData;
+
+            setStacks(adaptedStacks);
+            setOverview(adaptedOverview);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Erreur inconnue');
         } finally {
@@ -162,8 +166,8 @@ export function StackManagement() {
 
             const result = await response.json();
             console.log('Action exécutée:', result);
-
-            // Recharger les données après l'action
+            
+            // Rafraîchir les données après l'action
             await loadData();
         } catch (err) {
             console.error('Erreur lors de l\'exécution de l\'action:', err);

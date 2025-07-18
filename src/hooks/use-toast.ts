@@ -5,19 +5,19 @@ import { useState, useCallback } from 'react';
 import { ToastState, ToastAction } from '@/models/ui/interface';
 
 interface ToastOptions {
-  title: string;
-  description?: string;
-  variant?: 'success' | 'error' | 'warning' | 'info';
-  duration?: number;
-  actions?: ToastAction[];
-  persistent?: boolean;
+    title: string;
+    description?: string;
+    variant?: 'success' | 'error' | 'warning' | 'info';
+    duration?: number;
+    actions?: ToastAction[];
+    persistent?: boolean;
 }
 
 interface ToastContextType {
-  toasts: ToastState[];
-  toast: (options: ToastOptions) => string;
-  dismiss: (id: string) => void;
-  dismissAll: () => void;
+    toasts: ToastState[];
+    toast: (options: ToastOptions) => string;
+    dismiss: (id: string) => void;
+    dismissAll: () => void;
 }
 
 let toastCount = 0;
@@ -27,100 +27,100 @@ let toastList: ToastState[] = [];
 const generateId = () => `toast-${++toastCount}`;
 
 const notify = () => {
-  toastListeners.forEach(listener => listener(toastList));
+    toastListeners.forEach(listener => listener(toastList));
 };
 
 const addToast = (options: ToastOptions): string => {
-  const id = generateId();
-  const toast: ToastState = {
-    id,
-    type: options.variant || 'info',
-    title: options.title,
-    message: options.description,
-    duration: options.duration || 5000,
-    actions: options.actions,
-    persistent: options.persistent || false,
-  };
+    const id = generateId();
+    const toast: ToastState = {
+        id,
+        type: options.variant || 'info',
+        title: options.title,
+        message: options.description,
+        duration: options.duration || 5000,
+        actions: options.actions,
+        persistent: options.persistent || false,
+    };
 
-  toastList.push(toast);
-  notify();
+    toastList.push(toast);
+    notify();
 
-  // Auto-dismiss non-persistent toasts
-  if (!toast.persistent && toast.duration > 0) {
-    setTimeout(() => {
-      removeToast(id);
-    }, toast.duration);
-  }
+    // Auto-dismiss non-persistent toasts
+    if (!toast.persistent && toast.duration > 0) {
+        setTimeout(() => {
+            removeToast(id);
+        }, toast.duration);
+    }
 
-  return id;
+    return id;
 };
 
 const removeToast = (id: string) => {
-  toastList = toastList.filter(toast => toast.id !== id);
-  notify();
+    toastList = toastList.filter(toast => toast.id !== id);
+    notify();
 };
 
 const removeAllToasts = () => {
-  toastList = [];
-  notify();
+    toastList = [];
+    notify();
 };
 
 export const toast = (options: ToastOptions): string => {
-  return addToast(options);
+    return addToast(options);
 };
 
 toast.success = (title: string, description?: string) => {
-  return addToast({ title, description, variant: 'success' });
+    return addToast({ title, description, variant: 'success' });
 };
 
 toast.error = (title: string, description?: string) => {
-  return addToast({ title, description, variant: 'error' });
+    return addToast({ title, description, variant: 'error' });
 };
 
 toast.warning = (title: string, description?: string) => {
-  return addToast({ title, description, variant: 'warning' });
+    return addToast({ title, description, variant: 'warning' });
 };
 
 toast.info = (title: string, description?: string) => {
-  return addToast({ title, description, variant: 'info' });
+    return addToast({ title, description, variant: 'info' });
 };
 
 toast.dismiss = (id: string) => {
-  removeToast(id);
+    removeToast(id);
 };
 
 toast.dismissAll = () => {
-  removeAllToasts();
+    removeAllToasts();
 };
 
 export const useToast = (): ToastContextType => {
-  const [toasts, setToasts] = useState<ToastState[]>(toastList);
+    const [toasts, setToasts] = useState<ToastState[]>(toastList);
 
-  const subscribe = useCallback((listener: (toasts: ToastState[]) => void) => {
-    toastListeners.push(listener);
-    return () => {
-      toastListeners = toastListeners.filter(l => l !== listener);
+    const subscribe = useCallback((listener: (toasts: ToastState[]) => void) => {
+        toastListeners.push(listener);
+        return () => {
+            toastListeners = toastListeners.filter(l => l !== listener);
+        };
+    }, []);
+
+    const dismiss = useCallback((id: string) => {
+        removeToast(id);
+    }, []);
+
+    const dismissAll = useCallback(() => {
+        removeAllToasts();
+    }, []);
+
+    // Subscribe to toast changes
+    useState(() => {
+        const unsubscribe = subscribe(setToasts);
+        return unsubscribe;
+    });
+
+    return {
+        toasts,
+        toast: addToast,
+        dismiss,
+        dismissAll,
     };
-  }, []);
-
-  const dismiss = useCallback((id: string) => {
-    removeToast(id);
-  }, []);
-
-  const dismissAll = useCallback(() => {
-    removeAllToasts();
-  }, []);
-
-  // Subscribe to toast changes
-  useState(() => {
-    const unsubscribe = subscribe(setToasts);
-    return unsubscribe;
-  });
-
-  return {
-    toasts,
-    toast: addToast,
-    dismiss,
-    dismissAll,
-  };
 };

@@ -13,10 +13,14 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "analyze": "cross-env ANALYZE=true next build",
-    "ci": "npm run format:check && npm run lint && npm run type-check && npm run test && npm run build"
+    "ci": "npm run format:check && npm run lint && npm run type-check && npm run test && npm run build && npm run test:e2e"
   },
   "dependencies": {
     "@fontsource/inter": "^5.0.15",
@@ -24,7 +28,6 @@
     "@tanstack/react-query": "5.8.4",
     "@tanstack/react-query-devtools": "5.8.4",
     "@types/js-yaml": "4.0.9",
-    "@types/node": "20.8.10",
     "@types/react": "18.2.37",
     "@types/react-dom": "18.2.15",
     "autoprefixer": "10.4.16",
@@ -54,9 +57,11 @@
     "zustand": "4.4.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.54.1",
     "@tailwindcss/forms": "0.5.7",
     "@tailwindcss/typography": "0.5.10",
     "@types/jest": "29.5.8",
+    "@types/node": "^24.0.14",
     "cross-env": "7.0.3",
     "eslint": "8.53.0",
     "eslint-config-next": "14.0.3",

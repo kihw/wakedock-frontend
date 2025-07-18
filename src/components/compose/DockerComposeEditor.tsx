@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Button from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { 
-  FileText, 
-  Save, 
-  Download, 
-  Upload, 
-  CheckCircle, 
-  XCircle, 
+import {
+  FileText,
+  Save,
+  Download,
+  Upload,
+  CheckCircle,
+  XCircle,
   AlertCircle,
   Play,
   Eye,
@@ -118,11 +118,11 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
 
   const validateYaml = useCallback((yamlContent: string): ValidationError[] => {
     const errors: ValidationError[] = [];
-    
+
     try {
       const parsed = yaml.load(yamlContent) as DockerComposeConfig;
       setParsedConfig(parsed);
-      
+
       // Basic structure validation
       if (!parsed.version) {
         errors.push({
@@ -131,7 +131,7 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
           type: 'warning'
         });
       }
-      
+
       if (!parsed.services || Object.keys(parsed.services).length === 0) {
         errors.push({
           line: 1,
@@ -139,7 +139,7 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
           type: 'error'
         });
       }
-      
+
       // Service validation
       if (parsed.services) {
         Object.entries(parsed.services).forEach(([serviceName, service]) => {
@@ -150,7 +150,7 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
               type: 'error'
             });
           }
-          
+
           // Port validation
           if (service.ports) {
             service.ports.forEach(port => {
@@ -164,7 +164,7 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
               }
             });
           }
-          
+
           // Environment validation
           if (service.environment) {
             if (Array.isArray(service.environment)) {
@@ -179,7 +179,7 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
               });
             }
           }
-          
+
           // Health check validation
           if (service.healthcheck) {
             if (!service.healthcheck.test) {
@@ -192,7 +192,7 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
           }
         });
       }
-      
+
     } catch (error) {
       errors.push({
         line: 1,
@@ -201,7 +201,7 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
       });
       setParsedConfig(null);
     }
-    
+
     return errors;
   }, []);
 
@@ -213,7 +213,7 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
 
   const handleSave = async () => {
     if (!onSave) return;
-    
+
     setIsSaving(true);
     try {
       await onSave(content);
@@ -226,7 +226,7 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
 
   const handleDeploy = async () => {
     if (!onDeploy || !isValid) return;
-    
+
     setIsDeploying(true);
     try {
       await onDeploy(content);
@@ -274,14 +274,14 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
 
     const lines = content.split('\n');
     const servicesIndex = lines.findIndex(line => line.trim() === 'services:');
-    
+
     if (servicesIndex !== -1) {
       // Find the end of services section
       let insertIndex = servicesIndex + 1;
       while (insertIndex < lines.length && (lines[insertIndex].startsWith('  ') || lines[insertIndex].trim() === '')) {
         insertIndex++;
       }
-      
+
       lines.splice(insertIndex, 0, newServiceTemplate);
       setContent(lines.join('\n'));
     }
@@ -335,7 +335,7 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
             </div>
           </div>
         </div>
-        
+
         <div className="relative">
           <textarea
             value={content}
@@ -348,7 +348,7 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
               tabSize: 2
             }}
           />
-          
+
           {/* Line numbers */}
           <div className="absolute left-0 top-0 w-12 h-full bg-gray-100 border-r">
             {content.split('\n').map((_, index) => (
@@ -402,7 +402,7 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
   const renderPreview = () => (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Configuration Preview</h3>
-      
+
       {parsedConfig && (
         <div className="space-y-4">
           {/* Services */}
@@ -483,7 +483,7 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
   const renderValidation = () => (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Validation Results</h3>
-      
+
       {validationErrors.length === 0 ? (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <div className="flex items-center">
@@ -496,11 +496,10 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
           {validationErrors.map((error, index) => (
             <div
               key={index}
-              className={`border rounded-lg p-4 ${
-                error.type === 'error' 
-                  ? 'bg-red-50 border-red-200' 
+              className={`border rounded-lg p-4 ${error.type === 'error'
+                  ? 'bg-red-50 border-red-200'
                   : 'bg-yellow-50 border-yellow-200'
-              }`}
+                }`}
             >
               <div className="flex items-start">
                 {error.type === 'error' ? (
@@ -510,16 +509,14 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
                 )}
                 <div>
                   <div className="flex items-center space-x-2">
-                    <span className={`text-sm font-medium ${
-                      error.type === 'error' ? 'text-red-800' : 'text-yellow-800'
-                    }`}>
+                    <span className={`text-sm font-medium ${error.type === 'error' ? 'text-red-800' : 'text-yellow-800'
+                      }`}>
                       {error.type === 'error' ? 'Error' : 'Warning'}
                     </span>
                     <span className="text-xs text-gray-500">Line {error.line}</span>
                   </div>
-                  <p className={`text-sm mt-1 ${
-                    error.type === 'error' ? 'text-red-700' : 'text-yellow-700'
-                  }`}>
+                  <p className={`text-sm mt-1 ${error.type === 'error' ? 'text-red-700' : 'text-yellow-700'
+                    }`}>
                     {error.message}
                   </p>
                 </div>
@@ -556,11 +553,10 @@ export const DockerComposeEditor: React.FC<DockerComposeEditorProps> = ({
           <FileText className="h-4 w-4 mr-2 inline" />
           Validation
           {validationErrors.length > 0 && (
-            <span className={`ml-2 px-2 py-1 text-xs rounded-full ${
-              validationErrors.some(e => e.type === 'error') 
-                ? 'bg-red-100 text-red-800' 
+            <span className={`ml-2 px-2 py-1 text-xs rounded-full ${validationErrors.some(e => e.type === 'error')
+                ? 'bg-red-100 text-red-800'
                 : 'bg-yellow-100 text-yellow-800'
-            }`}>
+              }`}>
               {validationErrors.length}
             </span>
           )}

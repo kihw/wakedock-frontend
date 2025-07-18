@@ -5,12 +5,12 @@ import Badge from '@/components/ui/Badge';
 import ServiceCreationWizard from '@/components/services/ServiceCreationWizard';
 import DockerComposeEditor from '@/components/compose/DockerComposeEditor';
 import GitHubIntegration from '@/components/github/GitHubIntegration';
-import { 
-  Plus, 
-  FileText, 
-  Github, 
-  Container, 
-  Network, 
+import {
+  Plus,
+  FileText,
+  Github,
+  Container,
+  Network,
   HardDrive,
   Activity,
   Settings,
@@ -124,10 +124,10 @@ const ServiceManagementDashboard: React.FC = () => {
     // Simulate loading data
     const loadData = async () => {
       setIsLoading(true);
-      
+
       // Simulate API calls
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       setServices(mockServices);
       setSystemStats({
         totalContainers: 4,
@@ -139,7 +139,7 @@ const ServiceManagementDashboard: React.FC = () => {
         memoryUsage: 72.3,
         diskUsage: 45.8
       });
-      
+
       setIsLoading(false);
     };
 
@@ -171,13 +171,13 @@ const ServiceManagementDashboard: React.FC = () => {
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setServices(prev => prev.map(service => 
-        service.id === serviceId 
-          ? { 
-              ...service, 
-              status: action === 'start' ? 'running' : action === 'stop' ? 'stopped' : 'starting' 
-            }
+
+      setServices(prev => prev.map(service =>
+        service.id === serviceId
+          ? {
+            ...service,
+            status: action === 'start' ? 'running' : action === 'stop' ? 'stopped' : 'starting'
+          }
           : service
       ));
     } catch (error) {
@@ -189,7 +189,7 @@ const ServiceManagementDashboard: React.FC = () => {
     try {
       // Simulate service creation
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       const newService: Service = {
         id: Date.now().toString(),
         name: config.customName,
@@ -201,7 +201,7 @@ const ServiceManagementDashboard: React.FC = () => {
         uptime: '0m',
         health: 'healthy'
       };
-      
+
       setServices(prev => [...prev, newService]);
       setIsWizardOpen(false);
     } catch (error) {
@@ -278,7 +278,7 @@ const ServiceManagementDashboard: React.FC = () => {
             <Container className="h-8 w-8 text-blue-500" />
           </div>
         </Card>
-        
+
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
@@ -288,7 +288,7 @@ const ServiceManagementDashboard: React.FC = () => {
             <Activity className="h-8 w-8 text-green-500" />
           </div>
         </Card>
-        
+
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
@@ -298,7 +298,7 @@ const ServiceManagementDashboard: React.FC = () => {
             <Network className="h-8 w-8 text-purple-500" />
           </div>
         </Card>
-        
+
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
@@ -326,7 +326,7 @@ const ServiceManagementDashboard: React.FC = () => {
               />
             </div>
           </div>
-          
+
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium">Memory Usage</span>
@@ -339,7 +339,7 @@ const ServiceManagementDashboard: React.FC = () => {
               />
             </div>
           </div>
-          
+
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium">Disk Usage</span>
@@ -370,7 +370,7 @@ const ServiceManagementDashboard: React.FC = () => {
             </Button>
           </div>
         </div>
-        
+
         {isLoading ? (
           <div className="text-center py-8">
             <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-500" />
@@ -390,7 +390,7 @@ const ServiceManagementDashboard: React.FC = () => {
                       <p className="text-sm text-gray-600">{service.image}</p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-4">
                     <div className="text-right">
                       <Badge variant={getStatusColor(service.status) as any}>
@@ -400,17 +400,17 @@ const ServiceManagementDashboard: React.FC = () => {
                         {service.health}
                       </Badge>
                     </div>
-                    
+
                     <div className="text-right text-sm">
                       <p className="text-gray-600">CPU: {service.cpu}%</p>
                       <p className="text-gray-600">Memory: {service.memory}%</p>
                     </div>
-                    
+
                     <div className="text-right text-sm">
                       <p className="text-gray-600">Ports: {service.ports.join(', ')}</p>
                       <p className="text-gray-600">Uptime: {service.uptime}</p>
                     </div>
-                    
+
                     <div className="flex items-center space-x-2">
                       {service.status === 'running' ? (
                         <>

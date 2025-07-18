@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Button from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
-import { 
-  Github, 
-  Search, 
-  Download, 
-  GitBranch, 
-  FileText, 
-  Container, 
+import {
+  Github,
+  Search,
+  Download,
+  GitBranch,
+  FileText,
+  Container,
   Settings,
   Play,
   RefreshCw,
@@ -158,7 +158,7 @@ networks:
 volumes:
   postgres_data:`;
 
-export const GitHubIntegration: React.FC<GitHubIntegrationProps> = ({ 
+export const GitHubIntegration: React.FC<GitHubIntegrationProps> = ({
   onDeploy,
   className = ''
 }) => {
@@ -190,7 +190,7 @@ export const GitHubIntegration: React.FC<GitHubIntegrationProps> = ({
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
     setIsLoading(true);
-    
+
     // Simulate search API call
     setTimeout(() => {
       const filtered = SAMPLE_REPOSITORIES.filter(repo =>
@@ -206,11 +206,11 @@ export const GitHubIntegration: React.FC<GitHubIntegrationProps> = ({
   const analyzeRepository = async (repo: GitHubRepository) => {
     setIsAnalyzing(true);
     setSelectedRepo(repo);
-    
+
     // Simulate repository analysis
     setTimeout(() => {
       const dockerfiles: DockerFile[] = [];
-      
+
       if (repo.has_dockerfile) {
         dockerfiles.push({
           name: 'Dockerfile',
@@ -219,7 +219,7 @@ export const GitHubIntegration: React.FC<GitHubIntegrationProps> = ({
           size: SAMPLE_DOCKERFILE.length
         });
       }
-      
+
       if (repo.has_compose) {
         dockerfiles.push({
           name: 'docker-compose.yml',
@@ -228,9 +228,9 @@ export const GitHubIntegration: React.FC<GitHubIntegrationProps> = ({
           size: SAMPLE_COMPOSE.length
         });
       }
-      
+
       setDockerfiles(dockerfiles);
-      
+
       setDeploymentConfig({
         repository: repo,
         branch: repo.default_branch,
@@ -246,7 +246,7 @@ export const GitHubIntegration: React.FC<GitHubIntegrationProps> = ({
         },
         autoWebhook: true
       });
-      
+
       setIsAnalyzing(false);
       setActiveTab('configure');
     }, 1500);
@@ -254,7 +254,7 @@ export const GitHubIntegration: React.FC<GitHubIntegrationProps> = ({
 
   const handleDeploy = async () => {
     if (!deploymentConfig || !onDeploy) return;
-    
+
     try {
       await onDeploy(deploymentConfig);
       setActiveTab('deploy');
@@ -295,7 +295,7 @@ export const GitHubIntegration: React.FC<GitHubIntegrationProps> = ({
           Refresh
         </Button>
       </div>
-      
+
       <div className="flex items-center space-x-2">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -339,7 +339,7 @@ export const GitHubIntegration: React.FC<GitHubIntegrationProps> = ({
                     )}
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-4 text-sm text-gray-500">
                   <div className="flex items-center space-x-1">
                     <Star className="h-4 w-4" />
@@ -354,7 +354,7 @@ export const GitHubIntegration: React.FC<GitHubIntegrationProps> = ({
                     <span>{new Date(repo.updated_at).toLocaleDateString()}</span>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     {repo.language && (
@@ -383,7 +383,7 @@ export const GitHubIntegration: React.FC<GitHubIntegrationProps> = ({
                     )}
                   </Button>
                 </div>
-                
+
                 {repo.topics.length > 0 && (
                   <div className="flex flex-wrap gap-1">
                     {repo.topics.slice(0, 3).map((topic) => (

@@ -51,8 +51,8 @@ class SimpleApiClient {
   private token: string | null = null;
 
   constructor() {
-    // Use environment variable or fallback
-    this.baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
+    // Use environment variable or fallback to relative URL
+    this.baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '/api/v1';
     
     if (typeof window !== 'undefined') {
       this.token = localStorage.getItem('wakedock_access_token');
@@ -129,20 +129,20 @@ class SimpleApiClient {
   // Auth methods
   auth = {
     login: async (credentials: { username: string; password: string }): Promise<LoginResponse> => {
-      // OAuth2PasswordRequestForm requires form-urlencoded data
-      const formData = new URLSearchParams();
-      formData.append('username', credentials.username);
-      formData.append('password', credentials.password);
-      
+      // Use real backend endpoint
       const response = await this.request<LoginResponse>('/auth/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: formData.toString(),
+        body: JSON.stringify(credentials),
       });
       
-      this.setToken(response.access_token);
+      // Store the token
+      if (response.access_token) {
+        this.setToken(response.access_token);
+        if (response.refresh_token && typeof window !== 'undefined') {
+          localStorage.setItem('wakedock_refresh_token', response.refresh_token);
+        }
+      }
+      
       return response;
     },
 
@@ -179,6 +179,7 @@ class SimpleApiClient {
   // Services methods
   services = {
     getAll: async (): Promise<Service[]> => {
+      // Use real backend endpoint
       return this.request<Service[]>('/services');
     },
 
@@ -187,15 +188,21 @@ class SimpleApiClient {
     },
 
     start: async (id: string): Promise<void> => {
-      await this.request(`/services/${id}/start`, { method: 'POST' });
+      await this.request(`/services/${id}/start`, { 
+        method: 'POST'
+      });
     },
 
     stop: async (id: string): Promise<void> => {
-      await this.request(`/services/${id}/stop`, { method: 'POST' });
+      await this.request(`/services/${id}/stop`, { 
+        method: 'POST'
+      });
     },
 
     restart: async (id: string): Promise<void> => {
-      await this.request(`/services/${id}/restart`, { method: 'POST' });
+      await this.request(`/services/${id}/restart`, { 
+        method: 'POST'
+      });
     },
 
     delete: async (id: string): Promise<void> => {

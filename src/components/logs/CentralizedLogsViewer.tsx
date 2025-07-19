@@ -682,4 +682,5 @@ const CentralizedLogsViewer: React.FC = () => {
     );
 };
 
+export { CentralizedLogsViewer };
 export default CentralizedLogsViewer;

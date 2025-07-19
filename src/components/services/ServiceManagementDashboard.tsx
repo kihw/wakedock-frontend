@@ -149,8 +149,6 @@ export const ServiceManagementDashboard: React.FC<ServiceManagementDashboardProp
         startService,
         stopService,
         restartService,
-        rebuildService,
-        bulkAction,
         setFilters,
         setSelectedServices,
         setPage,

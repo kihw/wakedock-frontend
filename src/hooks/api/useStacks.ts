@@ -39,17 +39,33 @@ export const useStacks = (): UseStacksReturn => {
     setError(null);
     
     try {
-      const response = await api.get<StackStatsResponse>('/api/v1/stacks/stats/overview');
+      const response = await api.get('/stacks');
       
       if (response.data) {
-        setOverview(response.data.overview);
+        // Handle different response formats
+        const responseData = response.data;
         
-        // Convert API response to Stack format
-        const stacksData: Stack[] = response.data.stacks.map((stack: any) => ({
-          name: stack.name,
-          status: stack.status,
-          services: stack.services || [],
-          containers: stack.containers || [],
+        if (responseData.overview) {
+          setOverview(responseData.overview);
+        } else {
+          setOverview({
+            total_stacks: 0,
+            running_stacks: 0,
+            stopped_stacks: 0,
+            error_stacks: 0,
+            total_services: 0,
+            total_containers: 0
+          });
+        }
+        
+        // Handle array or object response
+        const stacksArray = Array.isArray(responseData) ? responseData : (responseData.stacks || []);
+        
+        const stacksData: Stack[] = stacksArray.map((stack: any) => ({
+          name: stack.name || 'unknown',
+          status: stack.status || 'stopped',
+          services: Array.isArray(stack.services) ? stack.services : [],
+          containers: Array.isArray(stack.containers) ? stack.containers : [],
           stats: stack.stats || {
             total_containers: 0,
             running_containers: 0,
@@ -60,14 +76,36 @@ export const useStacks = (): UseStacksReturn => {
             cpu_usage: 0,
             memory_usage: 0
           },
-          deployment_info: stack.deployment_info
+          deployment_info: stack.deployment_info || null
         }));
         
         setStacks(stacksData);
+      } else {
+        // Fallback for empty response
+        setStacks([]);
+        setOverview({
+          total_stacks: 0,
+          running_stacks: 0,
+          stopped_stacks: 0,
+          error_stacks: 0,
+          total_services: 0,
+          total_containers: 0
+        });
       }
     } catch (err: any) {
       setError(err.message || 'Failed to fetch stacks');
       console.error('Error fetching stacks:', err);
+      
+      // Set default values on error
+      setStacks([]);
+      setOverview({
+        total_stacks: 0,
+        running_stacks: 0,
+        stopped_stacks: 0,
+        error_stacks: 0,
+        total_services: 0,
+        total_containers: 0
+      });
     } finally {
       setLoading(false);
     }
@@ -77,7 +115,7 @@ export const useStacks = (): UseStacksReturn => {
     if (typeof window === 'undefined') return; // Skip on SSR
     
     try {
-      const response = await api.post(`/api/v1/stacks/${stackName}/action`, {
+      const response = await api.post(`/stacks/${stackName}/action`, {
         action
       });
       
@@ -98,7 +136,7 @@ export const useStacks = (): UseStacksReturn => {
     if (typeof window === 'undefined') return; // Skip on SSR
     
     try {
-      const response = await api.get(`/api/v1/stacks/${stackName}/logs?tail=${tail}`);
+      const response = await api.get(`/stacks/${stackName}/logs?tail=${tail}`);
       return response.data;
     } catch (err: any) {
       console.error(`Error getting logs for ${stackName}:`, err);

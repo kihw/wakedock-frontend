@@ -733,4 +733,5 @@ const MonitoringDashboard: React.FC = () => {
     );
 };
 
+export { MonitoringDashboard };
 export default MonitoringDashboard;

@@ -1,13 +1,23 @@
 // Service Controller Hook - MVC Architecture
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Service, ServiceStatus } from '@/lib/types/domain';
-import { ServiceListRequest, ServiceActionRequest } from '@/lib/types/api-requests';
-import { FilterState, LoadingState } from '@/lib/types/ui';
-import { serviceApi } from '@/lib/api/services';
-import { toast } from '@/hooks/ui/use-toast';
+import { api } from '@/lib/api/client';
+import { Service } from '@/lib/api-simple';
+
+interface FilterState {
+  search: string;
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
+  [key: string]: any;
+}
+
+interface LoadingState {
+  isLoading: boolean;
+  loadingText?: string;
+  error?: string;
+}
 
 export interface ServiceControllerState {
     services: Service[];
@@ -22,14 +32,12 @@ export interface ServiceControllerState {
 }
 
 export interface ServiceControllerActions {
-    loadServices: (params?: ServiceListRequest) => Promise<void>;
+    loadServices: () => Promise<void>;
     refreshServices: () => Promise<void>;
     startService: (serviceId: string) => Promise<void>;
     stopService: (serviceId: string) => Promise<void>;
     restartService: (serviceId: string) => Promise<void>;
-    rebuildService: (serviceId: string) => Promise<void>;
-    bulkAction: (serviceIds: string[], action: string) => Promise<void>;
-    setFilters: (filters: Partial<FilterState<Service>>) => void;
+    setFilters: (filters: Partial<FilterState>) => void;
     setSelectedServices: (serviceIds: string[]) => void;
     setPage: (page: number) => void;
     setPageSize: (pageSize: number) => void;
@@ -39,12 +47,10 @@ export const useServiceController = (): ServiceControllerState & ServiceControll
     const queryClient = useQueryClient();
 
     // Local state
-    const [filters, setFiltersState] = useState<FilterState<Service>>({
+    const [filters, setFiltersState] = useState<FilterState>({
         search: '',
-        filters: {},
         sortBy: 'name',
         sortOrder: 'asc',
-        activeFilters: [],
     });
 
     const [selectedServices, setSelectedServicesState] = useState<string[]>([]);
@@ -59,115 +65,70 @@ export const useServiceController = (): ServiceControllerState & ServiceControll
         refetch,
     } = useQuery({
         queryKey: ['services', filters, page, pageSize],
-        queryFn: () => serviceApi.getServices({
-            page,
-            page_size: pageSize,
-            search: filters.search,
-            sort_by: filters.sortBy,
-            sort_order: filters.sortOrder,
-            ...filters.filters,
-        }),
+        queryFn: async () => {
+            try {
+                const response = await api.get('/services', {
+                    page,
+                    page_size: pageSize,
+                    search: filters.search,
+                    sort_by: filters.sortBy,
+                    sort_order: filters.sortOrder,
+                });
+                return response.data;
+            } catch (error) {
+                console.error('Failed to fetch services:', error);
+                return [];
+            }
+        },
         staleTime: 30000, // 30 seconds
         refetchInterval: 60000, // 1 minute
     });
 
     // Mutations for service actions
     const startServiceMutation = useMutation({
-        mutationFn: (serviceId: string) => serviceApi.executeAction({
-            action: 'start',
-            service_id: serviceId,
-        }),
+        mutationFn: async (serviceId: string) => {
+            const response = await api.post(`/services/${serviceId}/start`);
+            return response.data;
+        },
         onSuccess: (data, serviceId) => {
             queryClient.invalidateQueries({ queryKey: ['services'] });
-            toast({
-                title: 'Success',
-                description: `Service ${serviceId} started successfully`,
-                variant: 'success',
-            });
+            console.log(`Service ${serviceId} started successfully`);
         },
         onError: (error, serviceId) => {
-            toast({
-                title: 'Error',
-                description: `Failed to start service ${serviceId}: ${error.message}`,
-                variant: 'error',
-            });
+            console.error(`Failed to start service ${serviceId}:`, error);
         },
     });
 
     const stopServiceMutation = useMutation({
-        mutationFn: (serviceId: string) => serviceApi.executeAction({
-            action: 'stop',
-            service_id: serviceId,
-        }),
+        mutationFn: async (serviceId: string) => {
+            const response = await api.post(`/services/${serviceId}/stop`);
+            return response.data;
+        },
         onSuccess: (data, serviceId) => {
             queryClient.invalidateQueries({ queryKey: ['services'] });
-            toast({
-                title: 'Success',
-                description: `Service ${serviceId} stopped successfully`,
-                variant: 'success',
-            });
+            console.log(`Service ${serviceId} stopped successfully`);
         },
         onError: (error, serviceId) => {
-            toast({
-                title: 'Error',
-                description: `Failed to stop service ${serviceId}: ${error.message}`,
-                variant: 'error',
-            });
+            console.error(`Failed to stop service ${serviceId}:`, error);
         },
     });
 
     const restartServiceMutation = useMutation({
-        mutationFn: (serviceId: string) => serviceApi.executeAction({
-            action: 'restart',
-            service_id: serviceId,
-        }),
+        mutationFn: async (serviceId: string) => {
+            const response = await api.post(`/services/${serviceId}/restart`);
+            return response.data;
+        },
         onSuccess: (data, serviceId) => {
             queryClient.invalidateQueries({ queryKey: ['services'] });
-            toast({
-                title: 'Success',
-                description: `Service ${serviceId} restarted successfully`,
-                variant: 'success',
-            });
+            console.log(`Service ${serviceId} restarted successfully`);
         },
         onError: (error, serviceId) => {
-            toast({
-                title: 'Error',
-                description: `Failed to restart service ${serviceId}: ${error.message}`,
-                variant: 'error',
-            });
-        },
-    });
-
-    const rebuildServiceMutation = useMutation({
-        mutationFn: (serviceId: string) => serviceApi.executeAction({
-            action: 'rebuild',
-            service_id: serviceId,
-        }),
-        onSuccess: (data, serviceId) => {
-            queryClient.invalidateQueries({ queryKey: ['services'] });
-            toast({
-                title: 'Success',
-                description: `Service ${serviceId} rebuilt successfully`,
-                variant: 'success',
-            });
-        },
-        onError: (error, serviceId) => {
-            toast({
-                title: 'Error',
-                description: `Failed to rebuild service ${serviceId}: ${error.message}`,
-                variant: 'error',
-            });
+            console.error(`Failed to restart service ${serviceId}:`, error);
         },
     });
 
     // Controller actions
-    const loadServices = useCallback(async (params?: ServiceListRequest) => {
-        if (params) {
-            setFiltersState(prev => ({
-                ...prev,
-                ...params,
-            }));
-        }
+    const loadServices = useCallback(async () => {
         await refetch();
     }, [refetch]);
 
@@ -187,43 +148,7 @@ export const useServiceController = (): ServiceControllerState & ServiceControll
         await restartServiceMutation.mutateAsync(serviceId);
     }, [restartServiceMutation]);
 
-    const rebuildService = useCallback(async (serviceId: string) => {
-        await rebuildServiceMutation.mutateAsync(serviceId);
-    }, [rebuildServiceMutation]);
-
-    const bulkAction = useCallback(async (serviceIds: string[], action: string) => {
-        const promises = serviceIds.map(serviceId => {
-            switch (action) {
-                case 'start':
-                    return startService(serviceId);
-                case 'stop':
-                    return stopService(serviceId);
-                case 'restart':
-                    return restartService(serviceId);
-                case 'rebuild':
-                    return rebuildService(serviceId);
-                default:
-                    return Promise.reject(new Error(`Unknown action: ${action}`));
-            }
-        });
-
-        try {
-            await Promise.all(promises);
-            toast({
-                title: 'Success',
-                description: `Bulk ${action} completed successfully`,
-                variant: 'success',
-            });
-        } catch (error) {
-            toast({
-                title: 'Error',
-                description: `Bulk ${action} failed: ${error.message}`,
-                variant: 'error',
-            });
-        }
-    }, [startService, stopService, restartService, rebuildService]);
-
-    const setFilters = useCallback((newFilters: Partial<FilterState<Service>>) => {
+    const setFilters = useCallback((newFilters: Partial<FilterState>) => {
         setFiltersState(prev => ({
             ...prev,
             ...newFilters,
@@ -251,8 +176,8 @@ export const useServiceController = (): ServiceControllerState & ServiceControll
         error: error?.message,
     };
 
-    const services = servicesData?.items || [];
-    const totalCount = servicesData?.total || 0;
+    const services = Array.isArray(servicesData) ? servicesData : [];
+    const totalCount = services.length;
 
     return {
         // State
@@ -272,8 +197,6 @@ export const useServiceController = (): ServiceControllerState & ServiceControll
         startService,
         stopService,
         restartService,
-        rebuildService,
-        bulkAction,
         setFilters,
         setSelectedServices,
         setPage,

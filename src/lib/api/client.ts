@@ -5,29 +5,31 @@
 import { api as baseApi } from '../api-simple';
 export { toast } from '../toast';
 
-// Ensure API is available in browser environment
-export const api = typeof window !== 'undefined' ? baseApi : {
-  get: async () => ({ data: null }),
-  post: async () => ({ data: null }),
-  put: async () => ({ data: null }),
-  delete: async () => ({ data: null }),
-  patch: async () => ({ data: null }),
+// Create a stable API reference that works both client and server side
+const createApiProxy = () => {
+  if (typeof window === 'undefined') {
+    // Server-side mock
+    return {
+      get: async () => ({ data: null }),
+      post: async () => ({ data: null }),
+      put: async () => ({ data: null }),
+      delete: async () => ({ data: null }),
+      patch: async () => ({ data: null }),
+      services: { getAll: async () => [] },
+      system: { getOverview: async () => ({}) },
+    };
+  }
+  return baseApi;
 };
 
-// Re-export des types pour compatibilité
+export const api = createApiProxy();
+
+// Re-export des types pour compatibilité  
 export type {
-  ApiResponse,
   ApiError,
-  PaginatedResponse,
-  QueryParams,
-  RequestConfig,
+  Service,
+  SystemOverview,
 } from '../api-simple';
 
 // Création d'un alias pour l'usage direct
-export const apiClient = {
-  get: api.get,
-  post: api.post,
-  put: api.put,
-  delete: api.delete,
-  patch: api.patch,
-};
+export const apiClient = api;

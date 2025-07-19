@@ -27,7 +27,6 @@ RUN echo "Building Next.js application..." && \
     npm run build && \
     echo "Build completed, checking output..." && \
     ls -la .next/ && \
-    test -f .next/standalone/server.js || (echo "❌ Build failed: server.js not found in .next/standalone/" && ls -la .next/ && exit 1) && \
     echo "✅ Next.js build successful"
 
 # Production image, copy all the files and run next
@@ -53,13 +52,11 @@ RUN mkdir -p public
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Copy public files directly from source (not from builder as they may not be in standalone)
+# Copy Next.js build output and dependencies for standard build
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
 # Switch to non-root user
 USER nextjs
@@ -71,5 +68,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:3000/api/health || curl -f http://localhost:3000/ || exit 1
 
-# Start the application
-CMD ["node", "server.js"]
+# Start the application with Next.js standard mode
+CMD ["npm", "run", "start"]

@@ -47,10 +47,13 @@ export interface SystemOverview {
 }
 
 class SimpleApiClient {
-  private baseUrl = '/api/v1';
+  private baseUrl: string;
   private token: string | null = null;
 
   constructor() {
+    // Use environment variable or fallback
+    this.baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
+    
     if (typeof window !== 'undefined') {
       this.token = localStorage.getItem('wakedock_access_token');
     }
@@ -76,7 +79,7 @@ class SimpleApiClient {
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`;
+    const url = endpoint.startsWith('http') ? endpoint : `${this.baseUrl}${endpoint}`;
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...((options.headers as Record<string, string>) || {}),
@@ -217,6 +220,44 @@ class SimpleApiClient {
       return this.request<{ status: string }>('/health');
     },
   };
+
+  // Generic HTTP methods for compatibility
+  async get<T>(endpoint: string, params?: Record<string, any>): Promise<{ data: T }> {
+    const queryString = params ? '?' + new URLSearchParams(params).toString() : '';
+    const data = await this.request<T>(`${endpoint}${queryString}`);
+    return { data };
+  }
+
+  async post<T>(endpoint: string, data?: any): Promise<{ data: T }> {
+    const result = await this.request<T>(endpoint, {
+      method: 'POST',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+    return { data: result };
+  }
+
+  async put<T>(endpoint: string, data?: any): Promise<{ data: T }> {
+    const result = await this.request<T>(endpoint, {
+      method: 'PUT',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+    return { data: result };
+  }
+
+  async patch<T>(endpoint: string, data?: any): Promise<{ data: T }> {
+    const result = await this.request<T>(endpoint, {
+      method: 'PATCH',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+    return { data: result };
+  }
+
+  async delete<T>(endpoint: string): Promise<{ data: T }> {
+    const result = await this.request<T>(endpoint, {
+      method: 'DELETE',
+    });
+    return { data: result };
+  }
 
   // Legacy compatibility methods
   async getServices() {

@@ -135,3 +135,4 @@ export const StatusBadge = forwardRef<HTMLDivElement, Omit<BadgeProps, 'variant'
 StatusBadge.displayName = 'StatusBadge';
 
 export { Badge };
+export default Badge;

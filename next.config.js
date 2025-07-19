@@ -12,8 +12,8 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  // Output configuration for standalone server
-  output: 'standalone',
+  // Output configuration - disable standalone for now to fix build
+  // output: 'standalone',
   trailingSlash: true,
   skipTrailingSlashRedirect: true,
 
@@ -41,7 +41,7 @@ const nextConfig = {
 
   // Environment variables
   env: {
-    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1',
     NEXT_PUBLIC_WS_BASE_URL: process.env.NEXT_PUBLIC_WS_BASE_URL || 'ws://localhost:8000',
   },
   // Headers for security and performance
@@ -61,6 +61,10 @@ const nextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'origin-when-cross-origin',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' http://localhost:8000 ws://localhost:8000 https:; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self';",
           },
         ],
       },

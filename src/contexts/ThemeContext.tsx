@@ -63,10 +63,12 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       
       // Remove any existing theme classes
       root.removeAttribute('data-theme');
+      root.classList.remove('dark');
       
       // Add new theme
       if (newActualTheme === 'dark') {
         root.setAttribute('data-theme', 'dark');
+        root.classList.add('dark'); // Add Tailwind dark class
       }
       
       // Update meta theme-color for mobile browsers

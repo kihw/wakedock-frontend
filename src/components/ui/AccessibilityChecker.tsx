@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { AlertTriangle, CheckCircle, Info, XCircle } from 'lucide-react'
-import { Card } from '@/views/atoms/Card'
-import { Button } from '@/views/atoms/Button'
+import { Card } from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button'
 
 interface AccessibilityIssue {
     id: string

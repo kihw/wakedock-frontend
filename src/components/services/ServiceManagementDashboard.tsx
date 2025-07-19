@@ -1,14 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import Badge from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/Badge';
 import ServiceCreationWizard from '@/components/services/ServiceCreationWizard';
 import DockerComposeEditor from '@/components/compose/DockerComposeEditor';
 import GitHubIntegration from '@/components/github/GitHubIntegration';
 import { ServiceGroup } from '@/components/stacks/ServiceGroup';
-import { useStacks } from '@/hooks/useStacks';
+import { useStacks } from '@/hooks/api/useStacks';
+import { useServiceController } from '@/hooks/api/useServiceController';
 import {
     Plus,
     Code,
@@ -128,38 +129,43 @@ export const ServiceManagementDashboard: React.FC<ServiceManagementDashboardProp
     className = ''
 }) => {
     const [activeTab, setActiveTab] = useState<'overview' | 'create' | 'compose' | 'github'>('overview');
-    const [services, setServices] = useState<ServiceStatus[]>(MOCK_SERVICES);
     const [isWizardOpen, setIsWizardOpen] = useState(false);
     const [viewMode, setViewMode] = useState<'services' | 'stacks'>('services');
     const [statusFilter, setStatusFilter] = useState<string>('all');
-    
-    // Hook pour les stacks
-    const { stacks, overview, loading: stacksLoading, executeStackAction } = useStacks();
     const [selectedService, setSelectedService] = useState<ServiceStatus | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+    
+    // Modern SPA hooks
+    const { stacks, overview, loading: stacksLoading, executeStackAction } = useStacks();
+    const {
+        services,
+        loading,
+        isLoading,
+        error,
+        filters,
+        selectedServices,
+        totalCount,
+        page,
+        pageSize,
+        startService,
+        stopService,
+        restartService,
+        rebuildService,
+        bulkAction,
+        setFilters,
+        setSelectedServices,
+        setPage,
+        setPageSize,
+        refreshServices
+    } = useServiceController();
 
     useEffect(() => {
-        // Simulate real-time updates
+        // Real-time updates through React Query
         const interval = setInterval(() => {
-            setServices(prev => prev.map(service => {
-                if (service.status === 'running') {
-                    return {
-                        ...service,
-                        cpu: Math.random() * 50,
-                        memory: service.memory + (Math.random() - 0.5) * 10,
-                        network: {
-                            rx: service.network.rx + Math.floor(Math.random() * 100),
-                            tx: service.network.tx + Math.floor(Math.random() * 100)
-                        },
-                        lastUpdated: new Date().toISOString()
-                    };
-                }
-                return service;
-            }));
-        }, 5000);
+            refreshServices();
+        }, 30000); // Refresh every 30 seconds
 
         return () => clearInterval(interval);
-    }, []);
+    }, [refreshServices]);
 
     const getStatusColor = (status: ServiceStatus['status']) => {
         switch (status) {
@@ -184,56 +190,37 @@ export const ServiceManagementDashboard: React.FC<ServiceManagementDashboardProp
     };
 
     const handleServiceControl = async (serviceId: string, action: 'start' | 'stop' | 'restart' | 'pause') => {
-        setIsLoading(true);
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            setServices(prev => prev.map(service => {
-                if (service.id === serviceId) {
-                    let newStatus: ServiceStatus['status'];
-                    switch (action) {
-                        case 'start': newStatus = 'running'; break;
-                        case 'stop': newStatus = 'stopped'; break;
-                        case 'restart': newStatus = 'restarting'; break;
-                        case 'pause': newStatus = 'paused'; break;
-                        default: newStatus = service.status;
-                    }
-                    return {
-                        ...service,
-                        status: newStatus,
-                        lastUpdated: new Date().toISOString()
-                    };
-                }
-                return service;
-            }));
+            switch (action) {
+                case 'start':
+                    await startService(serviceId);
+                    break;
+                case 'stop':
+                    await stopService(serviceId);
+                    break;
+                case 'restart':
+                    await restartService(serviceId);
+                    break;
+                case 'pause':
+                    // Note: pause action not implemented in useServiceController
+                    console.warn('Pause action not yet implemented');
+                    break;
+                default:
+                    console.error('Unknown action:', action);
+            }
         } catch (error) {
             console.error('Failed to control service:', error);
-        } finally {
-            setIsLoading(false);
         }
     };
 
     const handleCreateService = async (config: any) => {
         try {
-            // Simulate service creation
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            const newService: ServiceStatus = {
-                id: `srv-${Date.now()}`,
-                name: config.customName,
-                status: 'running',
-                uptime: '0s',
-                cpu: 0,
-                memory: 0,
-                network: { rx: 0, tx: 0 },
-                ports: Object.entries(config.ports).map(([internal, external]) => `${external}:${internal}`),
-                image: `${config.template.dockerImage}:${config.template.dockerTag}`,
-                created: new Date().toISOString(),
-                lastUpdated: new Date().toISOString()
-            };
-
-            setServices(prev => [...prev, newService]);
+            // Create service through API
+            // Note: This would need to be implemented in the service API
+            console.log('Creating service with config:', config);
+            
+            // For now, refresh the services list to pick up any new services
+            await refreshServices();
             setIsWizardOpen(false);
         } catch (error) {
             console.error('Failed to create service:', error);
@@ -360,7 +347,7 @@ export const ServiceManagementDashboard: React.FC<ServiceManagementDashboardProp
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm text-gray-600">Total Services</p>
-                            <p className="text-2xl font-bold">{services.length}</p>
+                            <p className="text-2xl font-bold">{services?.length || 0}</p>
                         </div>
                         <Container className="h-8 w-8 text-blue-500" />
                     </div>
@@ -370,7 +357,7 @@ export const ServiceManagementDashboard: React.FC<ServiceManagementDashboardProp
                         <div>
                             <p className="text-sm text-gray-600">Running</p>
                             <p className="text-2xl font-bold text-green-600">
-                                {services.filter(s => s.status === 'running').length}
+                                {services?.filter(s => s.status === 'running').length || 0}
                             </p>
                         </div>
                         <Play className="h-8 w-8 text-green-500" />
@@ -381,7 +368,7 @@ export const ServiceManagementDashboard: React.FC<ServiceManagementDashboardProp
                         <div>
                             <p className="text-sm text-gray-600">Stopped</p>
                             <p className="text-2xl font-bold text-red-600">
-                                {services.filter(s => s.status === 'stopped').length}
+                                {services?.filter(s => s.status === 'stopped').length || 0}
                             </p>
                         </div>
                         <Square className="h-8 w-8 text-red-500" />
@@ -392,7 +379,7 @@ export const ServiceManagementDashboard: React.FC<ServiceManagementDashboardProp
                         <div>
                             <p className="text-sm text-gray-600">CPU Usage</p>
                             <p className="text-2xl font-bold">
-                                {Math.round(services.reduce((acc, s) => acc + s.cpu, 0) / services.length)}%
+                                {services?.length ? Math.round(services.reduce((acc, s) => acc + (s.cpu || 0), 0) / services.length) : 0}%
                             </p>
                         </div>
                         <Cpu className="h-8 w-8 text-orange-500" />
@@ -502,7 +489,7 @@ export const ServiceManagementDashboard: React.FC<ServiceManagementDashboardProp
                     </div>
                 ) : (
                     <div className="space-y-3">
-                    {(statusFilter === 'all' ? services : services.filter(s => s.status === statusFilter)).map((service) => {
+                    {(statusFilter === 'all' ? services : services?.filter(s => s.status === statusFilter) || []).map((service) => {
                         const StatusIcon = getStatusIcon(service.status);
                         return (
                             <Card key={service.id} className="p-4">
@@ -530,21 +517,21 @@ export const ServiceManagementDashboard: React.FC<ServiceManagementDashboardProp
                                         <div className="text-sm text-gray-600">
                                             <div className="flex items-center space-x-1">
                                                 <Cpu className="h-3 w-3" />
-                                                <span>{service.cpu.toFixed(1)}%</span>
+                                                <span>{service.cpu?.toFixed(1) || 0}%</span>
                                             </div>
                                         </div>
 
                                         <div className="text-sm text-gray-600">
                                             <div className="flex items-center space-x-1">
                                                 <HardDrive className="h-3 w-3" />
-                                                <span>{service.memory.toFixed(1)}MB</span>
+                                                <span>{service.memory?.toFixed(1) || 0}MB</span>
                                             </div>
                                         </div>
 
                                         <div className="text-sm text-gray-600">
                                             <div className="flex items-center space-x-1">
                                                 <Network className="h-3 w-3" />
-                                                <span>{service.network.rx}↓ {service.network.tx}↑</span>
+                                                <span>{service.network?.rx || 0}↓ {service.network?.tx || 0}↑</span>
                                             </div>
                                         </div>
 

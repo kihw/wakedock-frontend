@@ -2,8 +2,8 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react'
 import { AlertTriangle, RefreshCw, Home, Mail } from 'lucide-react'
-import { Button } from '@/views/atoms/Button'
-import { Card } from '@/views/atoms/Card'
+import { Button } from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
 
 interface Props {
     children: ReactNode

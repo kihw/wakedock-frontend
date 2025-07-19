@@ -2,15 +2,39 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuthStore } from '@/lib/stores/auth-store';
-import { useToastStore } from '@/lib/stores/toast-store';
 import { Eye, EyeOff, LogIn } from 'lucide-react';
 import Head from 'next/head';
 
 export default function LoginPage() {
     const router = useRouter();
-    const { login, isAuthenticated, isLoading, error: authError } = useAuthStore();
-    const { error: showError } = useToastStore();
+    
+    // Temporary auth state until proper auth implementation
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [authError, setAuthError] = useState<string | null>(null);
+    
+    const login = async (username: string, password: string) => {
+        setIsLoading(true);
+        setAuthError(null);
+        try {
+            // Mock login for now
+            if (username === 'admin' && password === 'admin') {
+                setIsAuthenticated(true);
+                router.push('/');
+            } else {
+                setAuthError('Invalid credentials');
+            }
+        } catch (error) {
+            setAuthError('Login failed');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    const showError = (title: string, message: string) => {
+        console.error(`${title}: ${message}`);
+        setAuthError(message);
+    };
 
     const [formData, setFormData] = useState({
         username: '',
@@ -41,11 +65,10 @@ export default function LoginPage() {
         }
 
         try {
-            await login({ username: formData.username, password: formData.password });
+            await login(formData.username, formData.password);
             // Redirect happens automatically via useEffect
         } catch (error) {
             console.error('Login error:', error);
-            // Error handling is done via the store
         }
     };
 

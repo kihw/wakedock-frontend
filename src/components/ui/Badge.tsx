@@ -1,237 +1,137 @@
-import React, { forwardRef } from 'react';
-import { clsx } from 'clsx';
-import { X } from 'lucide-react';
+// Enhanced Badge Component - Atom
+'use client';
 
-export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-    variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'neutral';
+import React, { forwardRef } from 'react';
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
+
+export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
+    variant?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info';
     size?: 'sm' | 'md' | 'lg';
     rounded?: boolean;
-    outlined?: boolean;
-    dot?: boolean;
-    removable?: boolean;
-    icon?: React.ComponentType<{ className?: string }>;
+    outline?: boolean;
     pulse?: boolean;
-    clickable?: boolean;
-    href?: string;
-    target?: string;
-    children?: React.ReactNode;
-    onRemove?: () => void;
+    animate?: boolean;
+    icon?: React.ReactNode;
 }
 
-const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
-    (
-        {
-            variant = 'primary',
-            size = 'md',
-            rounded = false,
-            outlined = false,
-            dot = false,
-            removable = false,
-            icon: Icon,
-            pulse = false,
-            clickable = false,
-            href,
-            target,
-            children,
-            className,
-            onClick,
-            onRemove,
-            ...props
-        },
-        ref
-    ) => {
-        const baseClasses = [
-            'inline-flex items-center justify-center',
-            'font-medium',
-            'whitespace-nowrap',
-            'select-none',
-        ];
+const Badge = forwardRef<HTMLDivElement, BadgeProps>(
+    ({
+        className,
+        variant = 'default',
+        size = 'md',
+        rounded = false,
+        outline = false,
+        pulse = false,
+        animate = true,
+        icon,
+        children,
+        ...props
+    }, ref) => {
+        const baseClasses = `
+      inline-flex items-center gap-1 font-medium
+      ${rounded ? 'rounded-full' : 'rounded-md'}
+      ${pulse ? 'animate-pulse' : ''}
+      transition-all duration-200
+    `;
 
-        // Variant classes
         const variantClasses = {
-            primary: {
-                filled: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-700',
-                outlined: 'border-blue-500 text-blue-700 bg-transparent dark:border-blue-400 dark:text-blue-300',
-                dot: 'bg-blue-500',
-            },
-            secondary: {
-                filled: 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600',
-                outlined: 'border-gray-500 text-gray-700 bg-transparent dark:border-gray-400 dark:text-gray-300',
-                dot: 'bg-gray-500',
-            },
-            success: {
-                filled: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-700',
-                outlined: 'border-green-500 text-green-700 bg-transparent dark:border-green-400 dark:text-green-300',
-                dot: 'bg-green-500',
-            },
-            warning: {
-                filled: 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-700',
-                outlined: 'border-yellow-500 text-yellow-700 bg-transparent dark:border-yellow-400 dark:text-yellow-300',
-                dot: 'bg-yellow-500',
-            },
-            error: {
-                filled: 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-700',
-                outlined: 'border-red-500 text-red-700 bg-transparent dark:border-red-400 dark:text-red-300',
-                dot: 'bg-red-500',
-            },
-            info: {
-                filled: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-700',
-                outlined: 'border-blue-500 text-blue-700 bg-transparent dark:border-blue-400 dark:text-blue-300',
-                dot: 'bg-blue-500',
-            },
-            neutral: {
-                filled: 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600',
-                outlined: 'border-gray-500 text-gray-700 bg-transparent dark:border-gray-400 dark:text-gray-300',
-                dot: 'bg-gray-500',
-            },
+            default: outline
+                ? 'border border-gray-300 text-gray-700 bg-transparent dark:border-gray-600 dark:text-gray-300'
+                : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100',
+            primary: outline
+                ? 'border border-indigo-300 text-indigo-700 bg-transparent dark:border-indigo-600 dark:text-indigo-300'
+                : 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-100',
+            secondary: outline
+                ? 'border border-purple-300 text-purple-700 bg-transparent dark:border-purple-600 dark:text-purple-300'
+                : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-100',
+            success: outline
+                ? 'border border-green-300 text-green-700 bg-transparent dark:border-green-600 dark:text-green-300'
+                : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
+            warning: outline
+                ? 'border border-yellow-300 text-yellow-700 bg-transparent dark:border-yellow-600 dark:text-yellow-300'
+                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100',
+            error: outline
+                ? 'border border-red-300 text-red-700 bg-transparent dark:border-red-600 dark:text-red-300'
+                : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100',
+            info: outline
+                ? 'border border-blue-300 text-blue-700 bg-transparent dark:border-blue-600 dark:text-blue-300'
+                : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100',
         };
 
-        // Size classes
         const sizeClasses = {
-            sm: {
-                badge: 'px-2 py-0.5 text-xs',
-                gap: 'gap-1',
-                icon: 'w-3 h-3',
-                dot: 'w-2 h-2',
-                removeButton: 'ml-1 -mr-0.5 w-4 h-4',
-            },
-            md: {
-                badge: 'px-2.5 py-1 text-sm',
-                gap: 'gap-1.5',
-                icon: 'w-4 h-4',
-                dot: 'w-2.5 h-2.5',
-                removeButton: 'ml-1.5 -mr-0.5 w-5 h-5',
-            },
-            lg: {
-                badge: 'px-3 py-1.5 text-base',
-                gap: 'gap-2',
-                icon: 'w-5 h-5',
-                dot: 'w-3 h-3',
-                removeButton: 'ml-2 -mr-1 w-6 h-6',
-            },
+            sm: 'px-2 py-0.5 text-xs',
+            md: 'px-2.5 py-1 text-sm',
+            lg: 'px-3 py-1.5 text-base',
         };
 
-        const isInteractive = clickable || href || removable;
-
-        // Build classes
-        const classes = clsx(
-            baseClasses,
-            outlined ? variantClasses[variant].outlined : variantClasses[variant].filled,
-            outlined ? 'border-2' : 'border',
-            sizeClasses[size].badge,
-            (Icon || children) ? sizeClasses[size].gap : '',
-            rounded ? 'rounded-full' : 'rounded-md',
-            pulse ? 'animate-pulse' : '',
-            isInteractive ? 'cursor-pointer hover:opacity-80 transition-opacity duration-200' : '',
-            'transition-all duration-200',
-            className
-        );
-
-        const handleRemove = (e: React.MouseEvent) => {
-            e.stopPropagation();
-            onRemove?.();
+        const iconSizeClasses = {
+            sm: 'w-3 h-3',
+            md: 'w-4 h-4',
+            lg: 'w-5 h-5',
         };
 
-        // Dot variant
-        if (dot) {
-            return (
-                <span
-                    ref={ref}
-                    className={clsx(
-                        'inline-block rounded-full',
-                        sizeClasses[size].dot,
-                        variantClasses[variant].dot,
-                        pulse ? 'animate-pulse' : '',
-                        className
-                    )}
-                    {...props}
-                />
-            );
-        }
-
-        // Link variant
-        if (href) {
-            return (
-                <a
-                    href={href}
-                    target={target}
-                    className={classes}
-                    onClick={onClick}
-                    {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
-                >
-                    {Icon && (
-                        <span className="flex-shrink-0">
-                            <Icon className={sizeClasses[size].icon} aria-hidden="true" />
-                        </span>
-                    )}
-
-                    {children && (
-                        <span className="flex-1 truncate">
-                            {children}
-                        </span>
-                    )}
-
-                    {removable && (
-                        <button
-                            type="button"
-                            className={clsx(
-                                sizeClasses[size].removeButton,
-                                'flex-shrink-0 rounded-full hover:bg-black hover:bg-opacity-10',
-                                'focus:outline-none focus:bg-black focus:bg-opacity-10',
-                                'transition-colors duration-200'
-                            )}
-                            onClick={handleRemove}
-                            aria-label="Remove"
-                        >
-                            <X className="w-full h-full" />
-                        </button>
-                    )}
-                </a>
-            );
-        }
-
-        // Regular badge
-        return (
-            <span
+        const BadgeComponent = (
+            <div
                 ref={ref}
-                className={classes}
-                role={isInteractive ? 'button' : undefined}
-                tabIndex={isInteractive ? 0 : undefined}
-                onClick={onClick}
+                className={cn(
+                    baseClasses,
+                    variantClasses[variant],
+                    sizeClasses[size],
+                    className
+                )}
                 {...props}
             >
-                {Icon && (
-                    <span className="flex-shrink-0">
-                        <Icon className={sizeClasses[size].icon} aria-hidden="true" />
+                {icon && (
+                    <span className={cn('shrink-0', iconSizeClasses[size])}>
+                        {icon}
                     </span>
                 )}
-
-                {children && (
-                    <span className="flex-1 truncate">
-                        {children}
-                    </span>
-                )}
-
-                {removable && (
-                    <button
-                        type="button"
-                        className={clsx(
-                            sizeClasses[size].removeButton,
-                            'flex-shrink-0 rounded-full hover:bg-black hover:bg-opacity-10',
-                            'focus:outline-none focus:bg-black focus:bg-opacity-10',
-                            'transition-colors duration-200'
-                        )}
-                        onClick={handleRemove}
-                        aria-label="Remove"
-                    >
-                        <X className="w-full h-full" />
-                    </button>
-                )}
-            </span>
+                {children}
+            </div>
         );
+
+        if (animate) {
+            return (
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.2 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    {BadgeComponent}
+                </motion.div>
+            );
+        }
+
+        return BadgeComponent;
     }
 );
 
 Badge.displayName = 'Badge';
 
-export default Badge;
+// Status Badge variants for common use cases
+export const StatusBadge = forwardRef<HTMLDivElement, Omit<BadgeProps, 'variant'> & { status: 'running' | 'stopped' | 'error' | 'warning' | 'pending' }>(
+    ({ status, ...props }, ref) => {
+        const statusVariants = {
+            running: 'success',
+            stopped: 'secondary',
+            error: 'error',
+            warning: 'warning',
+            pending: 'info',
+        } as const;
+
+        return (
+            <Badge
+                ref={ref}
+                variant={statusVariants[status]}
+                {...props}
+            />
+        );
+    }
+);
+
+StatusBadge.displayName = 'StatusBadge';
+
+export { Badge };

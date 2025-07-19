@@ -3,7 +3,7 @@
  * Gère la navigation, les transitions et l'état global
  */
 
-import { useRouter } from 'next/router'
+import { useRouter, usePathname } from 'next/navigation'
 import { useEffect, useState, useCallback, useRef } from 'react'
 
 interface AppState {

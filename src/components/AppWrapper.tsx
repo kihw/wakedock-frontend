@@ -1,8 +1,8 @@
 'use client'
 
-import { ErrorBoundary } from '@/views/atoms/ErrorBoundary'
-import { AccessibilityChecker } from '@/views/atoms/AccessibilityChecker'
-import { withPerformanceMonitoring } from '@/controllers/hooks/usePerformanceMonitor'
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
+import { AccessibilityChecker } from '@/components/ui/AccessibilityChecker'
+import { withPerformanceMonitoring } from '@/hooks/system/usePerformanceMonitor'
 import { useEffect } from 'react'
 
 interface AppWrapperProps {

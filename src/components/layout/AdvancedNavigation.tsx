@@ -27,10 +27,9 @@ import {
     Sun
 } from 'lucide-react';
 
-import { Button } from '@/views/atoms/Button';
-import { Card } from '@/views/atoms/Card';
-import { Badge } from '@/views/atoms/Badge';
-import { NavigationState } from '@/models/ui/interface';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
 
 interface NavigationProps {

@@ -3,11 +3,11 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Service, ServiceStatus } from '@/models/domain/service';
-import { ServiceListRequest, ServiceActionRequest } from '@/models/api/requests';
-import { FilterState, LoadingState } from '@/models/ui/interface';
-import { serviceApi } from '@/controllers/services/service-api';
-import { toast } from '@/hooks/use-toast';
+import { Service, ServiceStatus } from '@/lib/types/domain';
+import { ServiceListRequest, ServiceActionRequest } from '@/lib/types/api-requests';
+import { FilterState, LoadingState } from '@/lib/types/ui';
+import { serviceApi } from '@/lib/api/services';
+import { toast } from '@/hooks/ui/use-toast';
 
 export interface ServiceControllerState {
     services: Service[];

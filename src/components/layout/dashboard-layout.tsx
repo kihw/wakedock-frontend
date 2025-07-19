@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { Header } from './Header-simple';
 import {
     Home,
@@ -23,6 +24,7 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children, title }: DashboardLayoutProps) {
     const pathname = usePathname();
+    const router = useRouter();
 
     // Navigation items for the application
     const navigation = [
@@ -83,12 +85,12 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
     ];
 
     const handleNavigationClick = (href: string) => {
-        // Use Next.js navigation
-        window.location.href = href;
+        // Use Next.js SPA navigation
+        router.push(href);
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             <Header
                 navigation={navigation}
                 onNavigationClick={handleNavigationClick}
@@ -98,7 +100,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
             <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 {title && (
                     <div className="px-4 py-6 sm:px-0">
-                        <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{title}</h1>
                     </div>
                 )}
                 <div className="px-4 py-6 sm:px-0">

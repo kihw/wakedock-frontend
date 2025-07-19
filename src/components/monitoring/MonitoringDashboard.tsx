@@ -435,22 +435,39 @@ const MonitoringDashboard: React.FC = () => {
             try {
                 // Charge le statut
                 const statusResponse = await fetch('/api/v1/monitoring/status');
-                const statusData = await statusResponse.json();
-                setStats(statusData);
-                setIsMonitoring(statusData.monitoring.is_running);
+                if (statusResponse.ok) {
+                    const statusData = await statusResponse.json();
+                    setStats(statusData);
+                    setIsMonitoring(statusData?.monitoring?.is_running || false);
+                } else {
+                    console.error('Erreur lors du chargement du statut:', statusResponse.status);
+                }
 
                 // Charge les conteneurs
                 const containersResponse = await fetch('/api/v1/monitoring/containers');
-                const containersData = await containersResponse.json();
-                setContainers(containersData.containers || []);
+                if (containersResponse.ok) {
+                    const containersData = await containersResponse.json();
+                    setContainers(containersData?.containers || []);
+                } else {
+                    console.error('Erreur lors du chargement des conteneurs:', containersResponse.status);
+                }
 
                 // Charge les alertes récentes
                 const alertsResponse = await fetch('/api/v1/monitoring/alerts?hours=24&limit=20');
-                const alertsData = await alertsResponse.json();
-                setAlerts(alertsData);
+                if (alertsResponse.ok) {
+                    const alertsData = await alertsResponse.json();
+                    setAlerts(Array.isArray(alertsData) ? alertsData : []);
+                } else {
+                    console.error('Erreur lors du chargement des alertes:', alertsResponse.status);
+                }
 
             } catch (error) {
                 console.error('Erreur lors du chargement des données:', error);
+                // Définir des valeurs par défaut en cas d'erreur
+                setStats(null);
+                setIsMonitoring(false);
+                setContainers([]);
+                setAlerts([]);
             }
         };
 
@@ -523,13 +540,6 @@ const MonitoringDashboard: React.FC = () => {
             {/* En-tête */}
             <div className="mb-6">
                 <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Monitoring Temps Réel</h1>
-                        <p className="text-gray-600 mt-2">
-                            Surveillance des performances des conteneurs Docker
-                        </p>
-                    </div>
-
                     <div className="flex items-center space-x-4">
                         {/* Statut de connexion */}
                         <div className="flex items-center space-x-2">
@@ -680,29 +690,29 @@ const MonitoringDashboard: React.FC = () => {
                         <h3 className="text-lg font-medium text-gray-900">Statistiques du système</h3>
                     </div>
                     <div className="p-4 space-y-4">
-                        {stats && (
+                        {stats && stats.monitoring && stats.websocket ? (
                             <>
                                 <div>
                                     <h4 className="font-medium text-gray-900 mb-2">Collecteur de métriques</h4>
                                     <div className="grid grid-cols-2 gap-4 text-sm">
                                         <div>
                                             <span className="text-gray-600">Statut:</span>
-                                            <span className={`ml-2 font-medium ${stats.monitoring.is_running ? 'text-green-600' : 'text-red-600'
+                                            <span className={`ml-2 font-medium ${stats.monitoring?.is_running ? 'text-green-600' : 'text-red-600'
                                                 }`}>
-                                                {stats.monitoring.is_running ? 'Actif' : 'Inactif'}
+                                                {stats.monitoring?.is_running ? 'Actif' : 'Inactif'}
                                             </span>
                                         </div>
                                         <div>
                                             <span className="text-gray-600">Conteneurs surveillés:</span>
-                                            <span className="ml-2 font-medium">{stats.monitoring.monitored_containers}</span>
+                                            <span className="ml-2 font-medium">{stats.monitoring?.monitored_containers || 0}</span>
                                         </div>
                                         <div>
                                             <span className="text-gray-600">Intervalle:</span>
-                                            <span className="ml-2 font-medium">{stats.monitoring.collection_interval}s</span>
+                                            <span className="ml-2 font-medium">{stats.monitoring?.collection_interval || 0}s</span>
                                         </div>
                                         <div>
                                             <span className="text-gray-600">Rétention:</span>
-                                            <span className="ml-2 font-medium">{stats.monitoring.retention_days}j</span>
+                                            <span className="ml-2 font-medium">{stats.monitoring?.retention_days || 0}j</span>
                                         </div>
                                     </div>
                                 </div>
@@ -712,19 +722,23 @@ const MonitoringDashboard: React.FC = () => {
                                     <div className="grid grid-cols-2 gap-4 text-sm">
                                         <div>
                                             <span className="text-gray-600">Connexions actives:</span>
-                                            <span className="ml-2 font-medium">{stats.websocket.active_connections}</span>
+                                            <span className="ml-2 font-medium">{stats.websocket?.active_connections || 0}</span>
                                         </div>
                                         <div>
                                             <span className="text-gray-600">Total connexions:</span>
-                                            <span className="ml-2 font-medium">{stats.websocket.total_connections}</span>
+                                            <span className="ml-2 font-medium">{stats.websocket?.total_connections || 0}</span>
                                         </div>
                                         <div>
                                             <span className="text-gray-600">Messages envoyés:</span>
-                                            <span className="ml-2 font-medium">{stats.websocket.messages_sent}</span>
+                                            <span className="ml-2 font-medium">{stats.websocket?.messages_sent || 0}</span>
                                         </div>
                                     </div>
                                 </div>
                             </>
+                        ) : (
+                            <div className="text-center text-gray-500 py-4">
+                                <p>Chargement des statistiques...</p>
+                            </div>
                         )}
                     </div>
                 </div>
